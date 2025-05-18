@@ -67,10 +67,10 @@ def input_int_validate():
 # Begin main code execution
 while True:
     print ("\n")
-    print ("Hi, which sort method would you like to run?")
-    print ("1 - ?")
-    print ("2 - ?")
-    print ("3 - ?")
+    print ("Hi, which quantum simulation scenario would you like to run?")
+    print ("1 - Pattern Matching")
+    print ("2 - Problem Solving")
+    print ("3 - Creative Thinking")
     print ("4 - ?")
     print ("0 - EXIT")
 
@@ -79,7 +79,7 @@ while True:
 
     # Take action based on user selection
     if (selection == 1):
-        print ("\nYou selected ?\n")
+        print ("\nYou selected Pattern Matching!\n")
     
     # Pick a qubit.
     qubit = cirq.GridQubit(0, 0)
@@ -96,9 +96,9 @@ while True:
     print(result)
     
     if (selection == 2):
-        print ("\nYou selected ?\n")
+        print ("\nYou selected Problem Solving!\n")
     if (selection == 3):
-        print ("\nYou selected ?\n")
+        print ("\nYou selected Creative Thinking!\n")
     if (selection == 4):
         print ("\nYou selected ?\n")
     if (selection == 0):
