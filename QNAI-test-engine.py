@@ -71,7 +71,7 @@ while True:
     print ("1 - Pattern Matching")
     print ("2 - Problem Solving")
     print ("3 - Creative Thinking")
-    print ("4 - ?")
+    print ("4 - SyDGE")
     print ("0 - EXIT")
 
     # Take user input and validate
@@ -100,7 +100,7 @@ while True:
     if (selection == 3):
         print ("\nYou selected Creative Thinking!\n")
     if (selection == 4):
-        print ("\nYou selected ?\n")
+        print ("\nYou selected Sythetic Data Generation Engine (SyDGE)\n")
     if (selection == 0):
         print ("\n You have chosen to leave the program.  Goodbye! \n")
         break
