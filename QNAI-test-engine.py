@@ -52,8 +52,10 @@ def input_int_validate():
         except:
             print ("\nIncorrect value! Please make a new selection\n")
     return validate
-# Function to create a sample quantum circuit that applies a square root of NOT gate to a qubit and measures it
-def square_root_not_gate():
+# This function creates a simple quantum circuit that applies a square root of NOT gate (also known as a Hadamard gate) to a qubit and measures it.
+def quantum_square_root_not_gate():
+    print("Creating a sample quantum circuit that applies a square root of NOT gate to a qubit and measures it...")
+    
     # Pick a qubit.
     qubit = cirq.GridQubit(0, 0)
     
@@ -165,7 +167,7 @@ def sydge_generate_qam_data():
 # Begin main code execution
 while True:
 
-    print ("Hi, which quantum simulation scenario would you like to run?")
+    print ("\nHi, which quantum simulation scenario would you like to run?")
     print ("1 - _Start Scenario_ Pattern Matching")
     print ("2 - _Start Scenario_ Problem Solving")
     print ("3 - _Start Scenario_ Creative Thinking")
@@ -213,9 +215,7 @@ while True:
                 for i in range(len(patterns_data["fundamental"])):
                     print(f"\n\n--- Pattern {i+1} ---")
                     print("\nFundamental Pattern:\n", patterns_data["fundamental"][i])
-                    #print("\nNoisy Pattern (" + noise_level_input * 10 + "%):\n", patterns_data["noisy"][i])
                     print("\nNoisy Pattern (" + str(noise_level_input * 100) + "%):\n", patterns_data["noisy"][i])
-                    #print("\nIncomplete Pattern (30% masked):\n", patterns_data["incomplete"][i])
                     print("\nIncomplete Pattern (" + str(incompleteness_level_input * 100) + "%):\n", patterns_data["incomplete"][i])
                     print("-" * 25 + "\n")            
             if (sydge_selection == 2):
@@ -227,7 +227,7 @@ while True:
                 break
     if (main_selection == 5):
         print ("\nYou selected a Sample Quantum Test Circuit.\n")
-        qubit = square_root_not_gate()
+        qubit = quantum_square_root_not_gate()
     if (main_selection == 0):
         print ("\nYou have chosen to leave the program.  Goodbye!\n")
         break
