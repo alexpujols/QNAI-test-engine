@@ -96,6 +96,7 @@ def sydge_generate_qhn_data(
     print("Generating synthetic data for Quantum Hopfield Neural Network (QHNN) suitable for pattern matching...")
     if not (0 <= noise_level <= 1 and 0 <= incompleteness_level <= 1):
         raise ValueError("Noise and incompleteness levels must be between 0 and 1.")
+    
     # Generate fundamental patterns
     num_neurons = pattern_size[0] * pattern_size[1]
     fundamental_patterns = []
@@ -163,7 +164,7 @@ def sydge_generate_qam_data():
 
 # Begin main code execution
 while True:
-    
+
     print ("Hi, which quantum simulation scenario would you like to run?")
     print ("1 - _Start Scenario_ Pattern Matching")
     print ("2 - _Start Scenario_ Problem Solving")
@@ -196,19 +197,26 @@ while True:
 
             # Take action based on user selection
             if (sydge_selection == 1):
-                print ("\nYou selected to generate a sample synthetic dataset for a Quantum Hopfield Neural Network (QHNN) suitable for pattern matching.\n")
+                print ("\nYou selected to generate a sample synthetic dataset for a Quantum Hopfield Neural Network (QHNN) suitable for pattern matching.")
+                pattern_size_input = int(input("Enter one value to set both the number of rows and columns (e.g., \"5\" for a 5x5 pattern) : "))
+                num_patterns_input = int(input("How many patterns would you like to generate? : "))
+                noise_level_input = float(input("What noise level would you like to apply to the patterns? (0.0 - 1.0) : "))
+                incompleteness_level_input = float(input("What incompleteness level would you like to apply to the patterns? (0.0 - 1.0) : "))
+                # Generate synthetic data for QHNN
                 patterns_data = sydge_generate_qhn_data(
-                    pattern_size=(5, 5),
-                    num_patterns=3,
-                    noise_level=0.15,   # 15% of the bits will be flipped to create noisy patterns
-                    incompleteness_level=0.3    # 30% of the bits will be masked (set to 0) to create incomplete patterns
+                    pattern_size=(pattern_size_input, pattern_size_input),
+                    num_patterns=num_patterns_input,
+                    noise_level=noise_level_input,   # % of the bits will be flipped to create noisy patterns
+                    incompleteness_level=incompleteness_level_input    # % of the bits will be masked (set to 0) to create incomplete patterns
                 )
                 # Print the generated patterns
                 for i in range(len(patterns_data["fundamental"])):
-                    print(f"--- Pattern {i+1} ---")
-                    print("Fundamental Pattern:\n", patterns_data["fundamental"][i])
-                    print("\nNoisy Pattern (15% noise):\n", patterns_data["noisy"][i])
-                    print("\nIncomplete Pattern (30% masked):\n", patterns_data["incomplete"][i])
+                    print(f"\n\n--- Pattern {i+1} ---")
+                    print("\nFundamental Pattern:\n", patterns_data["fundamental"][i])
+                    #print("\nNoisy Pattern (" + noise_level_input * 10 + "%):\n", patterns_data["noisy"][i])
+                    print("\nNoisy Pattern (" + str(noise_level_input * 100) + "%):\n", patterns_data["noisy"][i])
+                    #print("\nIncomplete Pattern (30% masked):\n", patterns_data["incomplete"][i])
+                    print("\nIncomplete Pattern (" + str(incompleteness_level_input * 100) + "%):\n", patterns_data["incomplete"][i])
                     print("-" * 25 + "\n")            
             if (sydge_selection == 2):
                 print ("\nYou selected to generate a sample synthetic dataset for a Variational Quantum Neural Network (VQNN) suitable for problem solving.\n")
