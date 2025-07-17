@@ -89,7 +89,24 @@ while True:
                     print("-" * 25 + "\n")
             elif sydge_selection == 2:
                 print("\nYou selected to generate a sample synthetic dataset for a Variational Quantum Neural Network (VQNN) suitable for problem solving.\n")
-                sydge_generate_vqnn_data()
+                # Call the function to generate maze data for the VQNN
+                # This will use the default arguments: num_mazes=10, maze_size=(5, 5)
+                vqnn_mazes = sydge_generate_vqnn_data()
+
+                # Check if any mazes were generated
+                if vqnn_mazes:
+                    print("\n--- Generated Maze Details ---")
+                    # Loop through the returned list and print the data for each maze
+                    for i, maze_data in enumerate(vqnn_mazes):
+                        print(f"\n--- Maze {i + 1} ---")
+                        print("Layout (0:path, 1:wall, 2:start, 3:goal):")
+                        print(maze_data["maze"])
+                        print(f"Start Position: {maze_data['start_pos']}")
+                        print(f"Goal Position: {maze_data['goal_pos']}")
+                        print(f"Complexity: {maze_data['complexity']}")
+                    print("\n" + "-" * 28 + "\n")
+                else:
+                    print("No maze data was generated.")
             elif sydge_selection == 3:
                 print("\nYou selected to generate a sample synthetic dataset for a Quantum Associative Memory Network (QAM) suitable for creative thinking.\n")
                 sydge_generate_qamnn_data()
