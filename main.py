@@ -31,7 +31,10 @@ Notes         : {Available at Github at https://github.com/alexpujols/QNAI-test-
 # Import modules from local files
 from utils import input_int_validate
 from circuits_quantum import quantum_square_root_not_gate
-from data_generation import sydge_generate_qhnn_data, sydge_generate_vqnn_data, sydge_generate_qamnn_data
+from data_generation_QHNN import sydge_generate_qhnn_data
+from data_generation_VQNN import sydge_generate_vqnn_data
+from data_generation_QAMNN import sydge_generate_qamnn_data
+from data_generation_QAMNN_wordbank_generator import generate_dataset
 
 ### Main code begins ###
 
@@ -63,6 +66,7 @@ while True:
             print("2 - _Test Data_ VQNN Data for Problem Solving")
             print("3 - _Test Data_ QAM Data for Creative Thinking")
             print("0 - EXIT")
+            
             # Take user input and validate
             sydge_selection = input_int_validate()
 
@@ -80,20 +84,34 @@ while True:
                     noise_level=noise_level_input,
                     incompleteness_level=incompleteness_level_input
                 )
+                
                 # Print the generated patterns
                 for i in range(len(patterns_data["fundamental"])):
-                    print(f"\n\n--- Pattern {i+1} ---")
+                    print(f"\heck if any mazes were generatedn\n--- Pattern {i+1} ---")
                     print("\nFundamental Pattern:\n", patterns_data["fundamental"][i])
                     print("\nNoisy Pattern (" + str(noise_level_input * 100) + "%):\n", patterns_data["noisy"][i])
                     print("\nIncomplete Pattern (" + str(incompleteness_level_input * 100) + "%):\n", patterns_data["incomplete"][i])
                     print("-" * 25 + "\n")
-            elif sydge_selection == 2:
-                print("\nYou selected to generate a sample synthetic dataset for a Variational Quantum Neural Network (VQNN) suitable for problem solving.\n")
+            elif sydge_selection == 2:           
                 # Call the function to generate maze data for the VQNN
-                # This will use the default arguments: num_mazes=10, maze_size=(5, 5)
-                vqnn_mazes = sydge_generate_vqnn_data()
+                # Take action based on user selection
+                print("\nYou selected to generate a sample synthetic dataset for a Variational Quantum Neural Network (VQNN) suitable for problem solving.\n")
+                num_mazes_input = int(input("How many mazes would you like to generate? : "))
+                while True:
+                    maze_size_input = int(input("Enter one value (odd number) to set both the number of rows and columns (e.g., \"5\" for a 5x5 maze) : "))
+                    if maze_size_input % 2 == 1:
+                        break
+                    else:
+                        print("Please enter an odd number for the maze size to ensure a valid maze structure.")
 
-                # Check if any mazes were generated
+                # Generate synthetic data for VQNN
+                # This will use the default arguments: num_mazes=10, maze_size=(5, 5)
+                vqnn_mazes = sydge_generate_vqnn_data(
+                    num_mazes=num_mazes_input,
+                    maze_size=(maze_size_input, maze_size_input)
+                )
+
+                # Print maze data
                 if vqnn_mazes:
                     print("\n--- Generated Maze Details ---")
                     # Loop through the returned list and print the data for each maze
@@ -101,7 +119,7 @@ while True:
                         print(f"\n--- Maze {i + 1} ---")
                         print("Layout (0:path, 1:wall, 2:start, 3:goal):")
                         print(maze_data["maze"])
-                        print(f"Start Position: {maze_data['start_pos']}")
+                        print(f"\nStart Position: {maze_data['start_pos']}")
                         print(f"Goal Position: {maze_data['goal_pos']}")
                         print(f"Complexity: {maze_data['complexity']}")
                     print("\n" + "-" * 28 + "\n")
@@ -109,7 +127,41 @@ while True:
                     print("No maze data was generated.")
             elif sydge_selection == 3:
                 print("\nYou selected to generate a sample synthetic dataset for a Quantum Associative Memory Network (QAM) suitable for creative thinking.\n")
-                sydge_generate_qamnn_data()
+                
+                # Ask the user if they want to generate a new dataset or use existing files
+                gen_new_data = str(input("Would you like to generate a brand new data set (Y/N)? (If 'N,' exiting data is used) : "))
+                if gen_new_data.lower() == 'y':
+                    # Call the function to generate a new dataset
+                    generate_dataset()
+                else:
+                    print("Using existing dataset files for QAM data generation...")
+
+                # Call the function to generate QAM data
+                qam_data = sydge_generate_qamnn_data()
+
+                # Print the generated data in a readable format
+                if qam_data:
+                    # Create a reverse map for easy lookup from index to concept name
+                    index_to_concept = {v: k for k, v in qam_data["concept_map"].items()}
+
+                    print("--- Generated QAM Semantic Network ---")
+                    print("\nCore Concepts Map (Concept: Vector Index):")
+                    print(qam_data["concept_map"])
+
+                    print("\nStored Memory Associations (Binary Vectors):")
+                    for i, vector in enumerate(qam_data["memory_vectors"]):
+                        # Find the concepts that are 'on' in the vector
+                        active_concepts = [index_to_concept[idx] for idx, val in enumerate(vector) if val == 1]
+                        print(f"  Memory {i+1:>2}: {vector} -> ({' & '.join(active_concepts)})")
+
+                    print("\nCreative Prompts (Binary Vectors):")
+                    for theme, vector in qam_data["prompts"].items():
+                        active_concepts = [index_to_concept[idx] for idx, val in enumerate(vector) if val == 1]
+                        print(f"  Theme '{theme}': {vector} -> ({' + '.join(active_concepts)})")
+
+                    print("\n" + "-" * 40 + "\n")
+                else:
+                    print("No QAM data was generated.")
             elif sydge_selection == 0:
                 print("\n You have chosen to leave the SyDGE program. Goodbye!\n")
                 break
