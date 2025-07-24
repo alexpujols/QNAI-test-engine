@@ -1,26 +1,30 @@
 {
-    "Rethinking Nation": [
+    "A Study in Nature": [
+        "Evil",
+        "Information",
+        "Ritual"
+    ],
+    "A Study in Glacier": [
+        "Lexicon",
+        "Suffering",
+        "Compassion",
+        "Gratitude",
+        "Universe"
+    ],
+    "Systems of Virtue": [
+        "FreeWill",
         "Hegemony",
-        "Luck"
+        "Chance",
+        "Propaganda"
     ],
-    "The Paradox of Luck": [
-        "Gravity",
-        "Equity",
-        "Deception"
+    "The Art of Scribe": [
+        "Eternity",
+        "Childhood",
+        "Truth"
     ],
-    "Rethinking Etymology": [
-        "Motivation",
-        "Vaccine",
-        "Empathy"
-    ],
-    "The Nature of Planet": [
-        "Asset",
-        "Motivation",
-        "NeuralNetwork"
-    ],
-    "The Nature of Empathy": [
-        "Eclipse",
-        "Duality",
-        "Etymology"
+    "Systems of FreeWill": [
+        "Glacier",
+        "Method",
+        "Liability"
     ]
 }

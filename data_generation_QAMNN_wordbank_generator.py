@@ -4,13 +4,7 @@ import itertools
 
 def generate_dataset():
     """Generates a large, random dataset for the QAM."""
-
-    # --- Parameters ---
-    # You can change these numbers to generate datasets of different sizes.
-    print("\nYou selected to generate a synthetic dataset for a Quantum Hopfield Neural Network (QHNN) suitable for pattern matching.\n")
-    num_concepts = int(input("How many concepts would you like to generate : "))
-    num_associations = int(input("How many associations would you like to generate? : "))
-    num_themes = int(input("How many themes would you like to generate : "))
+    print("\nYou have chosen to generate a synthetic dataset for a Quantum Associative Memory Neural Network (QAMNN) suitable for creative.")
 
 # --- Word Bank ---
 # A large bank of words from various domains to ensure variety.
@@ -64,35 +58,35 @@ def generate_dataset():
 
     # Generate Concepts
     # --------------------
-    print("1. Generating concepts...")
-    if num_concepts > len(WORD_BANK):
-        print(f"Error: Requested {num_concepts} concepts, but the word bank only has {len(WORD_BANK)}.")
-        return
-    concepts = sorted(random.sample(WORD_BANK, num_concepts))
-    print(f"   ...generated {len(concepts)} unique concepts.")
+    while True:
+        num_concepts = int(input("\nHow many concepts would you like to generate : "))
+        if num_concepts < len(WORD_BANK):
+            concepts = sorted(random.sample(WORD_BANK, num_concepts))
+            print(f"   - Generated {len(concepts)} unique concepts.")
+            break
+        else:
+            print(f"Error: Requested {num_concepts} concepts, but the word bank only has {len(WORD_BANK)}.")
 
     # Generate Associations
     # ------------------------
-    print("\n2. Generating associations...")
-    # Create all possible unique pairs from the concepts list
     possible_pairs = list(itertools.combinations(concepts, 2))
-    if num_associations > len(possible_pairs):
-        print(f"Error: Requested {num_associations} associations, but only {len(possible_pairs)} are possible with {len(concepts)} concepts.")
-        # Cap the number of associations to the maximum possible
-        num_to_generate = len(possible_pairs)
-    else:
-        num_to_generate = num_associations
 
-    # Sample the desired number of pairs
-    associations = random.sample(possible_pairs, num_to_generate)
-    # Convert tuples to lists for JSON standard
-    associations = [list(pair) for pair in associations]
-    print(f"   ...generated {len(associations)} unique associations.")
-
+    while True:
+        num_associations = int(input("\nHow many associations would you like to generate? : "))
+        if num_associations <= len(concepts) * (len(concepts) - 1) // 2:
+            num_to_generate = num_associations
+            # Sample the desired number of pairs
+            associations = random.sample(possible_pairs, num_to_generate)
+            # Convert tuples to lists for JSON standard
+            associations = [list(pair) for pair in associations]
+            print(f"   - Generated {len(associations)} unique associations.")
+            break
+        else:
+            print(f"Error: Requested {num_associations} associations, but only {len(concepts) * (len(concepts) - 1) // 2} are possible with {len(concepts)} concepts.")
 
     # Generate Themes
     # ------------------
-    print("\nGenerating themes...")
+    num_themes = int(input("\nHow many themes would you like to generate : "))
     themes = {}
     theme_prefixes = ["The Dynamics of", "A Study in", "The Paradox of", "Foundations of", "The Art of", "Systems of", "The Nature of", "Rethinking", "The Future of", "An Inquiry into"]
     theme_suffixes = ["Systems", "Dynamics", "Paradigms", "Structures", "Networks", "Ethics", "Aesthetics", "Futures", "Realities", "Frameworks"]
@@ -110,7 +104,7 @@ def generate_dataset():
         num_related_concepts = random.randint(2, 5)
         related_concepts = random.sample(concepts, num_related_concepts)
         themes[theme_name] = related_concepts
-    print(f"   ...generated {len(themes)} unique themes.")
+    print(f"   - Generated {len(themes)} unique themes.")
 
 
     # Write to Files

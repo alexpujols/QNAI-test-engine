@@ -15,7 +15,7 @@ __author__ = "Alex Pujols"
 __copyright__ = "Alex Pujols"
 __credits__ = ["Alex Pujols"]
 __license__ = "MIT"
-__version__ = "1.0"
+__version__ = "1.001-alpha"
 __maintainer__ = "Alex Pujols"
 __email__ = "A.Pujols@o365.ncu.edu; alexpujols@ieee.org"
 __status__ = "Prototype"
@@ -87,7 +87,7 @@ while True:
                 
                 # Print the generated patterns
                 for i in range(len(patterns_data["fundamental"])):
-                    print(f"\heck if any mazes were generatedn\n--- Pattern {i+1} ---")
+                    print(f"\nCheck if any mazes were generated\n--- Pattern {i+1} ---")
                     print("\nFundamental Pattern:\n", patterns_data["fundamental"][i])
                     print("\nNoisy Pattern (" + str(noise_level_input * 100) + "%):\n", patterns_data["noisy"][i])
                     print("\nIncomplete Pattern (" + str(incompleteness_level_input * 100) + "%):\n", patterns_data["incomplete"][i])
@@ -119,8 +119,8 @@ while True:
                         print(f"\n--- Maze {i + 1} ---")
                         print("Layout (0:path, 1:wall, 2:start, 3:goal):")
                         print(maze_data["maze"])
-                        print(f"\nStart Position: {maze_data['start_pos']}")
-                        print(f"Goal Position: {maze_data['goal_pos']}")
+                        print(f"\nStart Position: ({maze_data['start_pos'][1]}, {maze_data['start_pos'][0]})")
+                        print(f"Goal Position: ({maze_data['goal_pos'][1]}, {maze_data['goal_pos'][0]})")
                         print(f"Complexity: {maze_data['complexity']}")
                     print("\n" + "-" * 28 + "\n")
                 else:
@@ -129,12 +129,17 @@ while True:
                 print("\nYou selected to generate a sample synthetic dataset for a Quantum Associative Memory Network (QAM) suitable for creative thinking.\n")
                 
                 # Ask the user if they want to generate a new dataset or use existing files
-                gen_new_data = str(input("Would you like to generate a brand new data set (Y/N)? (If 'N,' exiting data is used) : "))
-                if gen_new_data.lower() == 'y':
-                    # Call the function to generate a new dataset
-                    generate_dataset()
-                else:
-                    print("Using existing dataset files for QAM data generation...")
+                while True:
+                    gen_new_data = str(input("Would you like to generate a brand new data set (Y/N)? (If 'N,' exiting JSON data is used) : "))
+                    if gen_new_data.lower() == 'y':
+                        # Call the function to generate a new dataset
+                        generate_dataset()
+                        break
+                    elif gen_new_data.lower() == 'n':
+                        print("\nUsing existing dataset files for QAM data generation...")
+                        break
+                    else:
+                        print("Invalid input. Please select Y or N")
 
                 # Call the function to generate QAM data
                 qam_data = sydge_generate_qamnn_data()
