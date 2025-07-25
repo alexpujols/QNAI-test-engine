@@ -78,6 +78,7 @@ while True:
                 num_patterns_input = int(input("How many patterns would you like to generate? : "))
                 noise_level_input = float(input("What noise level would you like to apply to the patterns? (0.0 - 1.0) : "))
                 incompleteness_level_input = float(input("What incompleteness level would you like to apply to the patterns? (0.0 - 1.0) : "))
+                
                 # Generate synthetic data for QHNN
                 patterns_data = sydge_generate_qhnn_data(
                     pattern_size=(pattern_size_input, pattern_size_input),
