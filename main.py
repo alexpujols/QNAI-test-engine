@@ -169,7 +169,7 @@ while True:
                 else:
                     print("No QAM data was generated.")
             elif sydge_selection == 0:
-                print("\n You have chosen to leave the SyDGE program. Goodbye!\n")
+                print("\nYou have chosen to leave the SyDGE program. Goodbye!\n")
                 break
     elif main_selection == 5:
         print("\nYou selected a Sample Quantum Test Circuit.\n")
