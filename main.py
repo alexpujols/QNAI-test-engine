@@ -30,7 +30,8 @@ Notes         : {Available at Github at https://github.com/alexpujols/QNAI-test-
 
 # Import modules from local files
 from utils import input_int_validate
-from circuits_quantum import quantum_square_root_not_gate
+#from circuits_quantum_cirq import quantum_square_root_not_gate
+from circuits_quantum_pennylane import lightning_gpu_test
 from data_generation_QHNN import sydge_generate_qhnn_data
 from data_generation_VQNN import sydge_generate_vqnn_data
 from data_generation_QAMNN import sydge_generate_qamnn_data
@@ -172,7 +173,8 @@ while True:
                 break
     elif main_selection == 5:
         print("\nYou selected a Sample Quantum Test Circuit.\n")
-        quantum_square_root_not_gate()
+        #quantum_square_root_not_gate()
+        lightning_gpu_test()
     elif main_selection == 0:
         print("\nYou have chosen to leave the program. Goodbye!\n")
         break

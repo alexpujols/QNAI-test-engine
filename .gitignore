@@ -1,0 +1,5 @@
+# Ignore Python virtual environments
+QNAI-test-engine-venv/
+
+# Ignore Python cache files
+__pycache__/
