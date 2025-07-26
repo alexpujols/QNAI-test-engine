@@ -3,7 +3,7 @@ import numpy as np
 
 # This function creates a simple quantum circuit that applies a square root of NOT gate (also known as a Hadamard gate) to a qubit and measures it.
 def quantum_square_root_not_gate():
-    print("Creating a sample quantum circuit that applies a square root of NOT gate to a qubit and measures it...")
+    print("\nCreating a sample quantum circuit that applies a square root of NOT gate to a qubit and measures it...")
 
     # Pick a qubit.
     qubit = cirq.GridQubit(0, 0)

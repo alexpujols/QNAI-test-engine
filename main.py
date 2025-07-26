@@ -30,7 +30,7 @@ Notes         : {Available at Github at https://github.com/alexpujols/QNAI-test-
 
 # Import modules from local files
 from utils import input_int_validate
-#from circuits_quantum_cirq import quantum_square_root_not_gate
+from circuits_quantum_cirq import quantum_square_root_not_gate
 from circuits_quantum_pennylane import lightning_gpu_test
 from data_generation_QHNN import sydge_generate_qhnn_data
 from data_generation_VQNN import sydge_generate_vqnn_data
@@ -41,7 +41,9 @@ from data_generation_QAMNN_wordbank_generator import generate_dataset
 
 # Begin main code execution
 while True:
-    print("\nHi, which quantum simulation scenario would you like to run?")
+    print("\n--------------------------------------------------------------")
+    print("-- Which quantum simulation scenario would you like to run? --")
+    print("--------------------------------------------------------------")
     print("1 - _Start Scenario_ Pattern Matching")
     print("2 - _Start Scenario_ Problem Solving")
     print("3 - _Start Scenario_ Creative Thinking")
@@ -174,8 +176,27 @@ while True:
                 break
     elif main_selection == 5:
         print("\nYou selected a Sample Quantum Test Circuit.\n")
-        #quantum_square_root_not_gate()
-        lightning_gpu_test()
+        # Prompt the user to select a quantum simulation test
+        # This will loop until the user selects a valid option or exits
+        while True:
+            print("Hi, which quantum simulation test would you like to run?")
+            print("1 - _Simulation_ Quantum square root NOT gate (Hadamard gate) using Cirq")
+            print("2 - _Simulation_ Quantum Hadamard gate to Bell state using Pennylane")
+            print("0 - EXIT")
+            # Take user input and validate
+            select_quantum_test = input_int_validate()
+
+            # Take action based on user selection
+            if select_quantum_test == 1:
+                # Call the function to run the quantum square root NOT gate simulation
+                quantum_square_root_not_gate()
+            elif select_quantum_test == 2:
+                # Call the function to run the Pennylane quantum simulation
+                lightning_gpu_test()
+            elif select_quantum_test == 0:
+                break
+            else:
+                print("Invalid input. Please select 1 or 2 to run a quantum simulation test, or 0 to exit.")
     elif main_selection == 0:
         print("\nYou have chosen to leave the program. Goodbye!\n")
         break
