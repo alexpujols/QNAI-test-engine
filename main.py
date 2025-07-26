@@ -36,6 +36,9 @@ from data_generation_QHNN import sydge_generate_qhnn_data
 from data_generation_VQNN import sydge_generate_vqnn_data
 from data_generation_QAMNN import sydge_generate_qamnn_data
 from data_generation_QAMNN_wordbank_generator import generate_dataset
+from model_QHNN import QuantumHopfieldNetworkPennyLane
+from model_VQNN import VariationalQuantumAgentPennyLane
+from model_QAMNN import QuantumAssociativeMemoryPennyLane
 
 ### Main code begins ###
 
@@ -56,11 +59,138 @@ while True:
 
     # Take action based on user selection
     if main_selection == 1:
-        print("\nYou selected Pattern Matching!\n")
+        print("\n--- Scenario: Pattern Matching with QHNN ---")
+        # 1. Get parameters and generate data
+        size = int(input("Enter pattern size (e.g., '5' for 5x5): "))
+        num_p = int(input("Enter number of patterns to store: "))
+        noise = float(input("Enter noise level for retrieval test (0.0 to 1.0): "))
+        
+        patterns_data = sydge_generate_qhnn_data(
+            pattern_size=(size, size),
+            num_patterns=num_p,
+            noise_level=noise
+        )
+        
+        # 2. Instantiate and configure the QHNN
+        num_neurons = size * size
+        qknn_model = QuantumHopfieldNetworkPennyLane(num_neurons=num_neurons)
+        
+        # Flatten patterns for the model
+        flat_fundamental_patterns = [p.flatten() for p in patterns_data["fundamental"]]
+        qknn_model.store_patterns(flat_fundamental_patterns)
+
+        # 3. Perform retrieval on the first noisy pattern
+        print("\nTesting retrieval on the first generated noisy pattern...")
+        noisy_pattern_to_test = patterns_data["noisy"][0]
+        retrieved_pattern = qknn_model.retrieve(noisy_pattern_to_test)
+
+        # 4. Display results
+        print("\n--- Retrieval Results ---")
+        print("Original Fundamental Pattern:\n", patterns_data["fundamental"][0])
+        print("\nNoisy Input Pattern:\n", noisy_pattern_to_test)
+        print("\nRetrieved Pattern:\n", retrieved_pattern)
+        print("-" * 25 + "\n")
     elif main_selection == 2:
-        print("\nYou selected Problem Solving!\n")
+        print("\n--- Scenario: Problem Solving with VQNN ---")
+        # 1. Get parameters and generate a maze
+        size = int(input("Enter maze size (odd number, e.g., 5): "))
+        episodes = int(input("Enter number of training episodes: "))
+        
+        maze_data = sydge_generate_vqnn_data(num_mazes=1, maze_size=(size, size))[0]
+        maze = maze_data["maze"]
+        start_pos = maze_data["start_pos"]
+        goal_pos = maze_data["goal_pos"]
+        
+        # 2. Instantiate the agent
+        agent = VariationalQuantumAgentPennyLane(maze_size=(size, size))
+
+        # 3. Run the training loop
+        print("\n🚀 Starting VQNN agent training...")
+        max_steps_per_episode = size * size * 2  # Set a step limit
+
+        for episode in range(episodes):
+            agent_pos = start_pos
+            total_reward = 0
+            
+            for step in range(max_steps_per_episode):
+                # The 'state' is the full maze with the agent's position marked
+                current_state = maze.copy()
+                current_state[agent_pos] = 4 # Use '4' to mark agent position
+                
+                # Agent chooses an action
+                action = agent.choose_action(current_state)
+                
+                # Simple environment logic
+                next_pos = list(agent_pos)
+                if action == 0: next_pos[0] -= 1 # Up
+                elif action == 1: next_pos[0] += 1 # Down
+                elif action == 2: next_pos[1] -= 1 # Left
+                elif action == 3: next_pos[1] += 1 # Right
+
+                reward = -1 # Cost for each step
+                if tuple(next_pos) == goal_pos:
+                    reward = 100
+                    done = True
+                elif not (0 <= next_pos[0] < size and 0 <= next_pos[1] < size and maze[tuple(next_pos)] != 1):
+                    reward = -10 # Penalty for hitting a wall
+                    next_pos = agent_pos # Stay in place
+                    done = False
+                else:
+                    done = False
+
+                next_state = maze.copy()
+                next_state[tuple(next_pos)] = 4
+                
+                # Agent learns from the experience
+                agent.train(current_state, action, reward, next_state)
+                
+                agent_pos = tuple(next_pos)
+                total_reward += reward
+
+                if done:
+                    print(f"Episode {episode + 1}: Goal reached in {step + 1} steps! Total Reward: {total_reward}")
+                    break
+            
+            if not done:
+                print(f"Episode {episode + 1}: Max steps reached. Total Reward: {total_reward}")
+        print("\n--- Training Complete ---")
     elif main_selection == 3:
-        print("\nYou selected Creative Thinking!\n")
+        print("\n--- Scenario: Creative Thinking with QAMNN ---")
+        # 1. Load the semantic network data
+        qam_data = sydge_generate_qamnn_data()
+        if not qam_data:
+            print("Could not load QAM data. Exiting scenario.")
+        else:
+            # 2. Instantiate and configure the QAM
+            num_concepts = len(qam_data["concept_map"])
+            qam_model = QuantumAssociativeMemoryPennyLane(num_concepts=num_concepts)
+            qam_model.store_memories(qam_data["memory_vectors"])
+
+            # 3. Prompt user to select a theme
+            print("\nPlease select a creative prompt (theme):")
+            themes = list(qam_data["prompts"].keys())
+            for i, theme in enumerate(themes):
+                print(f"{i + 1} - {theme}")
+            
+            choice = -1
+            while choice < 1 or choice > len(themes):
+                choice = int(input(f"Enter your choice (1-{len(themes)}): "))
+            
+            selected_theme = themes[choice - 1]
+            prompt_vector = qam_data["prompts"][selected_theme]
+
+            # 4. Query the QAM with the selected prompt
+            output_vector = qam_model.query(prompt_vector)
+
+            # 5. Decode and display the results
+            index_to_concept = {v: k for k, v in qam_data["concept_map"].items()}
+            prompt_concepts = [index_to_concept[i] for i, bit in enumerate(prompt_vector) if bit == 1]
+            output_concepts = [index_to_concept[i] for i, bit in enumerate(output_vector) if bit == 1]
+            
+            print("\n--- Creative Output ---")
+            print(f"Prompt Concepts: {' + '.join(prompt_concepts)}")
+            print(f"Generated Output Concepts: {' & '.join(output_concepts)}")
+            print("-" * 25 + "\n")
     elif main_selection == 4:
         print("\nYou selected Sythetic Data Generation Engine (SyDGE)!\n")
         while True:
