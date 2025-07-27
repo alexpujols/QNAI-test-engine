@@ -55,7 +55,8 @@ class QuantumAssociativeMemoryPennyLane:
         Queries the memory with a prompt vector.
         """
         print(f"\n🔍 Querying PennyLane QAM with prompt...")
-        device = qml.device("lightning.gpu", wires=self.num_concepts, shots=repetitions)
+        #device = qml.device("lightning.gpu", wires=self.num_concepts, shots=repetitions)
+        device = qml.device("lightning.qubit", wires=self.num_concepts, shots=repetitions)
 
         @qml.qnode(device)
         def query_circuit():
