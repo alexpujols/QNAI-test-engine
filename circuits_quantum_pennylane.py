@@ -3,9 +3,8 @@ import numpy as np
 
 def lightning_gpu_test():
     """
-    This function attempts to load the 'lightning.qubit' device from PennyLane.
-    If successful, it runs a simple quantum circuit, formats the state output,
-    and also draws the circuit.
+    This function attempts to load the 'lightning.qubit' or 'lightning.gpu' device from PennyLane.
+    If successful, it runs a simple quantum circuit, formats the state output, and also draws the circuit.
     """
     print("\n   - Attempting to load the '*.qubit' device from PennyLane")
 
@@ -16,9 +15,10 @@ def lightning_gpu_test():
         
         # Run test script with CPU support
         print("\n--- Loading lightning CPU device ---")
-        dev = qml.device("lightning.qubit", wires=2)
-        
-        print("\n   - Successfully loaded lightning.qubit device!")
+        #dev = qml.device("lightning.qubit", wires=2)   # Uncomment this line to use the CPU device
+        dev = qml.device("lightning.gpu", wires=2)  # Uncomment this line to use the GPU device
+
+        print("\n   - Successfully loaded lightning.gpu device!")
 
         @qml.qnode(dev)
         def my_circuit():

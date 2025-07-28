@@ -48,8 +48,8 @@ class QuantumHopfieldNetworkPennyLane:
         print(f"\n   - Retrieving pattern of shape {pattern_shape} with PennyLane...")
 
         # 1. Define the quantum device (high-performance GPU simulator)
-#device = qml.device("lightning.gpu", wires=self.num_neurons, shots=repetitions)
-        device = qml.device("lightning.qubit", wires=self.num_neurons, shots=repetitions)
+        device = qml.device("lightning.gpu", wires=self.num_neurons, shots=repetitions) # Uncomment this line to use the GPU device
+        #device = qml.device("lightning.qubit", wires=self.num_neurons, shots=repetitions) # Uncomment this line to use the CPU device
 
         # 2. Define the Quantum Node (QNode)
         @qml.qnode(device)

@@ -28,8 +28,8 @@ class VariationalQuantumAgentPennyLane:
         """
         # 1. Define the quantum device
         # Use shots=None for exact expectation values during training
-        #device = qml.device("lightning.gpu", wires=self.num_qubits, shots=None)
-        device = qml.device("lightning.qubit", wires=self.num_qubits, shots=None)
+        device = qml.device("lightning.gpu", wires=self.num_qubits, shots=None) # Uncomment this line to use the GPU device
+        #device = qml.device("lightning.qubit", wires=self.num_qubits, shots=None)  # Uncomment this line to use the CPU device
 
         # 2. Define the PQC ansatz as a QNode
         @qml.qnode(device, interface="tf")
