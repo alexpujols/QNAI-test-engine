@@ -7,7 +7,7 @@ def lightning_gpu_test():
     If successful, it runs a simple quantum circuit, formats the state output,
     and also draws the circuit.
     """
-    print("\nAttempting to load the '*.qubit' device from PennyLane")
+    print("\n   - Attempting to load the '*.qubit' device from PennyLane")
 
     try:
         # Run test script with GPU support
@@ -18,7 +18,7 @@ def lightning_gpu_test():
         print("\n--- Loading lightning CPU device ---")
         dev = qml.device("lightning.qubit", wires=2)
         
-        print("\n--- Successfully loaded lightning.qubit device! ---")
+        print("\n   - Successfully loaded lightning.qubit device!")
 
         @qml.qnode(dev)
         def my_circuit():
@@ -48,6 +48,6 @@ def lightning_gpu_test():
         print(qml.draw(my_circuit)())
 
     except Exception as e:
-        print(f"Failed to load lightning.qubit device or run circuit: {e}")
-        print("Please ensure PennyLane-Lightning is correctly installed.")
+        print(f"   - Failed to load lightning.qubit device or run circuit: {e}")
+        print("   - Please ensure PennyLane-Lightning is correctly installed.")
 

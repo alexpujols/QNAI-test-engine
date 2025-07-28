@@ -15,7 +15,7 @@ class QuantumHopfieldNetworkPennyLane:
         """
         self.num_neurons = num_neurons
         self.weights = np.zeros((num_neurons, num_neurons))
-        print(f"✅ PennyLane QHNN Initialized with {self.num_neurons} neurons/qubits.")
+        print(f"\n   - PennyLane QHNN Initialized with {self.num_neurons} neurons/qubits.")
 
     def store_patterns(self, patterns):
         """
@@ -24,13 +24,13 @@ class QuantumHopfieldNetworkPennyLane:
         Args:
             patterns (list of np.array): List of 1D patterns with values +1 or -1.
         """
-        print("🧠 Storing patterns in PennyLane QHNN memory...")
+        print("\n   - Storing patterns in PennyLane QHNN memory...")
         num_patterns = len(patterns)
         for p in patterns:
             self.weights += np.outer(p, p)
         np.fill_diagonal(self.weights, 0)
         self.weights /= num_patterns
-        print("   - Weight matrix computed.")
+        print("\n   - Weight matrix computed.")
 
     def retrieve(self, noisy_pattern, repetitions=100):
         """
@@ -45,10 +45,10 @@ class QuantumHopfieldNetworkPennyLane:
         """
         pattern_shape = noisy_pattern.shape
         flat_pattern = noisy_pattern.flatten()
-        print(f"\n🔍 Retrieving pattern of shape {pattern_shape} with PennyLane...")
+        print(f"\n   - Retrieving pattern of shape {pattern_shape} with PennyLane...")
 
         # 1. Define the quantum device (high-performance GPU simulator)
-        #device = qml.device("lightning.gpu", wires=self.num_neurons, shots=repetitions)
+#device = qml.device("lightning.gpu", wires=self.num_neurons, shots=repetitions)
         device = qml.device("lightning.qubit", wires=self.num_neurons, shots=repetitions)
 
         # 2. Define the Quantum Node (QNode)
@@ -74,12 +74,12 @@ class QuantumHopfieldNetworkPennyLane:
         
         # 4. Process results to find the most common outcome
         # Convert samples to a tuple of tuples to be hashable for counting
-        samples_tuple = tuple(map(tuple, samples.numpy()))
+        samples_tuple = tuple(map(tuple, samples))
         counts = {s: samples_tuple.count(s) for s in set(samples_tuple)}
         most_common_outcome = max(counts, key=counts.get)
         
         # Convert bitstring (0s and 1s) back to pattern (+1s and -1s)
         retrieved_flat = np.array([1 if bit == 0 else -1 for bit in most_common_outcome])
         
-        print("   - Retrieval complete. Most frequent outcome selected.")
+        print("\n   - Retrieval complete. Most frequent outcome selected.")
         return retrieved_flat.reshape(pattern_shape)

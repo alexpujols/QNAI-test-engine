@@ -4,7 +4,7 @@ import itertools
 
 def generate_dataset():
     """Generates a large, random dataset for the QAM."""
-    print("\nYou have chosen to generate a synthetic dataset for a Quantum Associative Memory Neural Network (QAMNN) suitable for creative.")
+    print("\n   - You have chosen to generate a synthetic dataset for a Quantum Associative Memory Neural Network (QAMNN) suitable for creative.")
 
 # --- Word Bank ---
 # A large bank of words from various domains to ensure variety.
@@ -65,7 +65,7 @@ def generate_dataset():
             print(f"   - Generated {len(concepts)} unique concepts.")
             break
         else:
-            print(f"Error: Requested {num_concepts} concepts, but the word bank only has {len(WORD_BANK)}.")
+            print(f"   - Error: Requested {num_concepts} concepts, but the word bank only has {len(WORD_BANK)}.")
 
     # Generate Associations
     # ------------------------
@@ -82,7 +82,7 @@ def generate_dataset():
             print(f"   - Generated {len(associations)} unique associations.")
             break
         else:
-            print(f"Error: Requested {num_associations} associations, but only {len(concepts) * (len(concepts) - 1) // 2} are possible with {len(concepts)} concepts.")
+            print(f"   - Error: Requested {num_associations} associations, but only {len(concepts) * (len(concepts) - 1) // 2} are possible with {len(concepts)} concepts.")
 
     # Generate Themes
     # ------------------
@@ -123,6 +123,6 @@ def generate_dataset():
             json.dump(themes, f, indent=4)
         print("   - Successfully wrote data_generation_QAMNN_themes.json")
     except IOError as e:
-        print(f"Error writing files: {e}")
+        print(f"   - Error writing files: {e}")
 
-    print("\nDone.")
+    print("\n   - Done.")

@@ -19,7 +19,7 @@ def sydge_generate_qhnn_data(
         num_patterns (int): The number of fundamental patterns to generate.
         noise_level (float): The fraction of bits to flip to create noisy patterns.
         incompleteness_level (float): The fraction of bits to mask (set to 0) to
-                                     create incomplete patterns.
+        create incomplete patterns.
 
     Returns:
         dict: A dictionary containing three lists of numpy arrays:
@@ -27,9 +27,9 @@ def sydge_generate_qhnn_data(
               'noisy': The noisy versions of the fundamental patterns.
               'incomplete': The incomplete versions of the fundamental patterns.
     """
-    print("Generating synthetic data for Quantum Hopfield Neural Network (QHNN) suitable for pattern matching...")
+    print("\n   - Generating synthetic data for Quantum Hopfield Neural Network (QHNN) suitable for pattern matching")
     if not (0 <= noise_level <= 1 and 0 <= incompleteness_level <= 1):
-        raise ValueError("Noise and incompleteness levels must be between 0 and 1.")
+        raise ValueError("\n   - Noise and incompleteness levels must be between 0 and 1")
 
     # Generate fundamental patterns
     num_neurons = pattern_size[0] * pattern_size[1]

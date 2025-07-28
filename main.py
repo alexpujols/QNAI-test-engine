@@ -30,6 +30,7 @@ Notes         : {Available at Github at https://github.com/alexpujols/QNAI-test-
 
 # Import modules from local files
 from utils import input_int_validate
+from utils import pattern_size_check
 from circuits_quantum_cirq import quantum_square_root_not_gate
 from circuits_quantum_pennylane import lightning_gpu_test
 from data_generation_QHNN import sydge_generate_qhnn_data
@@ -50,7 +51,7 @@ while True:
     print("1 - _Start Scenario_ Pattern Matching")
     print("2 - _Start Scenario_ Problem Solving")
     print("3 - _Start Scenario_ Creative Thinking")
-    print("4 - _Test Data_      Sythetic Data Generation Engine (SyDGE)")
+    print("4 - _Test SyDGE_     Synthetic Data Generation Engine")
     print("5 - _Test Circuit_   Sample Quantum Circuit Routine")
     print("0 - EXIT")
 
@@ -61,7 +62,7 @@ while True:
     if main_selection == 1:
         print("\n--- Scenario: Pattern Matching with QHNN ---")
         # 1. Get parameters and generate data
-        size = int(input("Enter pattern size (e.g., '5' for 5x5): "))
+        size = pattern_size_check()
         num_p = int(input("Enter number of patterns to store: "))
         noise = float(input("Enter noise level for retrieval test (0.0 to 1.0): "))
         
@@ -80,20 +81,23 @@ while True:
         qknn_model.store_patterns(flat_fundamental_patterns)
 
         # 3. Perform retrieval on the first noisy pattern
-        print("\nTesting retrieval on the first generated noisy pattern...")
+        print("\v   - Testing retrieval on the first generated noisy pattern...")
         noisy_pattern_to_test = patterns_data["noisy"][0]
         retrieved_pattern = qknn_model.retrieve(noisy_pattern_to_test)
 
         # 4. Display results
-        print("\n--- Retrieval Results ---")
+        print("\n\n--- Retrieval Results ---\n")
         print("Original Fundamental Pattern:\n", patterns_data["fundamental"][0])
         print("\nNoisy Input Pattern:\n", noisy_pattern_to_test)
         print("\nRetrieved Pattern:\n", retrieved_pattern)
-        print("-" * 25 + "\n")
+        print("\n" + "-" * 25 + "\n")
     elif main_selection == 2:
         print("\n--- Scenario: Problem Solving with VQNN ---")
         # 1. Get parameters and generate a maze
-        size = int(input("Enter maze size (odd number, e.g., 5): "))
+        while True:
+            size = pattern_size_check()
+            if size % 2 == 1:
+                break
         episodes = int(input("Enter number of training episodes: "))
         
         maze_data = sydge_generate_vqnn_data(num_mazes=1, maze_size=(size, size))[0]
@@ -105,7 +109,7 @@ while True:
         agent = VariationalQuantumAgentPennyLane(maze_size=(size, size))
 
         # 3. Run the training loop
-        print("\n🚀 Starting VQNN agent training...")
+        print("\n   - Starting VQNN agent training...")
         max_steps_per_episode = size * size * 2  # Set a step limit
 
         for episode in range(episodes):
@@ -148,18 +152,18 @@ while True:
                 total_reward += reward
 
                 if done:
-                    print(f"Episode {episode + 1}: Goal reached in {step + 1} steps! Total Reward: {total_reward}")
+                    print(f"   - Episode {episode + 1}: Goal reached in {step + 1} steps! Total Reward: {total_reward}")
                     break
             
             if not done:
-                print(f"Episode {episode + 1}: Max steps reached. Total Reward: {total_reward}")
+                print(f"   - Episode {episode + 1}: Max steps reached. Total Reward: {total_reward}")
         print("\n--- Training Complete ---")
     elif main_selection == 3:
         print("\n--- Scenario: Creative Thinking with QAMNN ---")
         # 1. Load the semantic network data
         qam_data = sydge_generate_qamnn_data()
         if not qam_data:
-            print("Could not load QAM data. Exiting scenario.")
+            print("   - Could not load QAM data. Exiting scenario.")
         else:
             # 2. Instantiate and configure the QAM
             num_concepts = len(qam_data["concept_map"])
@@ -167,7 +171,7 @@ while True:
             qam_model.store_memories(qam_data["memory_vectors"])
 
             # 3. Prompt user to select a theme
-            print("\nPlease select a creative prompt (theme):")
+            print("\n   - Please select a creative prompt (theme):")
             themes = list(qam_data["prompts"].keys())
             for i, theme in enumerate(themes):
                 print(f"{i + 1} - {theme}")
@@ -192,7 +196,7 @@ while True:
             print(f"Generated Output Concepts: {' & '.join(output_concepts)}")
             print("-" * 25 + "\n")
     elif main_selection == 4:
-        print("\nYou selected Sythetic Data Generation Engine (SyDGE)!\n")
+        print("\n   - You selected Sythetic Data Generation Engine (SyDGE)!\n")
         while True:
             print("Hi, which randomized sythetic data sample would you like to generate?")
             print("1 - _Test Data_ QHNN Data for Pattern Matching")
@@ -205,7 +209,7 @@ while True:
 
             # Take action based on user selection
             if sydge_selection == 1:
-                print("\nYou selected to generate a sample synthetic dataset for a Quantum Hopfield Neural Network (QHNN) suitable for pattern matching.")
+                print("\n   - You selected to generate a sample synthetic dataset for a Quantum Hopfield Neural Network (QHNN) suitable for pattern matching.")
                 pattern_size_input = int(input("Enter one value to set both the number of rows and columns (e.g., \"5\" for a 5x5 pattern) : "))
                 num_patterns_input = int(input("How many patterns would you like to generate? : "))
                 noise_level_input = float(input("What noise level would you like to apply to the patterns? (0.0 - 1.0) : "))
@@ -221,22 +225,22 @@ while True:
                 
                 # Print the generated patterns
                 for i in range(len(patterns_data["fundamental"])):
-                    print(f"\nCheck if any mazes were generated\n--- Pattern {i+1} ---")
+                    print(f"\n--- Pattern {i+1} ---")
                     print("\nFundamental Pattern:\n", patterns_data["fundamental"][i])
                     print("\nNoisy Pattern (" + str(noise_level_input * 100) + "%):\n", patterns_data["noisy"][i])
                     print("\nIncomplete Pattern (" + str(incompleteness_level_input * 100) + "%):\n", patterns_data["incomplete"][i])
-                    print("-" * 25 + "\n")
+                    print("\n-" * 25 + "\n")
             elif sydge_selection == 2:           
                 # Call the function to generate maze data for the VQNN
                 # Take action based on user selection
-                print("\nYou selected to generate a sample synthetic dataset for a Variational Quantum Neural Network (VQNN) suitable for problem solving.\n")
+                print("\n   - You selected to generate a sample synthetic dataset for a Variational Quantum Neural Network (VQNN) suitable for problem solving.\n")
                 num_mazes_input = int(input("How many mazes would you like to generate? : "))
                 while True:
                     maze_size_input = int(input("Enter one value (odd number) to set both the number of rows and columns (e.g., \"5\" for a 5x5 maze) : "))
                     if maze_size_input % 2 == 1:
                         break
                     else:
-                        print("Please enter an odd number for the maze size to ensure a valid maze structure.")
+                        print("   - Please enter an odd number for the maze size to ensure a valid maze structure.")
 
                 # Generate synthetic data for VQNN
                 # This will use the default arguments: num_mazes=10, maze_size=(5, 5)
@@ -250,17 +254,17 @@ while True:
                     print("\n--- Generated Maze Details ---")
                     # Loop through the returned list and print the data for each maze
                     for i, maze_data in enumerate(vqnn_mazes):
-                        print(f"\n--- Maze {i + 1} ---")
-                        print("Layout (0:path, 1:wall, 2:start, 3:goal):")
+                        print(f"\n--- Maze {i + 1} ---\n")
+                        print("Layout (0:path, 1:wall, 2:start, 3:goal):\n")
                         print(maze_data["maze"])
-                        print(f"\nStart Position: ({maze_data['start_pos'][1]}, {maze_data['start_pos'][0]})")
-                        print(f"Goal Position: ({maze_data['goal_pos'][1]}, {maze_data['goal_pos'][0]})")
-                        print(f"Complexity: {maze_data['complexity']}")
+                        print(f"\n   - Start Position: ({maze_data['start_pos'][1]}, {maze_data['start_pos'][0]})")
+                        print(f"   - Goal Position: ({maze_data['goal_pos'][1]}, {maze_data['goal_pos'][0]})")
+                        print(f"   - Complexity: {maze_data['complexity']}")
                     print("\n" + "-" * 28 + "\n")
                 else:
-                    print("No maze data was generated.")
+                    print("   - No maze data was generated.")
             elif sydge_selection == 3:
-                print("\nYou selected to generate a sample synthetic dataset for a Quantum Associative Memory Network (QAM) suitable for creative thinking.\n")
+                print("\n   - You selected to generate a sample synthetic dataset for a Quantum Associative Memory Network (QAM) suitable for creative thinking.\n")
                 
                 # Ask the user if they want to generate a new dataset or use existing files
                 while True:
@@ -270,10 +274,10 @@ while True:
                         generate_dataset()
                         break
                     elif gen_new_data.lower() == 'n':
-                        print("\nUsing existing dataset files for QAM data generation...")
+                        print("\n   - Using existing dataset files for QAM data generation...")
                         break
                     else:
-                        print("Invalid input. Please select Y or N")
+                        print("   - Invalid input. Please select Y or N")
 
                 # Call the function to generate QAM data
                 qam_data = sydge_generate_qamnn_data()
@@ -287,29 +291,29 @@ while True:
                     print("\nCore Concepts Map (Concept: Vector Index):")
                     print(qam_data["concept_map"])
 
-                    print("\nStored Memory Associations (Binary Vectors):")
+                    print("\n--- Stored Memory Associations (Binary Vectors): ---\n")
                     for i, vector in enumerate(qam_data["memory_vectors"]):
                         # Find the concepts that are 'on' in the vector
                         active_concepts = [index_to_concept[idx] for idx, val in enumerate(vector) if val == 1]
                         print(f"  Memory {i+1:>2}: {vector} -> ({' & '.join(active_concepts)})")
 
-                    print("\nCreative Prompts (Binary Vectors):")
+                    print("\n--- Creative Prompts (Binary Vectors): ---\n")
                     for theme, vector in qam_data["prompts"].items():
                         active_concepts = [index_to_concept[idx] for idx, val in enumerate(vector) if val == 1]
                         print(f"  Theme '{theme}': {vector} -> ({' + '.join(active_concepts)})")
 
                     print("\n" + "-" * 40 + "\n")
                 else:
-                    print("No QAM data was generated.")
+                    print("   - No QAM data was generated.")
             elif sydge_selection == 0:
-                print("\nYou have chosen to leave the SyDGE program. Goodbye!\n")
+                print("\n   - You have chosen to leave the SyDGE program. Goodbye!\n")
                 break
     elif main_selection == 5:
-        print("\nYou selected a Sample Quantum Test Circuit.\n")
+        print("\n   - You selected a Sample Quantum Test Circuit.\n")
         # Prompt the user to select a quantum simulation test
         # This will loop until the user selects a valid option or exits
         while True:
-            print("Hi, which quantum simulation test would you like to run?")
+            print("\nHi, which quantum simulation test would you like to run?")
             print("1 - _Simulation_ Quantum square root NOT gate (Hadamard gate) using Cirq")
             print("2 - _Simulation_ Quantum Hadamard gate to Bell state using Pennylane")
             print("0 - EXIT")
@@ -326,7 +330,7 @@ while True:
             elif select_quantum_test == 0:
                 break
             else:
-                print("Invalid input. Please select 1 or 2 to run a quantum simulation test, or 0 to exit.")
+                print("   - Invalid input. Please select 1 or 2 to run a quantum simulation test, or 0 to exit.")
     elif main_selection == 0:
-        print("\nYou have chosen to leave the program. Goodbye!\n")
+        print("\n   - You have chosen to leave the program. Goodbye!\n")
         break

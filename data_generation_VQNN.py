@@ -28,7 +28,7 @@ def sydge_generate_vqnn_data(num_mazes=10, maze_size=(5, 5)):
               'complexity': A dictionary with 'dead_ends' (int) and
                             'branching_factor' (float).
     """
-    print(f"\nGenerating {num_mazes} synthetic {maze_size[0]}x{maze_size[1]} mazes for VQNN...")
+    print(f"\n   - Generating {num_mazes} synthetic {maze_size[0]}x{maze_size[1]} mazes for VQNN...")
 
     mazes_data = []
 
@@ -111,5 +111,5 @@ def sydge_generate_vqnn_data(num_mazes=10, maze_size=(5, 5)):
                 "branching_factor": round(branching_factor, 2)
             }
         })
-    print(f"Successfully generated {len(mazes_data)} mazes.")
+    print(f"   - Successfully generated {len(mazes_data)} mazes.")
     return mazes_data
