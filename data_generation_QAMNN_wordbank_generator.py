@@ -111,15 +111,15 @@ def generate_dataset():
     # -----------------
     print("\n4. Writing data to JSON files...")
     try:
-        with open("data_generation_QAMNN_concepts.json", "w") as f:
+        with open("JSON-files/data_generation_QAMNN_concepts.json", "w") as f:
             json.dump(concepts, f, indent=4)
         print("   - Successfully wrote data_generation_QAMNN_concepts.json")
 
-        with open("data_generation_QAMNN_associations.json", "w") as f:
+        with open("JSON-files/data_generation_QAMNN_associations.json", "w") as f:
             json.dump(associations, f, indent=4)
         print("   - Successfully wrote data_generation_QAMNN_associations.json")
 
-        with open("data_generation_QAMNN_themes.json", "w") as f:
+        with open("JSON-files/data_generation_QAMNN_themes.json", "w") as f:
             json.dump(themes, f, indent=4)
         print("   - Successfully wrote data_generation_QAMNN_themes.json")
     except IOError as e:

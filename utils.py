@@ -1,3 +1,5 @@
+import os
+
 # Function to test for valid input and convert to int for further processing
 def input_int_validate():
     while True:
@@ -7,6 +9,7 @@ def input_int_validate():
         except ValueError: # Catch specific ValueError for non-integer input
             print("\nIncorrect value! Please make a new selection\n")
     return validate
+# Function to check and warn about large pattern sizes
 def pattern_size_check():
     while True:
         # Prompt user for pattern size 
@@ -21,3 +24,9 @@ def pattern_size_check():
             if proceed.lower() != 'y':
                 continue # This will restart the main menu loop
         return size
+# Function to clear the console screen
+def clear_screen():
+    if os.name == 'nt':
+        _ = os.system('cls')
+    else:
+        _ = os.system('clear')

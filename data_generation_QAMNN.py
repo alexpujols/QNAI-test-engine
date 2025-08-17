@@ -13,22 +13,22 @@ def sydge_generate_qamnn_data():
 
     try:
         # 1. Load data from external JSON files
-        with open('data_generation_QAMNN_concepts.json', 'r') as f:
+        with open('JSON-files/data_generation_QAMNN_concepts.json', 'r') as f:
             concepts = json.load(f)
         
-        with open('data_generation_QAMNN_associations.json', 'r') as f:
+        with open('JSON-files/data_generation_QAMNN_associations.json', 'r') as f:
             associations = json.load(f)
 
-        with open('data_generation_QAMNN_themes.json', 'r') as f:
+        with open('JSON-files/data_generation_QAMNN_themes.json', 'r') as f:
             themes = json.load(f)
 
     except (FileNotFoundError, json.JSONDecodeError) as e:
-        print(f"   - Error loading QAM data files: {e}")
+        print(f"\n   - Error loading QAM data files: {e}")
         return None # Return nothing if files can't be loaded or are invalid
 
     # --- The rest of the logic remains largely the same ---
 
-    print("   - Generating synthetic data for Quantum Associative Memory Network (QAM)...")
+    print("\n   - Generating synthetic data for Quantum Associative Memory Network (QAM)...")
     
     # 2. Create the concept map
     concept_map = {concept: i for i, concept in enumerate(concepts)}
@@ -52,7 +52,7 @@ def sydge_generate_qamnn_data():
                 prompt_vector[concept_map[concept]] = 1
         prompts[theme_name] = prompt_vector
 
-    print(f"   - Successfully generated {len(memory_vectors)} memory vectors and {len(prompts)} prompts.\n")
+    print(f"\n   - Successfully generated {len(memory_vectors)} memory vectors and {len(prompts)} prompts.\n")
 
     return {
         "concept_map": concept_map,

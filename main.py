@@ -31,6 +31,7 @@ Notes         : {Available at Github at https://github.com/alexpujols/QNAI-test-
 # Import modules from local files
 from utils import input_int_validate
 from utils import pattern_size_check
+from utils import clear_screen
 from circuits_quantum_cirq import quantum_square_root_not_gate
 from circuits_quantum_pennylane import lightning_gpu_test
 from data_generation_QHNN import sydge_generate_qhnn_data
@@ -229,7 +230,7 @@ while True:
                     print("\nFundamental Pattern:\n", patterns_data["fundamental"][i])
                     print("\nNoisy Pattern (" + str(noise_level_input * 100) + "%):\n", patterns_data["noisy"][i])
                     print("\nIncomplete Pattern (" + str(incompleteness_level_input * 100) + "%):\n", patterns_data["incomplete"][i])
-                    print("\n-" * 25 + "\n")
+                    print("-" * 17 + "\n")
             elif sydge_selection == 2:           
                 # Call the function to generate maze data for the VQNN
                 # Take action based on user selection
@@ -260,7 +261,7 @@ while True:
                         print(f"\n   - Start Position: ({maze_data['start_pos'][1]}, {maze_data['start_pos'][0]})")
                         print(f"   - Goal Position: ({maze_data['goal_pos'][1]}, {maze_data['goal_pos'][0]})")
                         print(f"   - Complexity: {maze_data['complexity']}")
-                    print("\n" + "-" * 28 + "\n")
+                    print("\n" + "-" * 14 + "\n")
                 else:
                     print("   - No maze data was generated.")
             elif sydge_selection == 3:
@@ -280,6 +281,7 @@ while True:
                         print("   - Invalid input. Please select Y or N")
 
                 # Call the function to generate QAM data
+                clear_screen()
                 qam_data = sydge_generate_qamnn_data()
 
                 # Print the generated data in a readable format
@@ -295,12 +297,12 @@ while True:
                     for i, vector in enumerate(qam_data["memory_vectors"]):
                         # Find the concepts that are 'on' in the vector
                         active_concepts = [index_to_concept[idx] for idx, val in enumerate(vector) if val == 1]
-                        print(f"  Memory {i+1:>2}: {vector} -> ({' & '.join(active_concepts)})")
+                        print(f"\n  Memory {i+1:>2}: {vector} -> ({' & '.join(active_concepts)})")
 
                     print("\n--- Creative Prompts (Binary Vectors): ---\n")
                     for theme, vector in qam_data["prompts"].items():
                         active_concepts = [index_to_concept[idx] for idx, val in enumerate(vector) if val == 1]
-                        print(f"  Theme '{theme}': {vector} -> ({' + '.join(active_concepts)})")
+                        print(f"\n  Theme '{theme}': {vector} -> ({' + '.join(active_concepts)})")
 
                     print("\n" + "-" * 40 + "\n")
                 else:
