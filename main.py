@@ -15,7 +15,7 @@ __author__ = "Alex Pujols"
 __copyright__ = "Alex Pujols"
 __credits__ = ["Alex Pujols"]
 __license__ = "MIT"
-__version__ = "1.01-alpha"
+__version__ = "1.03-alpha"
 __maintainer__ = "Alex Pujols"
 __email__ = "A.Pujols@o365.ncu.edu; alexpujols@ieee.org"
 __status__ = "Prototype"
@@ -197,9 +197,9 @@ while True:
             print(f"Generated Output Concepts: {' & '.join(output_concepts)}")
             print("-" * 25 + "\n")
     elif main_selection == 4:
-        print("\n   - You selected Sythetic Data Generation Engine (SyDGE)!\n")
+        print("\n   - You selected Sythetic Data Generation Engine (SyDGE)!")
         while True:
-            print("Hi, which randomized sythetic data sample would you like to generate?")
+            print("\nHi, which randomized sythetic data sample would you like to generate?")
             print("1 - _Test Data_ QHNN Data for Pattern Matching")
             print("2 - _Test Data_ VQNN Data for Problem Solving")
             print("3 - _Test Data_ QAM Data for Creative Thinking")
@@ -217,6 +217,7 @@ while True:
                 incompleteness_level_input = float(input("What incompleteness level would you like to apply to the patterns? (0.0 - 1.0) : "))
                 
                 # Generate synthetic data for QHNN
+                clear_screen()
                 patterns_data = sydge_generate_qhnn_data(
                     pattern_size=(pattern_size_input, pattern_size_input),
                     num_patterns=num_patterns_input,
@@ -230,7 +231,7 @@ while True:
                     print("\nFundamental Pattern:\n", patterns_data["fundamental"][i])
                     print("\nNoisy Pattern (" + str(noise_level_input * 100) + "%):\n", patterns_data["noisy"][i])
                     print("\nIncomplete Pattern (" + str(incompleteness_level_input * 100) + "%):\n", patterns_data["incomplete"][i])
-                    print("-" * 17 + "\n")
+                    print("\n" + "-" * 17)
             elif sydge_selection == 2:           
                 # Call the function to generate maze data for the VQNN
                 # Take action based on user selection
@@ -244,7 +245,7 @@ while True:
                         print("   - Please enter an odd number for the maze size to ensure a valid maze structure.")
 
                 # Generate synthetic data for VQNN
-                # This will use the default arguments: num_mazes=10, maze_size=(5, 5)
+                clear_screen()
                 vqnn_mazes = sydge_generate_vqnn_data(
                     num_mazes=num_mazes_input,
                     maze_size=(maze_size_input, maze_size_input)
@@ -293,18 +294,18 @@ while True:
                     print("\nCore Concepts Map (Concept: Vector Index):")
                     print(qam_data["concept_map"])
 
-                    print("\n--- Stored Memory Associations (Binary Vectors): ---\n")
+                    print("\n--- Stored Memory Associations (Binary Vectors): ---")
                     for i, vector in enumerate(qam_data["memory_vectors"]):
                         # Find the concepts that are 'on' in the vector
                         active_concepts = [index_to_concept[idx] for idx, val in enumerate(vector) if val == 1]
                         print(f"\n  Memory {i+1:>2}: {vector} -> ({' & '.join(active_concepts)})")
 
-                    print("\n--- Creative Prompts (Binary Vectors): ---\n")
+                    print("\n--- Creative Prompts (Binary Vectors): ---")
                     for theme, vector in qam_data["prompts"].items():
                         active_concepts = [index_to_concept[idx] for idx, val in enumerate(vector) if val == 1]
                         print(f"\n  Theme '{theme}': {vector} -> ({' + '.join(active_concepts)})")
 
-                    print("\n" + "-" * 40 + "\n")
+                    print("\n" + "-" * 40)
                 else:
                     print("   - No QAM data was generated.")
             elif sydge_selection == 0:
