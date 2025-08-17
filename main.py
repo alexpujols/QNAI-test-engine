@@ -312,7 +312,7 @@ while True:
                 print("\n   - You have chosen to leave the SyDGE program. Goodbye!\n")
                 break
     elif main_selection == 5:
-        print("\n   - You selected a Sample Quantum Test Circuit.\n")
+        print("\n   - You selected a Sample Quantum Test Circuit")
         # Prompt the user to select a quantum simulation test
         # This will loop until the user selects a valid option or exits
         while True:
