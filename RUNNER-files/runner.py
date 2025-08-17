@@ -25,7 +25,7 @@ Title         : {Quantum Neuromorphic Artificial Intelligence Test Script}
 Date          : {05-18-2025}
 Description   : {A Python/PennyLane test engine that simulates multiple quantum and classical neural networks for testing/simulation purposes}
 Options       : {Options located in config.json configurationf file}
-Dependencies  : {PennyLane, NumPy, TensorFlow, SciPy, Matplotlib, Pandas, etc.}
+Dependencies  : {Matplotlib, NumPy, Pandas, PennyLane, SciPy, Statsmodels, Seaborn, TensorFlow, etc.}
 Requirements  : {Python 3.8+}
 Usage         : {python runner.py}
 Notes         : {Available at Github at https://github.com/alexpujols/QNAI-test-engine}
@@ -36,6 +36,7 @@ import csv
 import itertools
 import os
 import time
+import random
 from datetime import datetime
 
 # Import your existing modules
@@ -62,7 +63,8 @@ def run_pattern_matching_experiments(config):
         "noise_level", "prediction_accuracy", "raw_output_bitstring"
     ]
     setup_csv(filepath, headers)
-
+    
+    # Create all combinations of parameters from the JSON file
     param_combinations = list(itertools.product(
         config["pattern_sizes"],
         config["num_patterns_to_store"],
