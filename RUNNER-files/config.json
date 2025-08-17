@@ -1,0 +1,20 @@
+{
+  "pattern_matching": {
+    "enabled": true,
+    "output_csv": "results_pattern_matching.csv",
+    "pattern_sizes": [4, 5],
+    "num_patterns_to_store": [3, 5],
+    "noise_levels": [0.1, 0.2, 0.3]
+  },
+  "problem_solving": {
+    "enabled": true,
+    "output_csv": "results_problem_solving.csv",
+    "maze_sizes": [5, 7],
+    "episodes": [50, 100]
+  },
+  "creative_thinking": {
+    "enabled": true,
+    "output_csv": "results_creative_thinking.csv",
+    "num_runs": 50 
+  }
+}
