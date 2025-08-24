@@ -6,3 +6,7 @@ __pycache__/
 
 # Ignore UML PNGs created by pyreverse
 UML-files/
+
+# Ignore API keys and environment files
+.env
+*.key

@@ -24,42 +24,8 @@ __status__ = "Prototype"
 Title         : {Variational Quantum Neural Network for Adaptive Problem Solving}
 Date          : {05-18-2025}
 Description   : {This code implements a Variational Quantum Neural Network (VQNN) that uses Q-learning to train an agent to solve 10 different 5x5 maze navigation tasks, measuring emergent problem-solving behaviors through complexity and entropy analysis of the learned solution paths.}
-Options       : {}
-Dependencies  : {pip install numpy scipy pennylane torch torchvision torchaudio autograd matplotlib}
-Requirements  : {Python 3.8+}
-Usage         : {python run-ps-test.py}
-Notes         : {Available at Github at https://github.com/alexpujols/QNAI-test-engine}
-'''
-#!/usr/bin/env python
-'''
-                      ::::::
-                    :+:  :+:
-                   +:+   +:+
-                  +#++:++#++:::::::
-                 +#+     +#+     :+:
-                #+#      #+#     +:+
-               ###       ###+:++#""
-                         +#+
-                         #+#
-                         ###
-'''
-__author__ = "Alex Pujols"
-__copyright__ = "Alex Pujols"
-__credits__ = ["Alex Pujols"]
-__license__ = "MIT"
-__version__ = "1.04-alpha"
-__maintainer__ = "Alex Pujols"
-__email__ = "A.Pujols@o365.ncu.edu; alexpujols@ieee.org"
-__status__ = "Prototype"
-
-'''
-Title         : {Variational Quantum Neural Network for Adaptive Problem Solving}
-Date          : {05-18-2025}
-Description   : {This code implements a Variational Quantum Neural Network (VQNN) that uses Q-learning to train an agent to solve 10 different 5x5 maze navigation tasks, measuring emergent problem-solving behaviors through complexity and entropy analysis of the learned solution paths.}
 Options       : {GPU acceleration via PennyLane-Lightning-GPU (NVIDIA cuQuantum SDK) or CPU fallback}
-Dependencies  : {
-    CPU-only: pip install numpy scipy pennylane matplotlib
-    GPU (NVIDIA): pip install numpy scipy pennylane pennylane-lightning-gpu matplotlib
+Dependencies  : {numpy scipy pennylane pennylane-lightning-gpu matplotlib
 }
 Requirements  : {Python 3.8+, Optional: CUDA 11.0+ and cuQuantum for GPU acceleration}
 Usage         : {python run-ps-test.py}
