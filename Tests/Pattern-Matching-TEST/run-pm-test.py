@@ -349,7 +349,7 @@ class QuantumHopfieldNetwork:
     
     def _quantum_evolution(self, initial_state: np.ndarray, add_noise: bool) -> np.ndarray:
         """
-        Quantum circuit evolution with Ising dynamics.
+        GPU-optimized quantum circuit evolution with Ising dynamics.
         
         Args:
             initial_state: Initial state for circuit
@@ -358,7 +358,25 @@ class QuantumHopfieldNetwork:
         Returns:
             Measured state after evolution
         """
-        dev = qml.device("default.qubit", wires=self.num_neurons, shots=1)
+        # GPU device selection with fallbacks
+        try:
+            # Try lightning.gpu first (GPU acceleration)
+            dev = qml.device("lightning.gpu", wires=self.num_neurons, shots=1)
+            device_name = "GPU (lightning.gpu)"
+        except Exception as e:
+            try:
+                # Fallback to lightning.qubit (optimized CPU)
+                dev = qml.device("lightning.qubit", wires=self.num_neurons, shots=1)
+                device_name = "CPU (lightning.qubit)"
+            except Exception as e2:
+                # Final fallback to default.qubit
+                dev = qml.device("default.qubit", wires=self.num_neurons, shots=1)
+                device_name = "CPU (default.qubit)"
+        
+        # Print device selection (only for first few calls to avoid spam)
+        if not hasattr(self, '_device_logged'):
+            print(f"🔧 Quantum device: {device_name}")
+            self._device_logged = True
         
         @qml.qnode(dev)
         def circuit():
@@ -383,10 +401,15 @@ class QuantumHopfieldNetwork:
             
             return qml.sample()
         
-        # Single shot measurement
-        measurement = circuit().flatten()
-        return np.where(measurement == 0, 1, -1).astype(np.int8)
-    
+        # Execute circuit
+        try:
+            measurement = circuit().flatten()
+            return np.where(measurement == 0, 1, -1).astype(np.int8)
+        except Exception as e:
+            print(f"⚠️  Quantum evolution failed: {e}")
+            # Fallback to classical evolution
+            return self._classical_evolution(initial_state)
+        
     def _classical_evolution(self, initial_state: np.ndarray) -> np.ndarray:
         """
         Classical stochastic Hopfield dynamics.

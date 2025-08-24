@@ -21,12 +21,47 @@ __email__ = "A.Pujols@o365.ncu.edu; alexpujols@ieee.org"
 __status__ = "Prototype"
 
 '''
-Title         : {Variational Quantum Neural Network for Adaptive Problemm Solving}
+Title         : {Variational Quantum Neural Network for Adaptive Problem Solving}
 Date          : {05-18-2025}
-Description   : {This code implements a GPU-accelerated Variational Quantum Neural Network (VQNN) that uses Q-learning to train an agent to solve 10 different 5x5 maze navigation tasks, measuring emergent problem-solving behaviors through complexity and entropy analysis of the learned solution paths.}
+Description   : {This code implements a Variational Quantum Neural Network (VQNN) that uses Q-learning to train an agent to solve 10 different 5x5 maze navigation tasks, measuring emergent problem-solving behaviors through complexity and entropy analysis of the learned solution paths.}
 Options       : {}
-Dependencies  : {pip install numpy scipy pennylane pennylane-lightning-gpu cupy-cuda12x torch torchvision torchaudio autograd matplotlib --index-url https://download.pytorch.org/whl/cu121}
+Dependencies  : {pip install numpy scipy pennylane torch torchvision torchaudio autograd matplotlib}
 Requirements  : {Python 3.8+}
+Usage         : {python run-ps-test.py}
+Notes         : {Available at Github at https://github.com/alexpujols/QNAI-test-engine}
+'''
+#!/usr/bin/env python
+'''
+                      ::::::
+                    :+:  :+:
+                   +:+   +:+
+                  +#++:++#++:::::::
+                 +#+     +#+     :+:
+                #+#      #+#     +:+
+               ###       ###+:++#""
+                         +#+
+                         #+#
+                         ###
+'''
+__author__ = "Alex Pujols"
+__copyright__ = "Alex Pujols"
+__credits__ = ["Alex Pujols"]
+__license__ = "MIT"
+__version__ = "1.04-alpha"
+__maintainer__ = "Alex Pujols"
+__email__ = "A.Pujols@o365.ncu.edu; alexpujols@ieee.org"
+__status__ = "Prototype"
+
+'''
+Title         : {Variational Quantum Neural Network for Adaptive Problem Solving}
+Date          : {05-18-2025}
+Description   : {This code implements a Variational Quantum Neural Network (VQNN) that uses Q-learning to train an agent to solve 10 different 5x5 maze navigation tasks, measuring emergent problem-solving behaviors through complexity and entropy analysis of the learned solution paths.}
+Options       : {GPU acceleration via PennyLane-Lightning-GPU (NVIDIA cuQuantum SDK) or CPU fallback}
+Dependencies  : {
+    CPU-only: pip install numpy scipy pennylane matplotlib
+    GPU (NVIDIA): pip install numpy scipy pennylane pennylane-lightning-gpu matplotlib
+}
+Requirements  : {Python 3.8+, Optional: CUDA 11.0+ and cuQuantum for GPU acceleration}
 Usage         : {python run-ps-test.py}
 Notes         : {Available at Github at https://github.com/alexpujols/QNAI-test-engine}
 '''
@@ -42,102 +77,84 @@ from dataclasses import dataclass
 import warnings
 warnings.filterwarnings('ignore')
 
-# GPU and Quantum backend handling
-try:
-    import pennylane as qml
-    from pennylane import numpy as pnp  # PennyLane's NumPy with autograd
-    PENNYLANE_AVAILABLE = True
-    
-    # Try to import GPU-specific backends
+# ============================================================================
+# QUANTUM BACKEND DETECTION AND CONFIGURATION
+# ============================================================================
+
+def detect_quantum_backend():
+    """
+    Detect and configure the best available quantum backend.
+    Priority: PennyLane Lightning.GPU (NVIDIA) > Default.Qubit (CPU)
+    """
     try:
-        # Check for NVIDIA cuQuantum SDK support
-        import cupy as cp  # NVIDIA GPU arrays
-        CUPY_AVAILABLE = True
-        print("✓ CuPy detected - GPU arrays enabled")
-    except ImportError:
-        CUPY_AVAILABLE = False
-        cp = np  # Fallback to NumPy
-        print("✗ CuPy not available - using CPU arrays")
-    
-    # Check for PennyLane GPU devices
-    try:
-        # Try lightning.gpu device (requires PennyLane-Lightning-GPU)
-        test_dev = qml.device("lightning.gpu", wires=2)
-        GPU_DEVICE = "lightning.gpu"
-        print("✓ PennyLane Lightning GPU detected - using NVIDIA cuQuantum")
-    except:
+        import pennylane as qml
+        from pennylane import numpy as pnp
+        
+        # First, try NVIDIA GPU backend (requires pennylane-lightning-gpu)
         try:
-            # Try default.qubit with GPU support
-            test_dev = qml.device("default.qubit.torch", wires=2)
-            import torch
-            if torch.cuda.is_available():
-                GPU_DEVICE = "default.qubit.torch"
-                print("✓ PyTorch GPU backend detected - using CUDA acceleration")
-            else:
-                GPU_DEVICE = "default.qubit"
-                print("✗ No GPU backend available - using CPU simulation")
-        except:
-            GPU_DEVICE = "default.qubit"
-            print("✗ No GPU backend available - using CPU simulation")
-    
-except ImportError:
-    PENNYLANE_AVAILABLE = False
-    CUPY_AVAILABLE = False
-    GPU_DEVICE = None
-    cp = np
-    pnp = np
-    print("Warning: PennyLane not available. Using simulation fallback.")
-
-# ============================================================================
-# GPU CONFIGURATION
-# ============================================================================
-
-class GPUConfig:
-    """GPU configuration and memory management."""
-    
-    @staticmethod
-    def setup_gpu():
-        """Configure GPU settings for optimal performance."""
-        if CUPY_AVAILABLE:
-            # Set memory pool for efficient allocation
-            mempool = cp.get_default_memory_pool()
-            pinned_mempool = cp.get_default_pinned_memory_pool()
+            # Test if lightning.gpu is available
+            test_dev = qml.device("lightning.gpu", wires=2)
+            del test_dev  # Clean up test device
             
-            # Pre-allocate memory to avoid fragmentation
-            mempool.set_limit(size=2**31)  # 2GB limit
+            print("=" * 60)
+            print("✔ NVIDIA cuQuantum SDK detected!")
+            print("✔ Using PennyLane Lightning.GPU for quantum acceleration")
+            print("=" * 60)
             
-            # Enable TensorCore operations if available
-            cp.cuda.Device().use()
+            return {
+                "available": True,
+                "backend": "lightning.gpu",
+                "interface": "autograd",
+                "diff_method": "adjoint",
+                "gpu": True,
+                "pnp": pnp
+            }
             
-            print(f"GPU Memory allocated: {mempool.used_bytes() / 1e9:.2f} GB")
-            return True
-        return False
-    
-    @staticmethod
-    def to_gpu(array: np.ndarray):
-        """Transfer array to GPU memory."""
-        if CUPY_AVAILABLE:
-            return cp.asarray(array, dtype=cp.float32)
-        return array
-    
-    @staticmethod
-    def to_cpu(array):
-        """Transfer array from GPU to CPU memory."""
-        if CUPY_AVAILABLE and isinstance(array, cp.ndarray):
-            return cp.asnumpy(array)
-        return array
-    
-    @staticmethod
-    def cleanup():
-        """Clean up GPU memory."""
-        if CUPY_AVAILABLE:
-            mempool = cp.get_default_memory_pool()
-            pinned_mempool = cp.get_default_pinned_memory_pool()
-            mempool.free_all_blocks()
-            pinned_mempool.free_all_blocks()
+        except Exception as e:
+            # Lightning.GPU not available, fall back to CPU
+            print("=" * 60)
+            print("ℹ NVIDIA GPU backend not available")
+            print("ℹ Using CPU-based quantum simulation")
+            print("ℹ For GPU acceleration, install: pip install pennylane-lightning-gpu")
+            print("=" * 60)
+            
+            return {
+                "available": True,
+                "backend": "default.qubit",
+                "interface": "autograd",
+                "diff_method": "backprop",
+                "gpu": False,
+                "pnp": pnp
+            }
+            
+    except ImportError:
+        print("=" * 60)
+        print("⚠ Warning: PennyLane not installed!")
+        print("⚠ Using classical neural network fallback")
+        print("⚠ Install PennyLane: pip install pennylane")
+        print("=" * 60)
+        
+        return {
+            "available": False,
+            "backend": None,
+            "interface": None,
+            "diff_method": None,
+            "gpu": False,
+            "pnp": np
+        }
 
-# Initialize GPU
-gpu_available = GPUConfig.setup_gpu()
+# Initialize quantum backend
+QUANTUM_CONFIG = detect_quantum_backend()
+PENNYLANE_AVAILABLE = QUANTUM_CONFIG["available"]
+QUANTUM_BACKEND = QUANTUM_CONFIG["backend"]
+QUANTUM_INTERFACE = QUANTUM_CONFIG["interface"]
+QUANTUM_DIFF_METHOD = QUANTUM_CONFIG["diff_method"]
+GPU_AVAILABLE = QUANTUM_CONFIG["gpu"]
+pnp = QUANTUM_CONFIG["pnp"]
+
+# Import PennyLane if available
+if PENNYLANE_AVAILABLE:
+    import pennylane as qml
 
 # ============================================================================
 # CONFIGURATION CONSTANTS
@@ -147,9 +164,9 @@ gpu_available = GPUConfig.setup_gpu()
 GLOBAL_SEED = None  # Set to integer for reproducibility, None for true randomness
 QUANTUM_NOISE_LEVEL = 0.01  # Quantum noise parameter for realistic simulation
 
-# Batch processing for GPU efficiency
-BATCH_SIZE = 32  # Process multiple states simultaneously on GPU
-PARALLEL_CIRCUITS = 4  # Number of parallel quantum circuits for GPU
+# Batch processing
+BATCH_SIZE = 32  # Process multiple states simultaneously
+PARALLEL_CIRCUITS = 4  # Number of parallel quantum circuits
 
 # Maze constants
 EMPTY = 0
@@ -186,25 +203,16 @@ class MazeSolution:
     performance_discontinuity: bool
 
 # ============================================================================
-# MAZE GENERATION MODULE (Using GPU Arrays)
+# MAZE GENERATION MODULE
 # ============================================================================
 
 class MazeGenerator:
-    """Generate and manage maze environments with GPU acceleration."""
+    """Generate and manage maze environments."""
     
     def __init__(self, seed: Optional[int] = None):
         """Initialize with optional seed for reproducibility."""
         self.seed = seed
         self.rng = np.random.RandomState(seed) if seed else np.random.RandomState()
-        
-        # Pre-allocate GPU memory for maze batch processing
-        if CUPY_AVAILABLE:
-            self.gpu_maze_cache = {}
-    
-    def _cache_maze_gpu(self, maze: np.ndarray, name: str):
-        """Cache maze in GPU memory for faster access."""
-        if CUPY_AVAILABLE:
-            self.gpu_maze_cache[name] = GPUConfig.to_gpu(maze)
     
     @staticmethod
     def get_fixed_mazes() -> List[Tuple[np.ndarray, str]]:
@@ -362,82 +370,81 @@ class MazeGenerator:
         return -1  # No path found
 
 # ============================================================================
-# GPU-ACCELERATED VARIATIONAL QUANTUM NEURAL NETWORK
+# VARIATIONAL QUANTUM NEURAL NETWORK
 # ============================================================================
 
 class VQNN:
     """
-    GPU-Accelerated Variational Quantum Neural Network for Q-learning.
+    Variational Quantum Neural Network for Q-learning.
     
     Implements:
     - Amplitude encoding for state representation
     - Two-layer variational circuit with RX, RY rotations and CNOT entanglement
     - Q-value prediction for action selection
-    - GPU batch processing for parallel circuit evaluation
+    - GPU acceleration via PennyLane Lightning.GPU when available
     """
     
     def __init__(self, num_qubits: int = 25, num_layers: int = 2, 
-                 learning_rate: float = 0.01, use_gpu: bool = True):
+                 learning_rate: float = 0.01):
         """
-        Initialize VQNN with GPU support.
+        Initialize VQNN with automatic GPU/CPU selection.
         
         Args:
             num_qubits: Number of qubits (25 for 5x5 maze)
             num_layers: Number of variational layers
             learning_rate: Learning rate for optimization
-            use_gpu: Whether to use GPU acceleration
         """
         self.num_qubits = num_qubits
         self.num_layers = num_layers
         self.learning_rate = learning_rate
-        self.use_gpu = use_gpu and gpu_available
         
-        # Initialize parameters with GPU arrays if available
-        if self.use_gpu and CUPY_AVAILABLE:
-            self.params = cp.random.randn(num_layers, num_qubits, 2, dtype=cp.float32) * 0.1
-            # Adam optimizer state on GPU
-            self.m = cp.zeros_like(self.params)  # First moment
-            self.v = cp.zeros_like(self.params)  # Second moment
-        else:
-            self.params = np.random.randn(num_layers, num_qubits, 2).astype(np.float32) * 0.1
-            self.m = np.zeros_like(self.params)
-            self.v = np.zeros_like(self.params)
+        # Initialize parameters
+        self.params = pnp.random.randn(num_layers, num_qubits, 2) * 0.1
         
+        # Adam optimizer state
+        self.m = pnp.zeros_like(self.params)  # First moment
+        self.v = pnp.zeros_like(self.params)  # Second moment
         self.t = 0  # Time step
         
-        # Initialize quantum device with GPU support
+        # Initialize quantum device based on availability
         if PENNYLANE_AVAILABLE:
-            if GPU_DEVICE == "lightning.gpu":
-                # Lightning GPU device for NVIDIA cuQuantum
-                self.dev = qml.device(GPU_DEVICE, wires=num_qubits, batch_obs=True)
-                print(f"Using {GPU_DEVICE} with {num_qubits} qubits")
-            elif GPU_DEVICE == "default.qubit.torch" and self.use_gpu:
-                # PyTorch GPU backend
-                import torch
-                torch.set_default_tensor_type('torch.cuda.FloatTensor')
-                self.dev = qml.device(GPU_DEVICE, wires=num_qubits, torch_device='cuda')
-                print(f"Using {GPU_DEVICE} with CUDA")
-            else:
-                # CPU fallback
-                self.dev = qml.device("default.qubit", wires=num_qubits)
-                print(f"Using CPU device with {num_qubits} qubits")
+            print(f"Initializing VQNN with {num_qubits} qubits...")
             
-            # Create batched circuit for parallel processing
-            self.circuit = self._create_batched_circuit()
+            if QUANTUM_BACKEND == "lightning.gpu":
+                # NVIDIA GPU backend with cuQuantum
+                self.dev = qml.device(
+                    "lightning.gpu",
+                    wires=num_qubits,
+                    batch_obs=True  # Enable batched observables for GPU efficiency
+                )
+                print(f"  ✔ Using NVIDIA cuQuantum acceleration")
+            else:
+                # CPU backend
+                self.dev = qml.device(
+                    "default.qubit",
+                    wires=num_qubits
+                )
+                print(f"  ✔ Using CPU quantum simulation")
+            
+            # Create quantum circuit
+            self.circuit = self._create_circuit()
         else:
             self.dev = None
             self.circuit = None
+            print("  ⚠ Using classical neural network fallback")
         
         self.rng = np.random.RandomState()
     
-    def _create_batched_circuit(self):
-        """Create variational quantum circuit with batch processing support."""
+    def _create_circuit(self):
+        """Create variational quantum circuit optimized for the backend."""
         
-        @qml.batch_params
-        @qml.qnode(self.dev, interface='autograd' if not self.use_gpu else 'torch', 
-                   diff_method='adjoint' if GPU_DEVICE == "lightning.gpu" else 'backprop')
+        @qml.qnode(
+            self.dev, 
+            interface=QUANTUM_INTERFACE,
+            diff_method=QUANTUM_DIFF_METHOD
+        )
         def circuit(inputs, params):
-            # Batch amplitude encoding
+            # Amplitude encoding
             qml.AmplitudeEmbedding(
                 features=inputs,
                 wires=range(self.num_qubits),
@@ -450,16 +457,16 @@ class VQNN:
                 for i in range(self.num_qubits):
                     qml.RY(QUANTUM_NOISE_LEVEL * self.rng.randn(), wires=i)
             
-            # Variational layers with GPU-optimized structure
+            # Variational layers
             for layer in range(self.num_layers):
                 # Layer of single-qubit rotations
                 for i in range(self.num_qubits):
                     qml.RX(params[layer, i, 0], wires=i)
                     qml.RY(params[layer, i, 1], wires=i)
                 
-                # Efficient entangling layer
-                if layer < self.num_layers - 1:  # Skip on last layer for efficiency
-                    # Linear entanglement pattern
+                # Entangling layer (optimized pattern for GPU)
+                if layer < self.num_layers - 1:
+                    # Linear entanglement pattern (efficient for GPU)
                     for i in range(0, self.num_qubits - 1, 2):
                         qml.CNOT(wires=[i, i + 1])
                     for i in range(1, self.num_qubits - 1, 2):
@@ -470,48 +477,9 @@ class VQNN:
         
         return circuit
     
-    def encode_state_batch(self, mazes: List[np.ndarray], 
-                           positions: List[Tuple[int, int]]) -> np.ndarray:
-        """
-        Encode batch of maze states for parallel GPU processing.
-        
-        Args:
-            mazes: List of maze arrays
-            positions: List of agent positions
-            
-        Returns:
-            Batch of encoded state vectors
-        """
-        batch_size = len(mazes)
-        states = np.zeros((batch_size, 25), dtype=np.float32)
-        
-        for idx, (maze, position) in enumerate(zip(mazes, positions)):
-            # Create state representation
-            state = np.zeros(25, dtype=np.float32)
-            
-            # Encode maze structure
-            flat_maze = maze.flatten()
-            for i in range(25):
-                if flat_maze[i] == WALL:
-                    state[i] = -1.0
-                elif flat_maze[i] == GOAL:
-                    state[i] = 0.5
-                else:
-                    state[i] = 0.0
-            
-            # Encode agent position
-            agent_idx = position[0] * 5 + position[1]
-            state[agent_idx] = 1.0
-            
-            states[idx] = state
-        
-        if self.use_gpu and CUPY_AVAILABLE:
-            return GPUConfig.to_gpu(states)
-        return states
-    
     def encode_state(self, maze: np.ndarray, position: Tuple[int, int]) -> np.ndarray:
         """
-        Encode single maze state.
+        Encode maze state for quantum processing.
         
         Args:
             maze: Current maze
@@ -520,7 +488,7 @@ class VQNN:
         Returns:
             Encoded state vector
         """
-        state = np.zeros(25, dtype=np.float32)
+        state = pnp.zeros(25, dtype=np.float32)
         
         # Encode maze structure
         flat_maze = maze.flatten()
@@ -536,47 +504,11 @@ class VQNN:
         agent_idx = position[0] * 5 + position[1]
         state[agent_idx] = 1.0
         
-        if self.use_gpu and CUPY_AVAILABLE:
-            return GPUConfig.to_gpu(state)
         return state
-    
-    def get_q_values_batch(self, mazes: List[np.ndarray], 
-                           positions: List[Tuple[int, int]]) -> np.ndarray:
-        """
-        Get Q-values for batch of states using GPU parallelization.
-        
-        Args:
-            mazes: List of mazes
-            positions: List of positions
-            
-        Returns:
-            Batch of Q-values
-        """
-        states = self.encode_state_batch(mazes, positions)
-        
-        if PENNYLANE_AVAILABLE and self.circuit:
-            # Convert parameters to CPU for PennyLane if needed
-            params_cpu = GPUConfig.to_cpu(self.params)
-            
-            # Batch quantum circuit evaluation
-            q_values_batch = []
-            for state in states:
-                state_cpu = GPUConfig.to_cpu(state)
-                q_values = np.array(self.circuit(state_cpu, params_cpu))
-                q_values_batch.append(q_values)
-            
-            q_values_batch = np.array(q_values_batch)
-            
-            if self.use_gpu and CUPY_AVAILABLE:
-                return GPUConfig.to_gpu(q_values_batch)
-            return q_values_batch
-        else:
-            # Classical fallback with GPU arrays
-            return self._classical_forward_batch(states)
     
     def get_q_values(self, maze: np.ndarray, position: Tuple[int, int]) -> np.ndarray:
         """
-        Get Q-values for single state.
+        Get Q-values for state using quantum circuit.
         
         Args:
             maze: Current maze
@@ -588,48 +520,31 @@ class VQNN:
         state = self.encode_state(maze, position)
         
         if PENNYLANE_AVAILABLE and self.circuit:
-            # Convert to CPU for PennyLane
-            state_cpu = GPUConfig.to_cpu(state)
-            params_cpu = GPUConfig.to_cpu(self.params)
-            
             # Quantum circuit evaluation
-            q_values = np.array(self.circuit(state_cpu, params_cpu))
-            
-            if self.use_gpu and CUPY_AVAILABLE:
-                return GPUConfig.to_gpu(q_values)
+            q_values = pnp.array(self.circuit(state, self.params))
             return q_values
         else:
             # Classical fallback
             return self._classical_forward(state)
     
-    def _classical_forward_batch(self, states: np.ndarray) -> np.ndarray:
-        """Classical neural network fallback with GPU acceleration."""
-        if self.use_gpu and CUPY_AVAILABLE:
-            # GPU matrix multiplication
-            weights = cp.reshape(self.params, (-1, 4))[:states.shape[1]]
-            q_values = cp.tanh(cp.dot(states, weights))
+    def get_q_values_from_state(self, state: np.ndarray) -> np.ndarray:
+        """Get Q-values directly from encoded state."""
+        if PENNYLANE_AVAILABLE and self.circuit:
+            q_values = pnp.array(self.circuit(state, self.params))
+            return q_values
         else:
-            # CPU computation
-            weights = self.params.reshape(-1, 4)[:states.shape[1]]
-            q_values = np.tanh(np.dot(states, weights))
-        
-        return q_values
+            return self._classical_forward(state)
     
     def _classical_forward(self, state: np.ndarray) -> np.ndarray:
-        """Classical neural network fallback for single state."""
-        if self.use_gpu and CUPY_AVAILABLE:
-            weights = cp.reshape(self.params, (-1, 4))[:len(state)]
-            q_values = cp.tanh(cp.dot(state, weights))
-        else:
-            weights = self.params.reshape(-1, 4)[:len(state)]
-            q_values = np.tanh(np.dot(state, weights))
-        
+        """Classical neural network fallback."""
+        weights = self.params.reshape(-1, 4)[:len(state)]
+        q_values = pnp.tanh(pnp.dot(state, weights))
         return q_values
     
     def update(self, state: np.ndarray, action: int, target: float, 
                current_q: float) -> float:
         """
-        Update network parameters using GPU-accelerated gradient descent.
+        Update network parameters using gradient descent.
         
         Args:
             state: Encoded state
@@ -643,103 +558,56 @@ class VQNN:
         self.t += 1
         loss = (target - current_q) ** 2
         
-        # Compute gradient with GPU acceleration
-        if self.use_gpu and CUPY_AVAILABLE:
-            gradient = cp.zeros_like(self.params)
-            epsilon = 0.01
-            
-            # Parallel gradient computation on GPU
-            for layer in range(self.num_layers):
-                for qubit in range(self.num_qubits):
-                    for param in range(2):
-                        # Forward difference
-                        self.params[layer, qubit, param] += epsilon
-                        q_plus = self.get_q_values_from_state(state)[action]
-                        
-                        self.params[layer, qubit, param] -= 2 * epsilon
-                        q_minus = self.get_q_values_from_state(state)[action]
-                        
-                        self.params[layer, qubit, param] += epsilon
-                        
-                        grad_val = (GPUConfig.to_cpu(q_plus) - GPUConfig.to_cpu(q_minus)) / (2 * epsilon)
-                        gradient[layer, qubit, param] = grad_val
-            
-            # Adam optimizer update on GPU
-            gradient *= 2 * (current_q - target)
-            
-            beta1, beta2 = 0.9, 0.999
-            eps = 1e-8
-            
-            self.m = beta1 * self.m + (1 - beta1) * gradient
-            self.v = beta2 * self.v + (1 - beta2) * gradient ** 2
-            
-            m_hat = self.m / (1 - beta1 ** self.t)
-            v_hat = self.v / (1 - beta2 ** self.t)
-            
-            self.params -= self.learning_rate * m_hat / (cp.sqrt(v_hat) + eps)
-        else:
-            # CPU gradient computation
-            gradient = np.zeros_like(self.params)
-            epsilon = 0.01
-            
-            for layer in range(self.num_layers):
-                for qubit in range(self.num_qubits):
-                    for param in range(2):
-                        self.params[layer, qubit, param] += epsilon
-                        q_plus = self.get_q_values_from_state(state)[action]
-                        
-                        self.params[layer, qubit, param] -= 2 * epsilon
-                        q_minus = self.get_q_values_from_state(state)[action]
-                        
-                        self.params[layer, qubit, param] += epsilon
-                        
-                        gradient[layer, qubit, param] = (q_plus - q_minus) / (2 * epsilon)
-            
-            gradient *= 2 * (current_q - target)
-            
-            beta1, beta2 = 0.9, 0.999
-            eps = 1e-8
-            
-            self.m = beta1 * self.m + (1 - beta1) * gradient
-            self.v = beta2 * self.v + (1 - beta2) * gradient ** 2
-            
-            m_hat = self.m / (1 - beta1 ** self.t)
-            v_hat = self.v / (1 - beta2 ** self.t)
-            
-            self.params -= self.learning_rate * m_hat / (np.sqrt(v_hat) + eps)
+        # Compute gradient
+        gradient = pnp.zeros_like(self.params)
+        epsilon = 0.01
+        
+        # Numerical gradient computation
+        for layer in range(self.num_layers):
+            for qubit in range(self.num_qubits):
+                for param in range(2):
+                    # Forward difference
+                    self.params[layer, qubit, param] += epsilon
+                    q_plus = self.get_q_values_from_state(state)[action]
+                    
+                    self.params[layer, qubit, param] -= 2 * epsilon
+                    q_minus = self.get_q_values_from_state(state)[action]
+                    
+                    self.params[layer, qubit, param] += epsilon
+                    
+                    gradient[layer, qubit, param] = (q_plus - q_minus) / (2 * epsilon)
+        
+        # Adam optimizer update
+        gradient *= 2 * (current_q - target)
+        
+        beta1, beta2 = 0.9, 0.999
+        eps = 1e-8
+        
+        self.m = beta1 * self.m + (1 - beta1) * gradient
+        self.v = beta2 * self.v + (1 - beta2) * gradient ** 2
+        
+        m_hat = self.m / (1 - beta1 ** self.t)
+        v_hat = self.v / (1 - beta2 ** self.t)
+        
+        self.params -= self.learning_rate * m_hat / (pnp.sqrt(v_hat) + eps)
         
         return float(loss)
-    
-    def get_q_values_from_state(self, state: np.ndarray) -> np.ndarray:
-        """Get Q-values directly from encoded state."""
-        if PENNYLANE_AVAILABLE and self.circuit:
-            state_cpu = GPUConfig.to_cpu(state)
-            params_cpu = GPUConfig.to_cpu(self.params)
-            q_values = np.array(self.circuit(state_cpu, params_cpu))
-            
-            if self.use_gpu and CUPY_AVAILABLE:
-                return GPUConfig.to_gpu(q_values)
-            return q_values
-        else:
-            return self._classical_forward(state)
 
 # ============================================================================
-# EXPERIENCE REPLAY BUFFER (GPU-OPTIMIZED)
+# EXPERIENCE REPLAY BUFFER
 # ============================================================================
 
 class ExperienceReplayBuffer:
-    """GPU-optimized experience replay buffer for batch training."""
+    """Experience replay buffer for batch training."""
     
-    def __init__(self, capacity: int = 10000, use_gpu: bool = True):
+    def __init__(self, capacity: int = 10000):
         """
         Initialize replay buffer.
         
         Args:
             capacity: Maximum buffer size
-            use_gpu: Whether to store on GPU
         """
         self.capacity = capacity
-        self.use_gpu = use_gpu and CUPY_AVAILABLE
         self.buffer = []
         self.position = 0
     
@@ -749,11 +617,6 @@ class ExperienceReplayBuffer:
         if len(self.buffer) < self.capacity:
             self.buffer.append(None)
         
-        # Store on GPU if available
-        if self.use_gpu:
-            state = GPUConfig.to_gpu(state)
-            next_state = GPUConfig.to_gpu(next_state)
-        
         self.buffer[self.position] = (state, action, reward, next_state, done)
         self.position = (self.position + 1) % self.capacity
     
@@ -761,35 +624,22 @@ class ExperienceReplayBuffer:
         """Sample batch of experiences."""
         indices = np.random.choice(len(self.buffer), batch_size, replace=False)
         batch = [self.buffer[i] for i in indices]
-        
-        if self.use_gpu:
-            # Keep batch on GPU
-            return batch
-        else:
-            # Convert to arrays for CPU processing
-            states = np.array([e[0] for e in batch])
-            actions = np.array([e[1] for e in batch])
-            rewards = np.array([e[2] for e in batch])
-            next_states = np.array([e[3] for e in batch])
-            dones = np.array([e[4] for e in batch])
-            
-            return states, actions, rewards, next_states, dones
+        return batch
     
     def __len__(self):
         return len(self.buffer)
 
 # ============================================================================
-# Q-LEARNING AGENT WITH GPU OPTIMIZATION
+# Q-LEARNING AGENT
 # ============================================================================
 
 class QLearningAgent:
     """
-    GPU-optimized Q-learning agent using VQNN.
+    Q-learning agent using VQNN.
     
     Implements:
     - Epsilon-greedy exploration
     - Experience replay with batch training
-    - GPU-accelerated updates
     """
     
     def __init__(self, vqnn: VQNN, epsilon: float = 0.1, 
@@ -815,10 +665,7 @@ class QLearningAgent:
         self.batch_size = batch_size
         
         if use_replay:
-            self.replay_buffer = ExperienceReplayBuffer(
-                capacity=10000, 
-                use_gpu=vqnn.use_gpu
-            )
+            self.replay_buffer = ExperienceReplayBuffer(capacity=10000)
         
         self.rng = np.random.RandomState()
     
@@ -841,8 +688,7 @@ class QLearningAgent:
         else:
             # Exploitation
             q_values = self.vqnn.get_q_values(maze, position)
-            q_values_cpu = GPUConfig.to_cpu(q_values)
-            action_idx = int(np.argmax(q_values_cpu))
+            action_idx = int(pnp.argmax(q_values))
         
         return action_idx, ACTIONS[action_idx]
     
@@ -875,14 +721,13 @@ class QLearningAgent:
         
         # Direct training (no replay)
         current_q_values = self.vqnn.get_q_values(maze, position)
-        current_q = GPUConfig.to_cpu(current_q_values)[action]
+        current_q = current_q_values[action]
         
         if done:
             target = reward
         else:
             next_q_values = self.vqnn.get_q_values(maze, next_position)
-            next_q_values_cpu = GPUConfig.to_cpu(next_q_values)
-            target = reward + self.gamma * np.max(next_q_values_cpu)
+            target = reward + self.gamma * pnp.max(next_q_values)
         
         state = self.vqnn.encode_state(maze, position)
         loss = self.vqnn.update(state, action, target, current_q)
@@ -902,15 +747,14 @@ class QLearningAgent:
         for state, action, reward, next_state, done in batch:
             # Compute current Q-value
             current_q_values = self.vqnn.get_q_values_from_state(state)
-            current_q = GPUConfig.to_cpu(current_q_values)[action]
+            current_q = current_q_values[action]
             
             # Compute target Q-value
             if done:
                 target = reward
             else:
                 next_q_values = self.vqnn.get_q_values_from_state(next_state)
-                next_q_values_cpu = GPUConfig.to_cpu(next_q_values)
-                target = reward + self.gamma * np.max(next_q_values_cpu)
+                target = reward + self.gamma * pnp.max(next_q_values)
             
             # Update network
             loss = self.vqnn.update(state, action, target, current_q)
@@ -919,7 +763,7 @@ class QLearningAgent:
         return total_loss / self.batch_size
 
 # ============================================================================
-# MAZE ENVIRONMENT (Unchanged)
+# MAZE ENVIRONMENT
 # ============================================================================
 
 class MazeEnvironment:
@@ -1000,7 +844,7 @@ class MazeEnvironment:
         return self.agent_pos, reward, done
 
 # ============================================================================
-# COMPLEXITY METRICS (Unchanged)
+# COMPLEXITY METRICS
 # ============================================================================
 
 @lru_cache(maxsize=512)
@@ -1071,7 +915,7 @@ def approximate_entropy(U: List[Any], m: int = 2, r: float = 0.2) -> float:
         return 0.0
 
 # ============================================================================
-# EMERGENCE DETECTION (Unchanged)
+# EMERGENCE DETECTION
 # ============================================================================
 
 def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
@@ -1142,7 +986,7 @@ def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
     }
 
 # ============================================================================
-# VISUALIZATION (Unchanged)
+# VISUALIZATION
 # ============================================================================
 
 def visualize_solution(maze: np.ndarray, path: List[Tuple[int, int]], 
@@ -1163,13 +1007,6 @@ def visualize_solution(maze: np.ndarray, path: List[Tuple[int, int]],
         visual[row, col] = 0.5 + (i / len(path)) * 0.3
     
     # Create text representation
-    symbols = {
-        0: '.',    # Empty
-        1: '█',    # Wall
-        2: 'S',    # Start
-        3: 'G',    # Goal
-    }
-    
     print(f"\n{maze_name} Solution:")
     print("-" * 15)
     
@@ -1196,7 +1033,7 @@ def visualize_solution(maze: np.ndarray, path: List[Tuple[int, int]],
 
 def run_experiments(config: Optional[Dict] = None):
     """
-    Execute adaptive problem-solving experiments with GPU acceleration.
+    Execute adaptive problem-solving experiments.
     
     Args:
         config: Experimental configuration dictionary
@@ -1211,44 +1048,35 @@ def run_experiments(config: Optional[Dict] = None):
             "epsilon_decay": 0.995,
             "learning_rate": 0.01,
             "gamma": 0.99,
-            "use_gpu": True,
             "use_replay": True,
             "batch_size": 32,
             "output_dir": "results",
             "visualize": True
         }
     
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now().strftime("%m%d%Y_%H%M%S")
     
+    print("\n" + "=" * 60)
+    print("VQNN ADAPTIVE PROBLEM-SOLVING EXPERIMENTS")
     print("=" * 60)
-    print("VQNN ADAPTIVE PROBLEM-SOLVING EXPERIMENTS (GPU-ACCELERATED)")
-    print("=" * 60)
-    print(f"GPU Acceleration: {'ENABLED' if config['use_gpu'] and gpu_available else 'DISABLED'}")
-    print(f"Quantum Device: {GPU_DEVICE if PENNYLANE_AVAILABLE else 'N/A'}")
+    print(f"Quantum Backend: {QUANTUM_BACKEND if PENNYLANE_AVAILABLE else 'Classical Fallback'}")
+    print(f"GPU Acceleration: {'ENABLED (NVIDIA cuQuantum)' if GPU_AVAILABLE else 'DISABLED'}")
     print(f"Episodes per maze: {config['episodes_per_maze']}")
     print(f"Batch size: {config['batch_size']}")
     print(f"Experience replay: {'ENABLED' if config['use_replay'] else 'DISABLED'}")
     print(f"Epsilon: {config['epsilon_start']} (decay: {config['epsilon_decay']})")
     print(f"Learning rate: {config['learning_rate']}")
     print(f"Seed: {GLOBAL_SEED or 'True random'}")
-    
-    if gpu_available and CUPY_AVAILABLE:
-        mempool = cp.get_default_memory_pool()
-        print(f"GPU Memory: {mempool.used_bytes() / 1e6:.1f} MB allocated")
+    print("=" * 60)
     print()
     
     # Initialize components
     generator = MazeGenerator(seed=GLOBAL_SEED)
     mazes = generator.get_fixed_mazes()
     
-    # Cache mazes on GPU
-    if config['use_gpu'] and CUPY_AVAILABLE:
-        for maze, name in mazes:
-            generator._cache_maze_gpu(maze, name)
-    
     # Output setup
     os.makedirs(config["output_dir"], exist_ok=True)
-    output_file = os.path.join(config["output_dir"], f"vqnn_gpu_results_{timestamp}.csv")
+    output_file = os.path.join(config["output_dir"], f"vqnn_results_{timestamp}.csv")
     
     headers = [
         "run_id", "timestamp", "maze_name", "maze_complexity",
@@ -1257,7 +1085,8 @@ def run_experiments(config: Optional[Dict] = None):
         "path_length", "path_lz_complexity", "path_shannon_entropy",
         "action_sequence_length", "action_lz_complexity", "action_shannon_entropy",
         "action_approximate_entropy", "is_emergent", "emergence_type", 
-        "emergence_score", "solution_path", "action_sequence"
+        "emergence_score", "solution_path", "action_sequence",
+        "quantum_backend", "gpu_accelerated"
     ]
     
     results = []
@@ -1278,12 +1107,11 @@ def run_experiments(config: Optional[Dict] = None):
         # Calculate baseline (random walk)
         random_steps = optimal_steps * 5  # Rough estimate
         
-        # Initialize VQNN and agent with GPU support
+        # Initialize VQNN and agent
         vqnn = VQNN(
             num_qubits=25,
             num_layers=2,
-            learning_rate=config["learning_rate"],
-            use_gpu=config["use_gpu"]
+            learning_rate=config["learning_rate"]
         )
         
         agent = QLearningAgent(
@@ -1415,7 +1243,9 @@ def run_experiments(config: Optional[Dict] = None):
             emergence["emergence_type"],
             emergence["emergence_score"],
             str(best_solution.solution_path),
-            str(best_solution.action_sequence)
+            str(best_solution.action_sequence),
+            QUANTUM_BACKEND if PENNYLANE_AVAILABLE else "classical",
+            GPU_AVAILABLE
         ])
     
     # Save results
@@ -1437,12 +1267,8 @@ def run_experiments(config: Optional[Dict] = None):
     print(f"Total mazes: {len(results)}")
     print(f"Emergent solutions: {total_emergent} ({total_emergent/len(results)*100:.1f}%)")
     print(f"Average efficiency: {avg_efficiency:.3f}")
-    
-    # GPU memory usage
-    if gpu_available and CUPY_AVAILABLE:
-        mempool = cp.get_default_memory_pool()
-        print(f"\nGPU Memory used: {mempool.used_bytes() / 1e6:.1f} MB")
-        print(f"GPU Memory blocks: {mempool.n_free_blocks()} free, {mempool.n_total_blocks()} total")
+    print(f"Quantum backend: {QUANTUM_BACKEND if PENNYLANE_AVAILABLE else 'Classical'}")
+    print(f"GPU acceleration: {'Yes (NVIDIA cuQuantum)' if GPU_AVAILABLE else 'No'}")
     
     # Detailed breakdown by emergence type
     emergence_types = {}
@@ -1455,11 +1281,6 @@ def run_experiments(config: Optional[Dict] = None):
         print("\nEmergence types:")
         for etype, count in emergence_types.items():
             print(f"  {etype}: {count}")
-    
-    # Clean up GPU memory
-    if config['use_gpu']:
-        GPUConfig.cleanup()
-        print("\nGPU memory cleaned up")
     
     return results
 
@@ -1475,9 +1296,8 @@ if __name__ == "__main__":
         "epsilon_decay": 0.995,      # Exploration decay
         "learning_rate": 0.01,       # VQNN learning rate
         "gamma": 0.99,               # Discount factor
-        "use_gpu": True,             # Enable GPU acceleration
         "use_replay": True,          # Enable experience replay
-        "batch_size": 32,            # Batch size for GPU processing
+        "batch_size": 32,            # Batch size for processing
         "output_dir": "results",
         "visualize": True
     }
@@ -1485,3 +1305,4 @@ if __name__ == "__main__":
     results = run_experiments(config)
     
     print("\n✅ Experiment complete!")
+    print("=" * 60)
