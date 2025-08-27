@@ -63,15 +63,22 @@ except ImportError:
     PENNYLANE_AVAILABLE = False
     print("Warning: PennyLane not available. Using simulation fallback.")
 
-# AI scoring libraries
+# AI scoring libraries with updated imports
+AI_SCORING_AVAILABLE = False
 try:
-    import openai
+    # Updated OpenAI import for v1.0+
+    from openai import OpenAI
+    
+    # Anthropic import
     from anthropic import Anthropic
+    
+    # Google Gemini import
     import google.generativeai as genai
+    
     AI_SCORING_AVAILABLE = True
-except ImportError:
-    AI_SCORING_AVAILABLE = False
-    print("Warning: AI scoring libraries not available. Using mock scoring.")
+except ImportError as e:
+    print(f"Warning: AI scoring libraries not available: {e}")
+    print("Using mock scoring.")
 
 # ============================================================================
 # CONFIGURATION CONSTANTS
@@ -369,7 +376,7 @@ class QuantumAssociativeMemory:
             prompt_normalized = prompt / np.linalg.norm(prompt)
             
             # Create full state vector for amplitude encoding
-            state_vector = np.zeros(2**self.num_qubits)
+            state_vector = np.zeros(2**self.num_qubits, dtype=complex)
             # Map prompt to computational basis states
             for i in range(min(len(prompt_normalized), 2**self.num_qubits)):
                 state_vector[i] = prompt_normalized[i % len(prompt_normalized)]
@@ -379,8 +386,8 @@ class QuantumAssociativeMemory:
             if norm > 0:
                 state_vector = state_vector / norm
             
-            # Prepare the quantum state
-            qml.QubitStateVector(state_vector, wires=range(self.num_qubits))
+            # Prepare the quantum state using StatePrep (updated from QubitStateVector)
+            qml.StatePrep(state_vector, wires=range(self.num_qubits))
             
             # Apply associative memory dynamics via controlled rotations
             for i in range(self.num_qubits):
@@ -528,25 +535,24 @@ class AICreativityScorer:
         """Initialize AI scoring clients."""
         self.initialized = False
         self.api_keys_valid = check_api_keys()
+        self.openai_client = None
+        self.anthropic_client = None
+        self.gemini_model = None
         
         if AI_SCORING_AVAILABLE and self.api_keys_valid:
             try:
-                # Initialize OpenAI
+                # Initialize OpenAI with new client interface
                 if API_KEYS["openai"]:
-                    openai.api_key = API_KEYS["openai"]
+                    self.openai_client = OpenAI(api_key=API_KEYS["openai"])
                 
                 # Initialize Anthropic
                 if API_KEYS["anthropic"]:
                     self.anthropic_client = Anthropic(api_key=API_KEYS["anthropic"])
-                else:
-                    self.anthropic_client = None
                 
-                # Initialize Google Gemini
+                # Initialize Google Gemini with updated model
                 if API_KEYS["google"]:
                     genai.configure(api_key=API_KEYS["google"])
-                    self.gemini_model = genai.GenerativeModel('gemini-pro')
-                else:
-                    self.gemini_model = None
+                    self.gemini_model = genai.GenerativeModel('gemini-1.5-flash')  # Updated model name
                 
                 self.initialized = True
                 print("✅ AI scoring APIs initialized")
@@ -580,7 +586,7 @@ class AICreativityScorer:
         scores = {}
         
         # Get scores from each AI judge if available
-        if API_KEYS["openai"]:
+        if self.openai_client:
             try:
                 scores["openai"] = await self._score_with_openai(scoring_prompt)
             except Exception as e:
@@ -589,7 +595,7 @@ class AICreativityScorer:
         else:
             scores["openai"] = self._default_scores()
         
-        if API_KEYS["anthropic"] and self.anthropic_client:
+        if self.anthropic_client:
             try:
                 scores["anthropic"] = await self._score_with_anthropic(scoring_prompt)
             except Exception as e:
@@ -598,7 +604,7 @@ class AICreativityScorer:
         else:
             scores["anthropic"] = self._default_scores()
         
-        if API_KEYS["google"] and self.gemini_model:
+        if self.gemini_model:
             try:
                 scores["google"] = await self._score_with_gemini(scoring_prompt)
             except Exception as e:
@@ -637,34 +643,49 @@ class AICreativityScorer:
         """
     
     async def _score_with_openai(self, prompt: str) -> Dict[str, float]:
-        """Score using OpenAI GPT."""
-        response = await openai.ChatCompletion.acreate(
-            model="gpt-4",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.3,
-            max_tokens=20
-        )
-        
-        scores_text = response.choices[0].message.content.strip()
-        return self._parse_scores(scores_text)
+        """Score using OpenAI GPT with updated API."""
+        try:
+            # Using the new OpenAI client interface
+            completion = self.openai_client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.3,
+                max_tokens=20
+            )
+            
+            scores_text = completion.choices[0].message.content.strip()
+            return self._parse_scores(scores_text)
+        except Exception as e:
+            print(f"OpenAI error: {e}")
+            return self._default_scores()
     
     async def _score_with_anthropic(self, prompt: str) -> Dict[str, float]:
-        """Score using Anthropic Claude."""
-        response = await self.anthropic_client.messages.create(
-            model="claude-3-opus-20240229",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=20,
-            temperature=0.3
-        )
-        
-        scores_text = response.content[0].text.strip()
-        return self._parse_scores(scores_text)
+        """Score using Anthropic Claude with updated model."""
+        try:
+            # Using updated Claude model name
+            response = self.anthropic_client.messages.create(
+                model="claude-3-haiku-20240307",  # Updated to available model
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=20,
+                temperature=0.3
+            )
+            
+            scores_text = response.content[0].text.strip()
+            return self._parse_scores(scores_text)
+        except Exception as e:
+            print(f"Anthropic error: {e}")
+            return self._default_scores()
     
     async def _score_with_gemini(self, prompt: str) -> Dict[str, float]:
-        """Score using Google Gemini."""
-        response = await self.gemini_model.generate_content_async(prompt)
-        scores_text = response.text.strip()
-        return self._parse_scores(scores_text)
+        """Score using Google Gemini with updated API."""
+        try:
+            # Using synchronous API (not async)
+            response = self.gemini_model.generate_content(prompt)
+            scores_text = response.text.strip()
+            return self._parse_scores(scores_text)
+        except Exception as e:
+            print(f"Gemini error: {e}")
+            return self._default_scores()
     
     def _parse_scores(self, scores_text: str) -> Dict[str, float]:
         """Parse score string into dictionary."""
@@ -698,7 +719,7 @@ class AICreativityScorer:
         return scores
 
 # ============================================================================
-# COMPLEXITY METRICS
+# COMPLEXITY METRICS (unchanged)
 # ============================================================================
 
 @lru_cache(maxsize=512)
@@ -763,7 +784,7 @@ def calculate_semantic_distance(vec1: np.ndarray, vec2: np.ndarray) -> float:
     return distance
 
 # ============================================================================
-# EMERGENCE DETECTION
+# EMERGENCE DETECTION (updated with better error handling)
 # ============================================================================
 
 def detect_creative_emergence(prompt: str, outputs: List[str], 
@@ -783,12 +804,13 @@ def detect_creative_emergence(prompt: str, outputs: List[str],
     Returns:
         Dictionary with emergence assessment
     """
-    # Calculate average scores across judges and outputs
+    # Calculate average scores across judges and outputs with better error handling
     all_scores = []
-    for output_scores in ai_scores.values():
-        for judge_scores in output_scores.values():
-            avg_score = np.mean(list(judge_scores.values()))
-            all_scores.append(avg_score)
+    for output_key, output_scores in ai_scores.items():
+        for judge, judge_scores in output_scores.items():
+            if isinstance(judge_scores, dict):
+                avg_score = np.mean(list(judge_scores.values()))
+                all_scores.append(avg_score)
     
     if not all_scores:
         return {
@@ -838,7 +860,7 @@ def detect_creative_emergence(prompt: str, outputs: List[str],
     }
 
 # ============================================================================
-# MAIN EXPERIMENTAL PIPELINE
+# MAIN EXPERIMENTAL PIPELINE (updated with better error handling)
 # ============================================================================
 
 async def run_experiments(config: Optional[Dict] = None):
@@ -959,16 +981,25 @@ async def run_experiments(config: Optional[Dict] = None):
                                  "surprise": 4 + np.random.randn()}
                     }
             
-            # Calculate average AI scores
-            avg_novelty = np.mean([scores[judge]["novelty"] 
-                                  for output in ai_scores.values() 
-                                  for judge, scores in output.items()])
-            avg_relevance = np.mean([scores[judge]["relevance"]
-                                    for output in ai_scores.values()
-                                    for judge, scores in output.items()])
-            avg_surprise = np.mean([scores[judge]["surprise"]
-                                   for output in ai_scores.values()
-                                   for judge, scores in output.items()])
+            # Calculate average AI scores with better error handling
+            score_values = []
+            for output_key in ai_scores:
+                for judge in ["openai", "anthropic", "google"]:
+                    if judge in ai_scores[output_key]:
+                        judge_scores = ai_scores[output_key][judge]
+                        if isinstance(judge_scores, dict):
+                            score_values.extend([
+                                judge_scores.get("novelty", 4.0),
+                                judge_scores.get("relevance", 4.0),
+                                judge_scores.get("surprise", 4.0)
+                            ])
+            
+            if score_values:
+                avg_novelty = np.mean([s for i, s in enumerate(score_values) if i % 3 == 0])
+                avg_relevance = np.mean([s for i, s in enumerate(score_values) if i % 3 == 1])
+                avg_surprise = np.mean([s for i, s in enumerate(score_values) if i % 3 == 2])
+            else:
+                avg_novelty = avg_relevance = avg_surprise = 4.0
             
             # Convert to bitstrings for complexity analysis
             prompt_bits = ''.join(['1' if x > 0 else '0' for x in prompt_vec])
