@@ -1,0 +1,17 @@
+#
+# These are packages that were installed on the test server
+# * denotes package was installed with root privledges
+#
+*python3-pip
+*python3.12-venv
+numpy
+scipy
+pennylane
+pennylane-lightning-gpu
+matplotlib
+openai
+anthropic
+google-generativeai
+asyncio
+aiohttp
+python-dotenv
