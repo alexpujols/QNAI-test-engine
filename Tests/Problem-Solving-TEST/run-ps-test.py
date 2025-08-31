@@ -29,7 +29,7 @@ Dependencies  : {numpy scipy pennylane pennylane-lightning-gpu matplotlib
 }
 Requirements  : {Python 3.8+, Optional: CUDA 11.0+ and cuQuantum for GPU acceleration}
 Usage         : {python run-ps-test.py}
-Notes         : {Available at Github at https://github.com/alexpujols/QNAI-test-engine}
+Notes         : {Available at Github at https://github.com/alexpujols/QNAI-test-engine/blob/main/Tests/Problem-Solving-TEST/run-ps-test.py}
 '''
 
 import json
