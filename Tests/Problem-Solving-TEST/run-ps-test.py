@@ -87,11 +87,11 @@ class PerformanceMonitor:
 # GPU CONFIGURATION
 # ============================================================================
 
-def optimize_gpu_settings():
-    """Configure optimal GPU settings for quantum simulation."""
+def configure_gpu_settings():
+    """Configure GPU settings for quantum simulation."""
     import os
     
-    # CUDA settings for optimal performance
+    # CUDA settings for performance
     os.environ['CUDA_LAUNCH_BLOCKING'] = '0'  # Async kernel launches
     os.environ['CUDNN_BENCHMARK'] = 'TRUE'    # Auto-tune operations
     
@@ -102,10 +102,10 @@ def optimize_gpu_settings():
     # XLA compilation for better performance
     os.environ['TF_XLA_FLAGS'] = '--tf_xla_enable_xla_devices'
     
-    print("✓ GPU settings optimized")
+    print("✓ GPU settings configured")
 
-# Apply GPU optimizations
-optimize_gpu_settings()
+# Apply GPU configuration
+configure_gpu_settings()
 
 # ============================================================================
 # QUANTUM BACKEND DETECTION
@@ -207,16 +207,16 @@ class MazeSolution:
     performance_discontinuity: bool
 
 # ============================================================================
-# OPTIMIZED VQNN
+# ENHANCED VQNN
 # ============================================================================
 
-class OptimizedVQNN:
+class VQNN:
     """
-    Optimized Variational Quantum Neural Network with:
+    Enhanced Variational Quantum Neural Network with:
     - Batch processing
     - Circuit caching
     - Vectorized operations
-    - GPU optimization
+    - GPU acceleration
     """
     
     def __init__(self, num_qubits: int = 25, num_layers: int = 2,
@@ -262,10 +262,10 @@ class OptimizedVQNN:
         else:
             self.dev = None
         
-        print(f"✓ Optimized VQNN initialized (batch_size={batch_size})")
+        print(f"✓ Enhanced VQNN initialized (batch_size={batch_size})")
     
     def _create_circuits(self):
-        """Create optimized quantum circuits."""
+        """Create enhanced quantum circuits."""
         
         # Main circuit for Q-value computation
         @qml.qnode(
@@ -377,7 +377,7 @@ class OptimizedVQNN:
     def update_batch(self, states: np.ndarray, actions: np.ndarray,
                     targets: np.ndarray, current_q_values: Optional[np.ndarray] = None) -> float:
         """
-        Optimized batch update with vectorized operations.
+        Enhanced batch update with vectorized operations.
         """
         self.t += 1
         batch_size = states.shape[0]
@@ -433,10 +433,10 @@ class OptimizedVQNN:
             return float(avg_loss)
 
 # ============================================================================
-# OPTIMIZED REPLAY BUFFER
+# ENHANCED REPLAY BUFFER
 # ============================================================================
 
-class OptimizedReplayBuffer:
+class ExperienceReplayBuffer:
     """
     High-performance experience replay buffer with:
     - Pre-allocated arrays
@@ -560,7 +560,7 @@ class MazeGenerator:
         """Generate 10 fixed 5x5 mazes with varying complexity."""
         mazes = []
         
-        # Maze configurations (same as original)
+        # Maze configurations
         maze_configs = [
             ("simple_corridor", [
                 [2, 0, 1, 1, 1],
@@ -730,15 +730,15 @@ class MazeEnvironment:
             return self.agent_pos, -1, self.steps >= self.max_steps
 
 # ============================================================================
-# OPTIMIZED Q-LEARNING AGENT
+# ENHANCED Q-LEARNING AGENT
 # ============================================================================
 
-class OptimizedQLearningAgent:
+class QLearningAgent:
     """
-    Q-learning agent with optimized batch processing.
+    Q-learning agent with enhanced batch processing.
     """
     
-    def __init__(self, vqnn: OptimizedVQNN, epsilon: float = 0.1,
+    def __init__(self, vqnn: VQNN, epsilon: float = 0.1,
                  gamma: float = 0.99, epsilon_decay: float = 0.995):
         self.vqnn = vqnn
         self.epsilon = epsilon
@@ -746,7 +746,7 @@ class OptimizedQLearningAgent:
         self.epsilon_decay = epsilon_decay
         self.gamma = gamma
         
-        self.replay_buffer = OptimizedReplayBuffer(capacity=100000)
+        self.replay_buffer = ExperienceReplayBuffer(capacity=100000)
         self.rng = np.random.RandomState()
     
     def select_actions_batch(self, mazes: List[np.ndarray],
@@ -849,16 +849,93 @@ def shannon_entropy(s: str) -> float:
     
     return entropy
 
+def approximate_entropy(U: List[Any], m: int = 2, r: float = 0.2) -> float:
+    """Calculate approximate entropy of a sequence."""
+    if len(U) < m:
+        return 0.0
+    
+    def _maxdist(xi, xj, m):
+        return max([abs(float(a) - float(b)) for a, b in zip(xi, xj)])
+    
+    def _phi(m):
+        patterns = [U[i:i + m] for i in range(len(U) - m + 1)]
+        C = []
+        for i, template in enumerate(patterns):
+            matches = sum(1 for j, pattern in enumerate(patterns)
+                        if _maxdist(template, pattern, m) <= r)
+            C.append(matches / (len(U) - m + 1))
+        return sum(np.log(c) for c in C if c > 0) / (len(U) - m + 1)
+    
+    try:
+        return _phi(m) - _phi(m + 1)
+    except:
+        return 0.0
+
+# ============================================================================
+# EMERGENCE DETECTION
+# ============================================================================
+
+def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
+                    learning_curve: List[float]) -> Dict[str, Any]:
+    """Detect emergent behavior in maze solving."""
+    # Calculate efficiency relative to optimal
+    efficiency = solution.efficiency_score
+    
+    # Detect performance discontinuity
+    if len(learning_curve) > 10:
+        window = 5
+        for i in range(window, len(learning_curve) - window):
+            before = np.mean(learning_curve[i-window:i])
+            after = np.mean(learning_curve[i:i+window])
+            if after - before > 30:
+                solution.performance_discontinuity = True
+                solution.convergence_episode = i
+                break
+    
+    # Emergence criteria
+    is_emergent = False
+    emergence_type = "none"
+    emergence_score = 0.0
+    
+    if efficiency >= 0.95:
+        is_emergent = True
+        emergence_type = "perfect_navigation"
+        emergence_score = 1.0
+    elif efficiency >= 0.85:
+        is_emergent = True
+        emergence_type = "efficient_navigation"
+        emergence_score = 0.8
+    
+    if solution.performance_discontinuity:
+        is_emergent = True
+        if emergence_type == "none":
+            emergence_type = "sudden_insight"
+        emergence_score = max(emergence_score, 0.7)
+    
+    random_improvement = (baseline_steps["random"] - solution.steps_to_goal) / baseline_steps["random"]
+    if random_improvement > 0.8:
+        is_emergent = True
+        if emergence_type == "none":
+            emergence_type = "intelligent_navigation"
+        emergence_score = max(emergence_score, 0.6)
+    
+    return {
+        "is_emergent": is_emergent,
+        "emergence_type": emergence_type,
+        "emergence_score": emergence_score,
+        "efficiency_score": efficiency,
+        "performance_discontinuity": solution.performance_discontinuity,
+        "convergence_episode": solution.convergence_episode
+    }
+
 # ============================================================================
 # PARALLEL TRAINING
 # ============================================================================
 
-def train_parallel_episodes(agent: OptimizedQLearningAgent,
+def train_parallel_episodes(agent: QLearningAgent,
                            env_manager: ParallelEnvironmentManager,
                            episodes: int) -> List[float]:
-    """
-    Train agent on parallel environments for faster convergence.
-    """
+    """Train agent on parallel environments for faster convergence."""
     learning_curve = []
     
     for episode in range(episodes):
@@ -939,13 +1016,45 @@ def train_parallel_episodes(agent: OptimizedQLearningAgent,
     return learning_curve
 
 # ============================================================================
+# VISUALIZATION
+# ============================================================================
+
+def visualize_solution(maze: np.ndarray, path: List[Tuple[int, int]], 
+                      maze_name: str, save_path: Optional[str] = None):
+    """Visualize the solution path in the maze."""
+    visual = maze.copy().astype(float)
+    
+    # Mark path
+    for i, (row, col) in enumerate(path[1:-1], 1):
+        visual[row, col] = 0.5 + (i / len(path)) * 0.3
+    
+    # Create text representation
+    print(f"\n{maze_name} Solution:")
+    print("-" * 15)
+    
+    for row in range(5):
+        line = ""
+        for col in range(5):
+            if (row, col) in path[1:-1]:
+                line += "o "
+            elif visual[row, col] == START:
+                line += "S "
+            elif visual[row, col] == GOAL:
+                line += "G "
+            elif visual[row, col] == WALL:
+                line += "█ "
+            else:
+                line += ". "
+        print(line)
+    
+    print(f"Path length: {len(path) - 1} steps")
+
+# ============================================================================
 # MAIN EXPERIMENTAL PIPELINE
 # ============================================================================
 
-def run_optimized_experiments(config: Optional[Dict] = None):
-    """
-    Execute optimized adaptive problem-solving experiments.
-    """
+def run_experiments(config: Optional[Dict] = None):
+    """Execute adaptive problem-solving experiments with enhancements."""
     if config is None:
         config = {
             "episodes_per_maze": 100,  # Reduced due to faster convergence
@@ -955,14 +1064,14 @@ def run_optimized_experiments(config: Optional[Dict] = None):
             "gamma": 0.99,
             "batch_size": BATCH_SIZE,
             "parallel_envs": PARALLEL_ENVS,
-            "output_dir": "results_optimized",
+            "output_dir": "results",
             "visualize": True
         }
     
     timestamp = datetime.now().strftime("%m%d%Y_%H%M%S")
     
     print("\n" + "=" * 60)
-    print("OPTIMIZED VQNN ADAPTIVE PROBLEM-SOLVING EXPERIMENTS")
+    print("VQNN ADAPTIVE PROBLEM-SOLVING EXPERIMENTS")
     print("=" * 60)
     print(f"Quantum Backend: {QUANTUM_BACKEND if PENNYLANE_AVAILABLE else 'Classical'}")
     print(f"GPU Acceleration: {'ENABLED' if QUANTUM_CONFIG['gpu'] else 'DISABLED'}")
@@ -978,17 +1087,17 @@ def run_optimized_experiments(config: Optional[Dict] = None):
     # Output setup
     os.makedirs(config["output_dir"], exist_ok=True)
     output_file = os.path.join(config["output_dir"], 
-                               f"vqnn_optimized_results_{timestamp}.csv")
+                               f"vqnn_results_{timestamp}.csv")
     
     # Initialize VQNN and agent once (reuse for all mazes)
-    vqnn = OptimizedVQNN(
+    vqnn = VQNN(
         num_qubits=25,
         num_layers=2,
         learning_rate=config["learning_rate"],
         batch_size=config["batch_size"]
     )
     
-    agent = OptimizedQLearningAgent(
+    agent = QLearningAgent(
         vqnn=vqnn,
         epsilon=config["epsilon_start"],
         gamma=config["gamma"],
@@ -997,16 +1106,21 @@ def run_optimized_experiments(config: Optional[Dict] = None):
     
     # Prepare results storage
     headers = [
-        "run_id", "timestamp", "maze_name", "steps_to_goal", 
-        "optimal_steps", "efficiency_score", "final_reward",
-        "convergence_episode", "training_time", "gpu_accelerated"
+        "run_id", "timestamp", "maze_name", "maze_complexity",
+        "episodes_trained", "steps_to_goal", "optimal_steps", "efficiency_score",
+        "final_reward", "convergence_episode", "performance_discontinuity",
+        "path_length", "path_lz_complexity", "path_shannon_entropy",
+        "action_sequence_length", "action_lz_complexity", "action_shannon_entropy",
+        "action_approximate_entropy", "is_emergent", "emergence_type", 
+        "emergence_score", "solution_path", "action_sequence",
+        "quantum_backend", "gpu_accelerated", "training_time"
     ]
     
     results = []
     
-    print("\nRunning optimized experiments...\n")
+    print("\nRunning experiments...\n")
     
-    # Process mazes in batches
+    # Process mazes
     total_time = 0
     for idx, (maze, maze_name) in enumerate(mazes, 1):
         print(f"\nMaze {idx}: {maze_name}")
@@ -1017,6 +1131,9 @@ def run_optimized_experiments(config: Optional[Dict] = None):
         # Calculate optimal path
         optimal_steps = generator.bfs_shortest_path(maze)
         print(f"  Optimal path: {optimal_steps} steps")
+        
+        # Calculate baseline
+        random_steps = optimal_steps * 5
         
         # Create parallel environments for this maze
         parallel_mazes = [maze] * config["parallel_envs"]
@@ -1042,34 +1159,77 @@ def run_optimized_experiments(config: Optional[Dict] = None):
             )
             position, reward, done = env.step(actions[0])
         
-        # Calculate metrics
-        efficiency = optimal_steps / env.steps if env.steps > 0 else 0
+        # Create solution
+        solution = MazeSolution(
+            maze_id=maze_name,
+            steps_to_goal=env.steps,
+            optimal_steps=optimal_steps,
+            efficiency_score=optimal_steps / env.steps if env.steps > 0 else 0,
+            solution_path=env.path,
+            action_sequence=env.actions,
+            learning_curve=learning_curve,
+            final_reward=reward,
+            convergence_episode=len(learning_curve),
+            performance_discontinuity=False
+        )
+        
+        # Complexity analysis
+        path_str = ''.join([f"{r}{c}" for r, c in solution.solution_path])
+        action_str = ''.join([a[0] for a in solution.action_sequence])
+        
+        path_lz = lz_complexity(path_str)
+        path_entropy = shannon_entropy(path_str)
+        action_lz = lz_complexity(action_str)
+        action_entropy = shannon_entropy(action_str)
+        
+        # Convert actions to numeric for approximate entropy
+        action_numeric = [ACTIONS.index(a) for a in solution.action_sequence]
+        action_apen = approximate_entropy(action_numeric) if len(action_numeric) > 2 else 0
+        
+        # Emergence detection
+        baselines = {"random": random_steps, "optimal": optimal_steps}
+        emergence = detect_emergence(solution, baselines, learning_curve)
+        
         training_time = time.time() - start_time
         total_time += training_time
         
-        # Find convergence episode
-        convergence_episode = len(learning_curve)
-        if len(learning_curve) > 10:
-            for i in range(10, len(learning_curve)):
-                if learning_curve[i] > 50:  # Threshold for "solved"
-                    convergence_episode = i
-                    break
-        
-        print(f"  Final: {env.steps} steps, Efficiency: {efficiency:.2f}")
+        print(f"  Final: {solution.steps_to_goal} steps, "
+              f"Efficiency: {solution.efficiency_score:.2f}, "
+              f"Emergent: {emergence['is_emergent']}")
         print(f"  Training time: {training_time:.2f}s")
+        
+        # Visualize solution
+        if config.get("visualize", True):
+            visualize_solution(maze, solution.solution_path, maze_name)
         
         # Save results
         results.append([
-            f"VQNN_optimized_{idx}",
+            f"VQNN_maze_{idx}",
             datetime.now().isoformat(),
             maze_name,
-            env.steps,
+            len(solution.solution_path),
+            config["episodes_per_maze"],
+            solution.steps_to_goal,
             optimal_steps,
-            efficiency,
-            reward,
-            convergence_episode,
-            training_time,
-            QUANTUM_CONFIG['gpu']
+            solution.efficiency_score,
+            solution.final_reward,
+            solution.convergence_episode,
+            solution.performance_discontinuity,
+            len(solution.solution_path),
+            path_lz,
+            path_entropy,
+            len(solution.action_sequence),
+            action_lz,
+            action_entropy,
+            action_apen,
+            emergence["is_emergent"],
+            emergence["emergence_type"],
+            emergence["emergence_score"],
+            str(solution.solution_path),
+            str(solution.action_sequence),
+            QUANTUM_BACKEND if PENNYLANE_AVAILABLE else "classical",
+            QUANTUM_CONFIG['gpu'],
+            training_time
         ])
         
         # Reset epsilon for next maze
@@ -1081,21 +1241,42 @@ def run_optimized_experiments(config: Optional[Dict] = None):
         writer.writerow(headers)
         writer.writerows(results)
     
-    # Performance report
+    print(f"\nResults saved to: {output_file}")
+    
+    # Summary statistics
     print("\n" + "=" * 60)
-    print("PERFORMANCE SUMMARY")
+    print("SUMMARY")
     print("=" * 60)
+    
+    total_emergent = sum(1 for r in results if r[18])
+    avg_efficiency = np.mean([r[7] for r in results])
+    
+    print(f"Total mazes: {len(results)}")
+    print(f"Emergent solutions: {total_emergent} ({total_emergent/len(results)*100:.1f}%)")
+    print(f"Average efficiency: {avg_efficiency:.3f}")
     print(f"Total training time: {total_time:.2f}s")
     print(f"Average time per maze: {total_time/len(mazes):.2f}s")
+    print(f"Quantum backend: {QUANTUM_BACKEND if PENNYLANE_AVAILABLE else 'Classical'}")
+    print(f"GPU acceleration: {'Yes (NVIDIA cuQuantum)' if QUANTUM_CONFIG['gpu'] else 'No'}")
     
+    # Performance metrics
     if hasattr(vqnn, '_cache_hits'):
         cache_ratio = vqnn._cache_hits / (vqnn._cache_hits + vqnn._cache_misses + 1)
         print(f"Circuit cache hit ratio: {cache_ratio:.2%}")
     
     vqnn.perf.report()
     
-    print(f"\nResults saved to: {output_file}")
-    print("✅ Optimized experiment complete!")
+    # Detailed breakdown by emergence type
+    emergence_types = {}
+    for r in results:
+        if r[18]:  # is_emergent
+            etype = r[19]  # emergence_type
+            emergence_types[etype] = emergence_types.get(etype, 0) + 1
+    
+    if emergence_types:
+        print("\nEmergence types:")
+        for etype, count in emergence_types.items():
+            print(f"  {etype}: {count}")
     
     return results
 
@@ -1104,7 +1285,7 @@ def run_optimized_experiments(config: Optional[Dict] = None):
 # ============================================================================
 
 if __name__ == "__main__":
-    # Run with optimized configuration
+    # Run with enhanced configuration
     config = {
         "episodes_per_maze": 100,    # Reduced due to faster convergence
         "epsilon_start": 0.3,
@@ -1113,15 +1294,15 @@ if __name__ == "__main__":
         "gamma": 0.99,
         "batch_size": BATCH_SIZE,
         "parallel_envs": PARALLEL_ENVS,
-        "output_dir": "results_optimized",
+        "output_dir": "results",
         "visualize": True
     }
     
-    print("🚀 Starting Optimized VQNN Experiments...")
+    print("🚀 Starting VQNN Experiments...")
     print(f"Configuration: Batch={BATCH_SIZE}, Parallel={PARALLEL_ENVS}")
     
-    results = run_optimized_experiments(config)
+    results = run_experiments(config)
     
     print("\n" + "=" * 60)
-    print("All experiments completed successfully!")
+    print("✅ Experiment complete!")
     print("=" * 60)
