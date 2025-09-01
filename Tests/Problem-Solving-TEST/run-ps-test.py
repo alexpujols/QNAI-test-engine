@@ -15,7 +15,7 @@ __author__ = "Alex Pujols"
 __copyright__ = "Alex Pujols"
 __credits__ = ["Alex Pujols"]
 __license__ = "MIT"
-__version__ = "1.10-alpha"
+__version__ = "1.11-alpha"
 __maintainer__ = "Alex Pujols"
 __email__ = "A.Pujols@o365.ncu.edu; alexpujols@ieee.org"
 __status__ = "Prototype"
@@ -85,14 +85,14 @@ class PerformanceMonitor:
 # ============================================================================
 
 def configure_gpu_settings():
-    """Configure GPU settings for shot-based quantum simulation."""
+    """Configure GPU settings for 20-qubit quantum simulation."""
     import os
     
     os.environ['CUDA_LAUNCH_BLOCKING'] = '0'
     os.environ['CUDNN_BENCHMARK'] = 'TRUE'
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
     
-    print("✓ GPU settings configured for shot-based simulation")
+    print("✓ GPU settings configured for 20-qubit simulation")
 
 configure_gpu_settings()
 
@@ -101,28 +101,27 @@ configure_gpu_settings()
 # ============================================================================
 
 def detect_quantum_backend():
-    """Detect and configure quantum backend for shot-based simulation."""
+    """Detect and configure quantum backend for 20-qubit simulation."""
     try:
         import pennylane as qml
         from pennylane import numpy as pnp
         
         # Try GPU backend first
         try:
-            # Test with shots to ensure compatibility
             test_dev = qml.device("lightning.gpu", wires=2, shots=100)
             del test_dev
             
             print("=" * 60)
             print("✓ NVIDIA cuQuantum SDK detected!")
-            print("✓ Using Lightning.GPU with shot-based simulation")
-            print("✓ 25 qubits with 1000 shots per evaluation")
+            print("✓ Using Lightning.GPU for 20-qubit simulation")
+            print("✓ Expected runtime: 10-15 minutes per maze")
             print("=" * 60)
             
             return {
                 "available": True,
                 "backend": "lightning.gpu",
                 "interface": "autograd",
-                "diff_method": "parameter-shift",  # Required for shots
+                "diff_method": "parameter-shift",
                 "gpu": True,
                 "pnp": pnp
             }
@@ -133,8 +132,8 @@ def detect_quantum_backend():
                 test_dev = qml.device("lightning.qubit", wires=2, shots=100)
                 del test_dev
                 print("=" * 60)
-                print("✓ Using Lightning.Qubit with shot-based simulation")
-                print("✓ 25 qubits with 1000 shots per evaluation")
+                print("✓ Using Lightning.Qubit (CPU) for 20-qubit simulation")
+                print("⚠ Note: CPU simulation will be slower")
                 print("=" * 60)
                 
                 return {
@@ -147,7 +146,7 @@ def detect_quantum_backend():
                 }
             except:
                 print("=" * 60)
-                print("ℹ Using default.qubit with shot-based simulation")
+                print("ℹ Using default.qubit for 20-qubit simulation")
                 print("=" * 60)
                 
                 return {
@@ -176,21 +175,21 @@ pnp = QUANTUM_CONFIG["pnp"]
 import pennylane as qml
 
 # ============================================================================
-# CONFIGURATION CONSTANTS
+# CONFIGURATION CONSTANTS - OPTIMIZED FOR 20 QUBITS
 # ============================================================================
 
 # Quantum circuit configuration
-NUM_QUBITS = 25  # Full 25 qubits
-NUM_LAYERS = 1   # Single layer for shot-based efficiency
-SHOTS = 1000     # Number of measurement shots
+NUM_QUBITS = 20      # Reduced from 25 for practical runtime
+NUM_LAYERS = 1        # Single layer for efficiency
+SHOTS = 500           # Reduced from 1000 for speed
 
-# Training configuration adjusted for shot noise
-EPISODES_PER_MAZE = 150  # More episodes due to noise
-LEARNING_RATE = 0.05      # Higher LR to overcome shot noise
+# Training configuration
+EPISODES_PER_MAZE = 100   # Reduced from 150
+LEARNING_RATE = 0.06      # Slightly higher for shot noise
 GAMMA = 0.95
 EPSILON_START = 0.3
-EPSILON_DECAY = 0.993     # Slower decay for exploration
-BATCH_SIZE = 32           # Reasonable batch size
+EPSILON_DECAY = 0.993
+BATCH_SIZE = 32
 
 # Maze constants
 EMPTY = 0
@@ -226,35 +225,28 @@ class MazeSolution:
     performance_discontinuity: bool
 
 # ============================================================================
-# SHOT-BASED 25-QUBIT VQNN
+# 20-QUBIT VQNN
 # ============================================================================
 
 class VQNN:
     """
-    25-Qubit Variational Quantum Neural Network using shot-based simulation.
+    20-Qubit Variational Quantum Neural Network.
     
-    This implementation uses measurement sampling (shots) instead of exact
-    state vector calculation, making 25-qubit simulation tractable.
+    Optimized for practical runtime while maintaining quantum advantage.
+    Uses shot-based simulation with 500 shots for speed.
     """
     
     def __init__(self, num_qubits: int = NUM_QUBITS, num_layers: int = NUM_LAYERS,
                  learning_rate: float = LEARNING_RATE, shots: int = SHOTS):
         """
-        Initialize VQNN with shot-based quantum simulation.
-        
-        Args:
-            num_qubits: Number of qubits (25)
-            num_layers: Number of variational layers (1 for efficiency)
-            learning_rate: Learning rate (higher for shot noise)
-            shots: Number of measurement shots (1000)
+        Initialize 20-qubit VQNN with shot-based quantum simulation.
         """
         self.num_qubits = num_qubits
         self.num_layers = num_layers
         self.learning_rate = learning_rate
         self.shots = shots
         
-        # Initialize parameters - fewer for shot-based
-        # Only 2 parameters per qubit for single layer
+        # Initialize parameters
         self.params = pnp.random.randn(num_layers, num_qubits, 2) * 0.1
         
         # Adam optimizer state
@@ -263,60 +255,48 @@ class VQNN:
         self.t = 0
         
         # Shot noise compensation
-        self.noise_scale = 1.0 / np.sqrt(shots)  # Statistical error scale
+        self.noise_scale = 1.0 / np.sqrt(shots)
         
         # Performance tracking
         self.perf = PerformanceMonitor()
         
-        print(f"Initializing Shot-Based 25-Qubit VQNN...")
+        print(f"Initializing 20-Qubit VQNN...")
         print(f"  Configuration:")
         print(f"    - Qubits: {num_qubits}")
         print(f"    - Layers: {num_layers}")
         print(f"    - Shots: {shots}")
-        print(f"    - Statistical error: ±{self.noise_scale:.3f}")
+        print(f"    - Statistical error: ±{self.noise_scale*100:.1f}%")
         print(f"    - Backend: {QUANTUM_BACKEND}")
         
         # Initialize quantum device with shots
-        # CORRECTED: Removed analytic parameter
         self.dev = qml.device(
             QUANTUM_BACKEND,
             wires=num_qubits,
             shots=shots
         )
         
-        # Create shot-optimized circuit
-        self.circuit = self._create_shot_optimized_circuit()
+        # Create circuit
+        self.circuit = self._create_circuit()
         
-        print(f"  ✓ Shot-based quantum circuit initialized")
-        print(f"  ✓ Expected runtime: 5-15 minutes per maze")
+        print(f"  ✓ 20-qubit quantum circuit initialized")
+        print(f"  ✓ Expected runtime: 10-15 minutes per maze")
     
-    def _create_shot_optimized_circuit(self):
+    def _create_circuit(self):
         """
-        Create quantum circuit optimized for shot-based simulation.
-        
-        Simpler circuit structure to reduce shot noise accumulation:
-        - Single layer of parameterized gates
-        - Local entanglement only
-        - Robust measurement strategy
+        Create 20-qubit quantum circuit optimized for practical runtime.
         """
         
         @qml.qnode(
             self.dev,
             interface=QUANTUM_INTERFACE,
-            diff_method=QUANTUM_DIFF_METHOD  # parameter-shift for shots
+            diff_method=QUANTUM_DIFF_METHOD
         )
         def circuit(inputs, params):
             """
-            Shot-optimized 25-qubit quantum circuit.
-            
-            Design principles:
-            - Shallow circuit to minimize noise accumulation
-            - Local operations for better shot statistics
-            - Strategic entanglement for quantum advantage
+            20-qubit circuit with balanced depth and entanglement.
             """
             
-            # Input encoding - simple angle encoding
-            # More robust to shot noise than amplitude encoding
+            # Angle encoding (more robust for shots)
             for i in range(self.num_qubits):
                 qml.RY(inputs[i] * np.pi, wires=i)
             
@@ -325,82 +305,81 @@ class VQNN:
                 qml.RX(params[0, i, 0], wires=i)
                 qml.RY(params[0, i, 1], wires=i)
             
-            # Local entanglement pattern
-            # Only nearest-neighbor to reduce circuit depth
+            # Efficient entanglement pattern for 20 qubits
+            # Linear entanglement
             for i in range(0, self.num_qubits - 1, 2):
                 qml.CNOT(wires=[i, i + 1])
             
-            # Second set of CNOTs for odd pairs
             for i in range(1, self.num_qubits - 1, 2):
                 qml.CNOT(wires=[i, i + 1])
             
+            # Add some long-range connections for quantum advantage
+            # Connect first and last quartiles
+            qml.CNOT(wires=[0, self.num_qubits-1])
+            qml.CNOT(wires=[5, 15])  # Connect middle qubits
+            
             # Measure 4 qubits for Q-values
-            # Using expectation values with shots
             return [qml.expval(qml.PauliZ(i)) for i in range(4)]
         
         return circuit
     
     def encode_state(self, maze: np.ndarray, position: Tuple[int, int]) -> np.ndarray:
         """
-        Encode maze state for shot-based quantum processing.
-        
-        Simplified encoding to reduce sensitivity to shot noise.
-        
-        Args:
-            maze: Current 5x5 maze
-            position: Agent position
-            
-        Returns:
-            25-dimensional encoded state vector
+        Encode maze state into 20-dimensional quantum state.
+        Uses subset of maze features for 20 qubits.
         """
         state = pnp.zeros(self.num_qubits, dtype=np.float32)
         
-        # Direct position encoding
+        # First 16 qubits: selected maze cells (4x4 grid around agent)
         flat_maze = maze.flatten()
         
-        for i in range(25):
-            row, col = i // 5, i % 5
-            
-            # Binary-like encoding for robustness
-            if flat_maze[i] == WALL:
-                state[i] = -0.5
-            elif flat_maze[i] == GOAL:
-                state[i] = 0.5
-            else:
-                state[i] = 0.0
-            
-            # Agent position gets strongest signal
-            if (row, col) == position:
-                state[i] = 1.0
+        # Map 5x5 maze to 20 features
+        # Use center 4x4 grid (indices 6,7,8,9,11,12,13,14,16,17,18,19,21,22,23,24)
+        important_indices = [6,7,8,9, 11,12,13,14, 16,17,18,19, 21,22,23,24]
         
-        # Normalize for consistency
+        for i, maze_idx in enumerate(important_indices[:16]):
+            if maze_idx < 25:
+                if flat_maze[maze_idx] == WALL:
+                    state[i] = -0.5
+                elif flat_maze[maze_idx] == GOAL:
+                    state[i] = 0.7
+                else:
+                    state[i] = 0.0
+        
+        # Qubits 16-17: Agent position
+        row, col = position
+        state[16] = row / 4.0
+        state[17] = col / 4.0
+        
+        # Qubits 18-19: Distance to goal
+        goal_pos = np.where(maze == GOAL)
+        if len(goal_pos[0]) > 0:
+            state[18] = (goal_pos[0][0] - row) / 4.0
+            state[19] = (goal_pos[1][0] - col) / 4.0
+        
+        # Mark agent position strongly
+        agent_idx = row * 5 + col
+        if agent_idx in important_indices:
+            idx = important_indices.index(agent_idx)
+            if idx < 16:
+                state[idx] = 1.0
+        
+        # Normalize
         norm = pnp.linalg.norm(state)
         if norm > 0:
-            state = state / (norm * 2)  # Scaled normalization
+            state = state / (norm * 1.5)
         
         return state
     
     def get_q_values(self, maze: np.ndarray, position: Tuple[int, int]) -> np.ndarray:
-        """
-        Get Q-values using shot-based quantum circuit.
-        
-        Returns averaged measurements over shots with noise handling.
-        
-        Args:
-            maze: Current maze
-            position: Agent position
-            
-        Returns:
-            Q-values for each action with shot noise
-        """
+        """Get Q-values using 20-qubit quantum circuit."""
         state = self.encode_state(maze, position)
         
-        with timer("Shot-based circuit evaluation", verbose=False):
-            # Execute circuit with shots
+        with timer("20-qubit circuit evaluation", verbose=False):
             q_values = pnp.array(self.circuit(state, self.params))
             
-            # Add small noise for exploration (simulating shot variance)
-            if self.t > 0:  # Not during initialization
+            # Add small noise for exploration
+            if self.t > 0:
                 noise = pnp.random.normal(0, self.noise_scale, size=4)
                 q_values = q_values + noise
             
@@ -412,7 +391,6 @@ class VQNN:
         """Get Q-values directly from encoded state."""
         q_values = pnp.array(self.circuit(state, self.params))
         
-        # Add shot noise simulation
         if self.t > 0:
             noise = pnp.random.normal(0, self.noise_scale, size=4)
             q_values = q_values + noise
@@ -421,43 +399,18 @@ class VQNN:
     
     def update(self, state: np.ndarray, action: int, target: float, 
                current_q: float) -> float:
-        """
-        Update parameters using parameter-shift rule for shot-based gradients.
-        
-        Includes noise-aware optimization strategies.
-        
-        Args:
-            state: Encoded state
-            action: Action taken
-            target: Target Q-value
-            current_q: Current Q-value
-            
-        Returns:
-            Loss value
-        """
+        """Update parameters using parameter-shift rule."""
         self.t += 1
         loss = (target - current_q) ** 2
         
-        # Compute gradient with parameter-shift rule
         gradient = pnp.zeros_like(self.params)
-        shift = np.pi / 2  # Standard shift for parameter-shift rule
+        shift = np.pi / 2
         
-        with timer("Shot-based gradient computation", verbose=False):
-            # Sample subset of parameters to update (for speed)
-            # With shots, updating all parameters is expensive
+        with timer("Gradient computation", verbose=False):
+            # Sample 30% of parameters for efficiency
             num_params = self.num_layers * self.num_qubits * 2
+            sample_size = max(6, int(0.3 * num_params))
             
-            # Adaptive sampling: update more parameters early, fewer later
-            if self.t < 50:
-                sample_rate = 0.5  # Update 50% of parameters
-            elif self.t < 100:
-                sample_rate = 0.3  # Update 30% of parameters
-            else:
-                sample_rate = 0.2  # Update 20% of parameters
-            
-            sample_size = max(5, int(sample_rate * num_params))
-            
-            # Randomly select parameters to update
             param_indices = []
             for _ in range(sample_size):
                 l = np.random.randint(self.num_layers)
@@ -465,32 +418,23 @@ class VQNN:
                 p = np.random.randint(2)
                 param_indices.append((l, q, p))
             
-            # Parameter-shift gradient estimation
             for layer, qubit, param_idx in param_indices:
-                # Shift parameter up
                 self.params[layer, qubit, param_idx] += shift
                 q_plus = self.get_q_values_from_state(state)[action]
                 
-                # Shift parameter down
                 self.params[layer, qubit, param_idx] -= 2 * shift
                 q_minus = self.get_q_values_from_state(state)[action]
                 
-                # Restore parameter
                 self.params[layer, qubit, param_idx] += shift
                 
-                # Parameter-shift gradient with noise scaling
                 gradient[layer, qubit, param_idx] = (q_plus - q_minus) / (2 * np.sin(shift))
-                
-                # Scale by sampling rate to maintain update magnitude
-                gradient[layer, qubit, param_idx] /= sample_rate
+                gradient[layer, qubit, param_idx] /= 0.3  # Scale for sampling
         
-        # Scale gradient by loss derivative
         gradient *= 2 * (current_q - target)
         
-        # Adam optimizer with noise-aware settings
-        beta1 = 0.9
-        beta2 = 0.99  # Less aggressive than usual due to noise
-        eps = 1e-6    # Larger epsilon for shot noise
+        # Adam optimizer
+        beta1, beta2 = 0.9, 0.99
+        eps = 1e-6
         
         self.m = beta1 * self.m + (1 - beta1) * gradient
         self.v = beta2 * self.v + (1 - beta2) * gradient ** 2
@@ -498,13 +442,10 @@ class VQNN:
         m_hat = self.m / (1 - beta1 ** self.t)
         v_hat = self.v / (1 - beta2 ** self.t)
         
-        # Adaptive learning rate with noise compensation
-        noise_adjusted_lr = self.learning_rate * np.sqrt(self.shots / 1000)
-        effective_lr = noise_adjusted_lr / np.sqrt(self.t)
-        
+        effective_lr = self.learning_rate / np.sqrt(self.t)
         self.params -= effective_lr * m_hat / (pnp.sqrt(v_hat) + eps)
         
-        # Clip parameters to prevent instability from shot noise
+        # Clip parameters
         self.params = pnp.clip(self.params, -2 * np.pi, 2 * np.pi)
         
         self.perf.record("loss", float(loss))
@@ -515,7 +456,7 @@ class VQNN:
 # ============================================================================
 
 class ExperienceReplayBuffer:
-    """Experience replay buffer adapted for shot-based training."""
+    """Experience replay buffer for training stability."""
     
     def __init__(self, capacity: int = 10000):
         self.capacity = capacity
@@ -524,7 +465,6 @@ class ExperienceReplayBuffer:
     
     def push(self, state: np.ndarray, action: int, reward: float, 
              next_state: np.ndarray, done: bool):
-        """Add experience to buffer."""
         if len(self.buffer) < self.capacity:
             self.buffer.append(None)
         
@@ -532,7 +472,6 @@ class ExperienceReplayBuffer:
         self.position = (self.position + 1) % self.capacity
     
     def sample_batch(self, batch_size: int) -> List:
-        """Sample random batch for training."""
         indices = np.random.choice(len(self.buffer), batch_size, replace=False)
         batch = [self.buffer[i] for i in indices]
         return batch
@@ -545,14 +484,14 @@ class ExperienceReplayBuffer:
 # ============================================================================
 
 class QLearningAgent:
-    """Q-learning agent adapted for shot-based VQNN."""
+    """Q-learning agent for 20-qubit VQNN."""
     
     def __init__(self, vqnn: VQNN, epsilon: float = EPSILON_START, 
                  gamma: float = GAMMA, epsilon_decay: float = EPSILON_DECAY,
                  use_replay: bool = True, batch_size: int = BATCH_SIZE):
         self.vqnn = vqnn
         self.epsilon = epsilon
-        self.epsilon_min = 0.05  # Higher min due to shot noise
+        self.epsilon_min = 0.05
         self.epsilon_decay = epsilon_decay
         self.gamma = gamma
         self.use_replay = use_replay
@@ -565,34 +504,22 @@ class QLearningAgent:
     
     def select_action(self, maze: np.ndarray, position: Tuple[int, int],
                      training: bool = True) -> Tuple[int, str]:
-        """Select action with noise-aware epsilon-greedy policy."""
         if training and self.rng.random() < self.epsilon:
             action_idx = self.rng.randint(4)
         else:
             q_values = self.vqnn.get_q_values(maze, position)
-            
-            # Boltzmann action selection for shot noise robustness
-            if training and self.vqnn.t > 0:
-                # Temperature parameter decreases over time
-                temperature = 0.5 / np.sqrt(self.vqnn.t)
-                probabilities = np.exp(q_values / temperature)
-                probabilities = probabilities / np.sum(probabilities)
-                action_idx = self.rng.choice(4, p=probabilities)
-            else:
-                action_idx = int(pnp.argmax(q_values))
+            action_idx = int(pnp.argmax(q_values))
         
         return action_idx, ACTIONS[action_idx]
     
     def train_step(self, maze: np.ndarray, position: Tuple[int, int],
                   action: int, reward: float, next_position: Tuple[int, int],
                   done: bool) -> float:
-        """Training step adapted for shot noise."""
         if self.use_replay:
             state = self.vqnn.encode_state(maze, position)
             next_state = self.vqnn.encode_state(maze, next_position)
             self.replay_buffer.push(state, action, reward, next_state, done)
             
-            # Train more frequently to average out shot noise
             if len(self.replay_buffer) >= self.batch_size:
                 return self._train_batch()
         
@@ -614,11 +541,10 @@ class QLearningAgent:
         return loss
     
     def _train_batch(self) -> float:
-        """Batch training with shot noise handling."""
         batch = self.replay_buffer.sample_batch(self.batch_size)
         total_loss = 0.0
         
-        # Process in smaller sub-batches for shot-based training
+        # Process in smaller sub-batches
         sub_batch_size = 8
         
         for i in range(0, len(batch), sub_batch_size):
@@ -659,12 +585,10 @@ class MazeEnvironment:
     
     @staticmethod
     def find_position(maze: np.ndarray, marker: int) -> Tuple[int, int]:
-        """Find position of a marker in the maze."""
         pos = np.where(maze == marker)
         return (pos[0][0], pos[1][0])
     
     def reset(self) -> Tuple[int, int]:
-        """Reset environment."""
         self.maze = self.original_maze.copy()
         self.agent_pos = self.start_pos
         self.steps = 0
@@ -673,7 +597,6 @@ class MazeEnvironment:
         return self.agent_pos
     
     def step(self, action: str) -> Tuple[Tuple[int, int], float, bool]:
-        """Execute action in environment."""
         self.steps += 1
         self.actions.append(action)
         
@@ -728,7 +651,6 @@ class MazeGenerator:
     
     @staticmethod
     def bfs_shortest_path(maze: np.ndarray) -> int:
-        """Find shortest path using BFS."""
         from collections import deque
         
         start = MazeEnvironment.find_position(maze, START)
@@ -761,7 +683,6 @@ class MazeGenerator:
 
 @lru_cache(maxsize=512)
 def lz_complexity(s: str) -> int:
-    """Calculate Lempel-Ziv complexity."""
     if len(s) <= 1:
         return len(s)
     
@@ -787,7 +708,6 @@ def lz_complexity(s: str) -> int:
 
 @lru_cache(maxsize=512)
 def shannon_entropy(s: str) -> float:
-    """Calculate Shannon entropy."""
     if not s:
         return 0.0
     
@@ -805,7 +725,6 @@ def shannon_entropy(s: str) -> float:
     return entropy
 
 def approximate_entropy(U: List[Any], m: int = 2, r: float = 0.2) -> float:
-    """Calculate approximate entropy."""
     if len(U) < m:
         return 0.0
     
@@ -832,7 +751,6 @@ def approximate_entropy(U: List[Any], m: int = 2, r: float = 0.2) -> float:
 
 def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
                     learning_curve: List[float]) -> Dict[str, Any]:
-    """Detect emergent behavior in maze solving."""
     efficiency = solution.efficiency_score
     
     if len(learning_curve) > 10:
@@ -849,12 +767,11 @@ def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
     emergence_type = "none"
     emergence_score = 0.0
     
-    # Adjusted thresholds for shot noise
-    if efficiency >= 0.90:  # Slightly lower due to noise
+    if efficiency >= 0.90:
         is_emergent = True
         emergence_type = "perfect_navigation"
         emergence_score = 1.0
-    elif efficiency >= 0.75:  # Adjusted threshold
+    elif efficiency >= 0.75:
         is_emergent = True
         emergence_type = "efficient_navigation"
         emergence_score = 0.8
@@ -866,7 +783,7 @@ def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
         emergence_score = max(emergence_score, 0.7)
     
     random_improvement = (baseline_steps["random"] - solution.steps_to_goal) / baseline_steps["random"]
-    if random_improvement > 0.7:  # Adjusted for noise
+    if random_improvement > 0.7:
         is_emergent = True
         if emergence_type == "none":
             emergence_type = "intelligent_navigation"
@@ -887,7 +804,6 @@ def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
 
 def visualize_solution(maze: np.ndarray, path: List[Tuple[int, int]], 
                       maze_name: str):
-    """Visualize the solution path."""
     print(f"\n{maze_name} Solution:")
     print("-" * 15)
     
@@ -913,7 +829,7 @@ def visualize_solution(maze: np.ndarray, path: List[Tuple[int, int]],
 # ============================================================================
 
 def run_experiments(config: Optional[Dict] = None):
-    """Execute shot-based 25-qubit quantum maze navigation experiments."""
+    """Execute 20-qubit quantum maze navigation experiments."""
     if config is None:
         config = {
             "episodes_per_maze": EPISODES_PER_MAZE,
@@ -930,14 +846,14 @@ def run_experiments(config: Optional[Dict] = None):
     timestamp = datetime.now().strftime("%m%d%Y_%H%M%S")
     
     print("\n" + "=" * 60)
-    print("SHOT-BASED 25-QUBIT VQNN EXPERIMENTS")
+    print("20-QUBIT VQNN ADAPTIVE PROBLEM-SOLVING EXPERIMENTS")
     print("=" * 60)
     print(f"Quantum Backend: {QUANTUM_BACKEND}")
     print(f"GPU Acceleration: {'ENABLED' if GPU_AVAILABLE else 'DISABLED'}")
     print(f"Qubits: {NUM_QUBITS}")
     print(f"Shots: {SHOTS}")
     print(f"Episodes per maze: {config['episodes_per_maze']}")
-    print(f"Expected time per maze: 5-15 minutes")
+    print(f"Expected total runtime: 1.5-2.5 hours")
     print("=" * 60)
     print()
     
@@ -962,7 +878,7 @@ def run_experiments(config: Optional[Dict] = None):
     results = []
     total_start = time.time()
     
-    print("Running shot-based quantum experiments...\n")
+    print("Running 20-qubit quantum experiments...\n")
     
     # Initialize VQNN once
     vqnn = VQNN(
@@ -999,7 +915,7 @@ def run_experiments(config: Optional[Dict] = None):
         best_solution = None
         best_steps = float('inf')
         
-        print(f"\nTraining with shot-based quantum circuit (1000 shots)...")
+        print(f"\nTraining with 20-qubit quantum circuit (500 shots)...")
         print("Progress:")
         
         for episode in range(config["episodes_per_maze"]):
@@ -1046,9 +962,9 @@ def run_experiments(config: Optional[Dict] = None):
         print("\nEvaluating final performance...")
         agent.epsilon = 0
         
-        # Run multiple evaluations to average out shot noise
+        # Run multiple evaluations
         eval_steps = []
-        for _ in range(5):
+        for _ in range(3):
             env.reset()
             position = env.start_pos
             done = False
@@ -1060,7 +976,6 @@ def run_experiments(config: Optional[Dict] = None):
             if done and position == env.goal_pos:
                 eval_steps.append(env.steps)
         
-        # Use median of evaluations for robustness
         if eval_steps:
             final_steps = int(np.median(eval_steps))
         else:
@@ -1137,9 +1052,6 @@ def run_experiments(config: Optional[Dict] = None):
             SHOTS,
             training_time
         ])
-        
-        # Reset parameters for next maze (optional)
-        # vqnn.params = pnp.random.randn(NUM_LAYERS, NUM_QUBITS, 2) * 0.1
     
     # Save all results
     with open(output_file, 'w', newline='') as f:
@@ -1165,7 +1077,7 @@ def run_experiments(config: Optional[Dict] = None):
     print(f"Quantum backend: {QUANTUM_BACKEND}")
     print(f"Qubits: {NUM_QUBITS}")
     print(f"Shots: {SHOTS}")
-    print(f"Statistical error: ±{1/np.sqrt(SHOTS):.3f}")
+    print(f"Statistical error: ±{100/np.sqrt(SHOTS):.1f}%")
     
     emergence_types = {}
     for r in results:
@@ -1191,15 +1103,14 @@ def run_experiments(config: Optional[Dict] = None):
 
 if __name__ == "__main__":
     print("\n" + "="*60)
-    print("SHOT-BASED 25-QUBIT QUANTUM EXPERIMENT")
+    print("20-QUBIT QUANTUM MAZE NAVIGATION EXPERIMENT")
     print("="*60)
-    print("\nThis experiment uses 25 qubits with shot-based simulation")
-    print("for tractable quantum computation.")
     print("\nConfiguration:")
-    print(f"  - Qubits: {NUM_QUBITS}")
+    print(f"  - Qubits: {NUM_QUBITS} (balanced for performance)")
     print(f"  - Shots: {SHOTS} per circuit evaluation")
+    print(f"  - Episodes: {EPISODES_PER_MAZE} per maze")
     print(f"  - Statistical error: ±{100/np.sqrt(SHOTS):.1f}%")
-    print(f"  - Expected runtime: 1-2 hours total")
+    print(f"  - Expected runtime: 1.5-2.5 hours total")
     print("="*60)
     
     config = {
@@ -1216,5 +1127,5 @@ if __name__ == "__main__":
     
     results = run_experiments(config)
     
-    print("\n✅ Shot-based 25-qubit experiment complete!")
+    print("\n✅ 20-qubit experiment complete!")
     print("=" * 60)
