@@ -15,7 +15,7 @@ __author__ = "Alex Pujols"
 __copyright__ = "Alex Pujols"
 __credits__ = ["Alex Pujols"]
 __license__ = "MIT"
-__version__ = "1.05-alpha"
+__version__ = "1.10-alpha"
 __maintainer__ = "Alex Pujols"
 __email__ = "A.Pujols@o365.ncu.edu; alexpujols@ieee.org"
 __status__ = "Prototype"
@@ -277,11 +277,11 @@ class VQNN:
         print(f"    - Backend: {QUANTUM_BACKEND}")
         
         # Initialize quantum device with shots
+        # CORRECTED: Removed analytic parameter
         self.dev = qml.device(
             QUANTUM_BACKEND,
             wires=num_qubits,
-            shots=shots,
-            analytic=False  # Force shot-based
+            shots=shots
         )
         
         # Create shot-optimized circuit
