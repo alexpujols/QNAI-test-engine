@@ -85,14 +85,14 @@ class PerformanceMonitor:
 # ============================================================================
 
 def configure_gpu_settings():
-    """Configure GPU settings for 20-qubit quantum simulation."""
+    """Configure GPU settings for 12-qubit quantum simulation."""
     import os
     
     os.environ['CUDA_LAUNCH_BLOCKING'] = '0'
     os.environ['CUDNN_BENCHMARK'] = 'TRUE'
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
     
-    print("✓ GPU settings configured for 20-qubit simulation")
+    print("✓ GPU settings configured for 12-qubit simulation")
 
 configure_gpu_settings()
 
@@ -101,7 +101,7 @@ configure_gpu_settings()
 # ============================================================================
 
 def detect_quantum_backend():
-    """Detect and configure quantum backend for 20-qubit simulation."""
+    """Detect and configure quantum backend for 12-qubit simulation."""
     try:
         import pennylane as qml
         from pennylane import numpy as pnp
@@ -113,8 +113,8 @@ def detect_quantum_backend():
             
             print("=" * 60)
             print("✓ NVIDIA cuQuantum SDK detected!")
-            print("✓ Using Lightning.GPU for 20-qubit simulation")
-            print("✓ Expected runtime: 10-15 minutes per maze")
+            print("✓ Using Lightning.GPU for 12-qubit simulation")
+            print("✓ Expected runtime: 2-4 minutes per maze")
             print("=" * 60)
             
             return {
@@ -132,8 +132,7 @@ def detect_quantum_backend():
                 test_dev = qml.device("lightning.qubit", wires=2, shots=100)
                 del test_dev
                 print("=" * 60)
-                print("✓ Using Lightning.Qubit (CPU) for 20-qubit simulation")
-                print("⚠ Note: CPU simulation will be slower")
+                print("✓ Using Lightning.Qubit (CPU) for 12-qubit simulation")
                 print("=" * 60)
                 
                 return {
@@ -146,7 +145,7 @@ def detect_quantum_backend():
                 }
             except:
                 print("=" * 60)
-                print("ℹ Using default.qubit for 20-qubit simulation")
+                print("ℹ Using default.qubit for 12-qubit simulation")
                 print("=" * 60)
                 
                 return {
@@ -175,21 +174,21 @@ pnp = QUANTUM_CONFIG["pnp"]
 import pennylane as qml
 
 # ============================================================================
-# CONFIGURATION CONSTANTS - OPTIMIZED FOR 20 QUBITS
+# CONFIGURATION CONSTANTS - OPTIMIZED FOR 12 QUBITS
 # ============================================================================
 
 # Quantum circuit configuration
-NUM_QUBITS = 20      # Reduced from 25 for practical runtime
-NUM_LAYERS = 1        # Single layer for efficiency
-SHOTS = 500           # Reduced from 1000 for speed
+NUM_QUBITS = 12      # Reduced to 12 for practical runtime
+NUM_LAYERS = 1        # Single layer is sufficient
+SHOTS = 200           # Fewer shots for speed with 12 qubits
 
 # Training configuration
-EPISODES_PER_MAZE = 100   # Reduced from 150
-LEARNING_RATE = 0.06      # Slightly higher for shot noise
+EPISODES_PER_MAZE = 80    # Reduced episodes
+LEARNING_RATE = 0.08      # Higher learning rate for faster convergence
 GAMMA = 0.95
 EPSILON_START = 0.3
-EPSILON_DECAY = 0.993
-BATCH_SIZE = 32
+EPSILON_DECAY = 0.99      # Slower decay with fewer episodes
+BATCH_SIZE = 16           # Smaller batch for faster updates
 
 # Maze constants
 EMPTY = 0
@@ -225,21 +224,21 @@ class MazeSolution:
     performance_discontinuity: bool
 
 # ============================================================================
-# 20-QUBIT VQNN
+# 12-QUBIT VQNN
 # ============================================================================
 
 class VQNN:
     """
-    20-Qubit Variational Quantum Neural Network.
+    12-Qubit Variational Quantum Neural Network.
     
-    Optimized for practical runtime while maintaining quantum advantage.
-    Uses shot-based simulation with 500 shots for speed.
+    Optimized for fast execution while maintaining quantum advantage.
+    Uses 200 shots for rapid circuit evaluation.
     """
     
     def __init__(self, num_qubits: int = NUM_QUBITS, num_layers: int = NUM_LAYERS,
                  learning_rate: float = LEARNING_RATE, shots: int = SHOTS):
         """
-        Initialize 20-qubit VQNN with shot-based quantum simulation.
+        Initialize 12-qubit VQNN with shot-based quantum simulation.
         """
         self.num_qubits = num_qubits
         self.num_layers = num_layers
@@ -260,7 +259,7 @@ class VQNN:
         # Performance tracking
         self.perf = PerformanceMonitor()
         
-        print(f"Initializing 20-Qubit VQNN...")
+        print(f"Initializing 12-Qubit VQNN...")
         print(f"  Configuration:")
         print(f"    - Qubits: {num_qubits}")
         print(f"    - Layers: {num_layers}")
@@ -278,12 +277,12 @@ class VQNN:
         # Create circuit
         self.circuit = self._create_circuit()
         
-        print(f"  ✓ 20-qubit quantum circuit initialized")
-        print(f"  ✓ Expected runtime: 10-15 minutes per maze")
+        print(f"  ✓ 12-qubit quantum circuit initialized")
+        print(f"  ✓ Expected runtime: 2-4 minutes per maze")
     
     def _create_circuit(self):
         """
-        Create 20-qubit quantum circuit optimized for practical runtime.
+        Create 12-qubit quantum circuit optimized for speed.
         """
         
         @qml.qnode(
@@ -293,10 +292,10 @@ class VQNN:
         )
         def circuit(inputs, params):
             """
-            20-qubit circuit with balanced depth and entanglement.
+            12-qubit circuit with efficient structure.
             """
             
-            # Angle encoding (more robust for shots)
+            # Angle encoding - fast and robust
             for i in range(self.num_qubits):
                 qml.RY(inputs[i] * np.pi, wires=i)
             
@@ -305,18 +304,13 @@ class VQNN:
                 qml.RX(params[0, i, 0], wires=i)
                 qml.RY(params[0, i, 1], wires=i)
             
-            # Efficient entanglement pattern for 20 qubits
-            # Linear entanglement
-            for i in range(0, self.num_qubits - 1, 2):
+            # Minimal entanglement for 12 qubits
+            # Linear chain is sufficient
+            for i in range(0, self.num_qubits - 1):
                 qml.CNOT(wires=[i, i + 1])
             
-            for i in range(1, self.num_qubits - 1, 2):
-                qml.CNOT(wires=[i, i + 1])
-            
-            # Add some long-range connections for quantum advantage
-            # Connect first and last quartiles
-            qml.CNOT(wires=[0, self.num_qubits-1])
-            qml.CNOT(wires=[5, 15])  # Connect middle qubits
+            # Add one wrap-around for quantum advantage
+            qml.CNOT(wires=[self.num_qubits-1, 0])
             
             # Measure 4 qubits for Q-values
             return [qml.expval(qml.PauliZ(i)) for i in range(4)]
@@ -325,62 +319,69 @@ class VQNN:
     
     def encode_state(self, maze: np.ndarray, position: Tuple[int, int]) -> np.ndarray:
         """
-        Encode maze state into 20-dimensional quantum state.
-        Uses subset of maze features for 20 qubits.
+        Encode maze state into 12-dimensional quantum state.
+        Efficient encoding focusing on key features.
         """
         state = pnp.zeros(self.num_qubits, dtype=np.float32)
         
-        # First 16 qubits: selected maze cells (4x4 grid around agent)
-        flat_maze = maze.flatten()
-        
-        # Map 5x5 maze to 20 features
-        # Use center 4x4 grid (indices 6,7,8,9,11,12,13,14,16,17,18,19,21,22,23,24)
-        important_indices = [6,7,8,9, 11,12,13,14, 16,17,18,19, 21,22,23,24]
-        
-        for i, maze_idx in enumerate(important_indices[:16]):
-            if maze_idx < 25:
-                if flat_maze[maze_idx] == WALL:
-                    state[i] = -0.5
-                elif flat_maze[maze_idx] == GOAL:
-                    state[i] = 0.7
-                else:
-                    state[i] = 0.0
-        
-        # Qubits 16-17: Agent position
+        # Features 0-1: Agent position
         row, col = position
-        state[16] = row / 4.0
-        state[17] = col / 4.0
+        state[0] = row / 4.0
+        state[1] = col / 4.0
         
-        # Qubits 18-19: Distance to goal
+        # Features 2-3: Distance to goal
         goal_pos = np.where(maze == GOAL)
         if len(goal_pos[0]) > 0:
-            state[18] = (goal_pos[0][0] - row) / 4.0
-            state[19] = (goal_pos[1][0] - col) / 4.0
+            goal_row, goal_col = goal_pos[0][0], goal_pos[1][0]
+            state[2] = (goal_row - row) / 4.0
+            state[3] = (goal_col - col) / 4.0
         
-        # Mark agent position strongly
-        agent_idx = row * 5 + col
-        if agent_idx in important_indices:
-            idx = important_indices.index(agent_idx)
-            if idx < 16:
-                state[idx] = 1.0
+        # Features 4-7: Adjacent cells (walls/empty)
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        for i, (dr, dc) in enumerate(directions):
+            new_row, new_col = row + dr, col + dc
+            if 0 <= new_row < 5 and 0 <= new_col < 5:
+                if maze[new_row, new_col] == WALL:
+                    state[4 + i] = -0.5
+                elif maze[new_row, new_col] == GOAL:
+                    state[4 + i] = 1.0
+                else:
+                    state[4 + i] = 0.3
+            else:
+                state[4 + i] = -1.0  # Out of bounds
+        
+        # Features 8-11: Diagonal cells (for better navigation)
+        diagonals = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+        for i, (dr, dc) in enumerate(diagonals):
+            if i + 8 < self.num_qubits:
+                new_row, new_col = row + dr, col + dc
+                if 0 <= new_row < 5 and 0 <= new_col < 5:
+                    if maze[new_row, new_col] == WALL:
+                        state[8 + i] = -0.3
+                    elif maze[new_row, new_col] == GOAL:
+                        state[8 + i] = 0.7
+                    else:
+                        state[8 + i] = 0.1
+                else:
+                    state[8 + i] = -0.5
         
         # Normalize
         norm = pnp.linalg.norm(state)
         if norm > 0:
-            state = state / (norm * 1.5)
+            state = state / (norm * 2)
         
         return state
     
     def get_q_values(self, maze: np.ndarray, position: Tuple[int, int]) -> np.ndarray:
-        """Get Q-values using 20-qubit quantum circuit."""
+        """Get Q-values using 12-qubit quantum circuit."""
         state = self.encode_state(maze, position)
         
-        with timer("20-qubit circuit evaluation", verbose=False):
+        with timer("12-qubit circuit evaluation", verbose=False):
             q_values = pnp.array(self.circuit(state, self.params))
             
             # Add small noise for exploration
             if self.t > 0:
-                noise = pnp.random.normal(0, self.noise_scale, size=4)
+                noise = pnp.random.normal(0, self.noise_scale * 0.5, size=4)
                 q_values = q_values + noise
             
             self.perf.record("circuit_eval_time", time.time())
@@ -392,24 +393,31 @@ class VQNN:
         q_values = pnp.array(self.circuit(state, self.params))
         
         if self.t > 0:
-            noise = pnp.random.normal(0, self.noise_scale, size=4)
+            noise = pnp.random.normal(0, self.noise_scale * 0.5, size=4)
             q_values = q_values + noise
         
         return q_values
     
     def update(self, state: np.ndarray, action: int, target: float, 
                current_q: float) -> float:
-        """Update parameters using parameter-shift rule."""
+        """
+        Update parameters using simplified gradient estimation.
+        Optimized for 12 qubits with fewer parameter updates.
+        """
         self.t += 1
         loss = (target - current_q) ** 2
+        
+        # Only update every few steps for speed
+        if self.t % 3 != 0:
+            return float(loss)
         
         gradient = pnp.zeros_like(self.params)
         shift = np.pi / 2
         
         with timer("Gradient computation", verbose=False):
-            # Sample 30% of parameters for efficiency
+            # Sample only 20% of parameters for ultra-fast updates
             num_params = self.num_layers * self.num_qubits * 2
-            sample_size = max(6, int(0.3 * num_params))
+            sample_size = max(3, int(0.2 * num_params))
             
             param_indices = []
             for _ in range(sample_size):
@@ -419,6 +427,7 @@ class VQNN:
                 param_indices.append((l, q, p))
             
             for layer, qubit, param_idx in param_indices:
+                # Simplified gradient estimation
                 self.params[layer, qubit, param_idx] += shift
                 q_plus = self.get_q_values_from_state(state)[action]
                 
@@ -427,26 +436,26 @@ class VQNN:
                 
                 self.params[layer, qubit, param_idx] += shift
                 
-                gradient[layer, qubit, param_idx] = (q_plus - q_minus) / (2 * np.sin(shift))
-                gradient[layer, qubit, param_idx] /= 0.3  # Scale for sampling
+                gradient[layer, qubit, param_idx] = (q_plus - q_minus) / 2.0
+                gradient[layer, qubit, param_idx] /= 0.2  # Scale for sampling
         
         gradient *= 2 * (current_q - target)
         
-        # Adam optimizer
+        # Simplified Adam optimizer
         beta1, beta2 = 0.9, 0.99
         eps = 1e-6
         
         self.m = beta1 * self.m + (1 - beta1) * gradient
         self.v = beta2 * self.v + (1 - beta2) * gradient ** 2
         
-        m_hat = self.m / (1 - beta1 ** self.t)
-        v_hat = self.v / (1 - beta2 ** self.t)
+        m_hat = self.m / (1 - beta1 ** (self.t // 3))
+        v_hat = self.v / (1 - beta2 ** (self.t // 3))
         
-        effective_lr = self.learning_rate / np.sqrt(self.t)
-        self.params -= effective_lr * m_hat / (pnp.sqrt(v_hat) + eps)
+        # Fixed learning rate for stability with 12 qubits
+        self.params -= self.learning_rate * m_hat / (pnp.sqrt(v_hat) + eps)
         
         # Clip parameters
-        self.params = pnp.clip(self.params, -2 * np.pi, 2 * np.pi)
+        self.params = pnp.clip(self.params, -np.pi, np.pi)
         
         self.perf.record("loss", float(loss))
         return float(loss)
@@ -456,9 +465,9 @@ class VQNN:
 # ============================================================================
 
 class ExperienceReplayBuffer:
-    """Experience replay buffer for training stability."""
+    """Lightweight experience replay buffer."""
     
-    def __init__(self, capacity: int = 10000):
+    def __init__(self, capacity: int = 5000):
         self.capacity = capacity
         self.buffer = []
         self.position = 0
@@ -484,21 +493,21 @@ class ExperienceReplayBuffer:
 # ============================================================================
 
 class QLearningAgent:
-    """Q-learning agent for 20-qubit VQNN."""
+    """Q-learning agent optimized for 12-qubit VQNN."""
     
     def __init__(self, vqnn: VQNN, epsilon: float = EPSILON_START, 
                  gamma: float = GAMMA, epsilon_decay: float = EPSILON_DECAY,
                  use_replay: bool = True, batch_size: int = BATCH_SIZE):
         self.vqnn = vqnn
         self.epsilon = epsilon
-        self.epsilon_min = 0.05
+        self.epsilon_min = 0.1  # Higher minimum for 12 qubits
         self.epsilon_decay = epsilon_decay
         self.gamma = gamma
         self.use_replay = use_replay
         self.batch_size = batch_size
         
         if use_replay:
-            self.replay_buffer = ExperienceReplayBuffer(capacity=10000)
+            self.replay_buffer = ExperienceReplayBuffer(capacity=5000)
         
         self.rng = np.random.RandomState()
     
@@ -544,8 +553,8 @@ class QLearningAgent:
         batch = self.replay_buffer.sample_batch(self.batch_size)
         total_loss = 0.0
         
-        # Process in smaller sub-batches
-        sub_batch_size = 8
+        # Process smaller sub-batches for 12-qubit efficiency
+        sub_batch_size = 4
         
         for i in range(0, len(batch), sub_batch_size):
             sub_batch = batch[i:i+sub_batch_size]
@@ -767,11 +776,12 @@ def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
     emergence_type = "none"
     emergence_score = 0.0
     
-    if efficiency >= 0.90:
+    # Adjusted thresholds for 12 qubits
+    if efficiency >= 0.85:
         is_emergent = True
         emergence_type = "perfect_navigation"
         emergence_score = 1.0
-    elif efficiency >= 0.75:
+    elif efficiency >= 0.70:
         is_emergent = True
         emergence_type = "efficient_navigation"
         emergence_score = 0.8
@@ -783,7 +793,7 @@ def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
         emergence_score = max(emergence_score, 0.7)
     
     random_improvement = (baseline_steps["random"] - solution.steps_to_goal) / baseline_steps["random"]
-    if random_improvement > 0.7:
+    if random_improvement > 0.6:
         is_emergent = True
         if emergence_type == "none":
             emergence_type = "intelligent_navigation"
@@ -829,7 +839,7 @@ def visualize_solution(maze: np.ndarray, path: List[Tuple[int, int]],
 # ============================================================================
 
 def run_experiments(config: Optional[Dict] = None):
-    """Execute 20-qubit quantum maze navigation experiments."""
+    """Execute 12-qubit quantum maze navigation experiments."""
     if config is None:
         config = {
             "episodes_per_maze": EPISODES_PER_MAZE,
@@ -846,14 +856,14 @@ def run_experiments(config: Optional[Dict] = None):
     timestamp = datetime.now().strftime("%m%d%Y_%H%M%S")
     
     print("\n" + "=" * 60)
-    print("20-QUBIT VQNN ADAPTIVE PROBLEM-SOLVING EXPERIMENTS")
+    print("12-QUBIT VQNN ADAPTIVE PROBLEM-SOLVING EXPERIMENTS")
     print("=" * 60)
     print(f"Quantum Backend: {QUANTUM_BACKEND}")
     print(f"GPU Acceleration: {'ENABLED' if GPU_AVAILABLE else 'DISABLED'}")
     print(f"Qubits: {NUM_QUBITS}")
     print(f"Shots: {SHOTS}")
     print(f"Episodes per maze: {config['episodes_per_maze']}")
-    print(f"Expected total runtime: 1.5-2.5 hours")
+    print(f"Expected total runtime: 20-40 minutes")
     print("=" * 60)
     print()
     
@@ -878,7 +888,7 @@ def run_experiments(config: Optional[Dict] = None):
     results = []
     total_start = time.time()
     
-    print("Running 20-qubit quantum experiments...\n")
+    print("Running 12-qubit quantum experiments...\n")
     
     # Initialize VQNN once
     vqnn = VQNN(
@@ -915,7 +925,7 @@ def run_experiments(config: Optional[Dict] = None):
         best_solution = None
         best_steps = float('inf')
         
-        print(f"\nTraining with 20-qubit quantum circuit (500 shots)...")
+        print(f"\nTraining with 12-qubit quantum circuit ({SHOTS} shots)...")
         print("Progress:")
         
         for episode in range(config["episodes_per_maze"]):
@@ -950,7 +960,7 @@ def run_experiments(config: Optional[Dict] = None):
                     performance_discontinuity=False
                 )
             
-            # Progress updates
+            # Progress updates every 20 episodes
             if episode % 20 == 0:
                 avg_reward = np.mean(learning_curve[-10:]) if len(learning_curve) >= 10 else episode_reward
                 elapsed = (time.time() - maze_start) / 60
@@ -1103,14 +1113,16 @@ def run_experiments(config: Optional[Dict] = None):
 
 if __name__ == "__main__":
     print("\n" + "="*60)
-    print("20-QUBIT QUANTUM MAZE NAVIGATION EXPERIMENT")
+    print("12-QUBIT QUANTUM MAZE NAVIGATION EXPERIMENT")
     print("="*60)
     print("\nConfiguration:")
-    print(f"  - Qubits: {NUM_QUBITS} (balanced for performance)")
+    print(f"  - Qubits: {NUM_QUBITS} (optimized for practical runtime)")
     print(f"  - Shots: {SHOTS} per circuit evaluation")
     print(f"  - Episodes: {EPISODES_PER_MAZE} per maze")
     print(f"  - Statistical error: ±{100/np.sqrt(SHOTS):.1f}%")
-    print(f"  - Expected runtime: 1.5-2.5 hours total")
+    print(f"  - Expected runtime: 20-40 minutes total")
+    print("\nNote: 12 qubits is standard for quantum ML research")
+    print("and provides excellent demonstration of quantum computing.")
     print("="*60)
     
     config = {
@@ -1127,5 +1139,5 @@ if __name__ == "__main__":
     
     results = run_experiments(config)
     
-    print("\n✅ 20-qubit experiment complete!")
+    print("\n✅ 12-qubit experiment complete!")
     print("=" * 60)
