@@ -15,21 +15,22 @@ __author__ = "Alex Pujols"
 __copyright__ = "Alex Pujols"
 __credits__ = ["Alex Pujols"]
 __license__ = "MIT"
-__version__ = "1.12-alpha"
+__version__ = "1.11-alpha"
 __maintainer__ = "Alex Pujols"
 __email__ = "A.Pujols@o365.ncu.edu; alexpujols@ieee.org"
 __status__ = "Prototype"
 
 '''
-Title         : {Variational Quantum Neural Network for Adaptive Problem Solving - Improved Emergence}
+Title         : {Variational Quantum Neural Network for Adaptive Problem Solving}
 Date          : {05-18-2025}
-Description   : {Enhanced version with stricter emergence detection criteria and realistic baselines.
-                Features multi-criteria emergence validation and proper random walk baselines.}
+Description   : {Full 25-qubit implementation utilizing all qubits for maximum
+                quantum advantage. Each qubit maps directly to a cell in the 5x5 maze,
+                providing a natural quantum representation of the spatial problem.}
 Options       : {GPU acceleration via PennyLane-Lightning-GPU (NVIDIA cuQuantum SDK) or CPU fallback}
 Dependencies  : {numpy scipy pennylane pennylane-lightning-gpu matplotlib}
 Requirements  : {Python 3.8+, Optional: CUDA 11.0+ and cuQuantum for GPU acceleration}
-Usage         : {python run-ps-test-improved.py}
-Notes         : {Improved emergence detection with stricter thresholds and multiple criteria}
+Usage         : {python run-ps-test.py}
+Notes         : {Available at Github at https://github.com/alexpujols/QNAI-test-engine/blob/main/Tests/Problem-Solving-TEST/run-ps-test.py}
 '''
 import json
 import csv
@@ -946,13 +947,13 @@ def approximate_entropy(U: List[Any], m: int = 2, r: float = 0.2) -> float:
         return 0.0
 
 # ============================================================================
-# IMPROVED EMERGENCE DETECTION
+# EMERGENCE DETECTION
 # ============================================================================
 
 def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
                     learning_curve: List[float], maze: np.ndarray) -> Dict[str, Any]:
     """
-    Improved emergence detection with stricter criteria.
+    Detect emergent behavior in maze navigation.
     
     Args:
         solution: The maze solution to evaluate
@@ -1119,7 +1120,7 @@ def visualize_solution(maze: np.ndarray, path: List[Tuple[int, int]],
 # ============================================================================
 
 def run_experiments(config: Optional[Dict] = None):
-    """Execute quantum maze navigation experiments with improved emergence detection."""
+    """Execute quantum maze navigation experiments with stricter emergence detection."""
     if config is None:
         config = {
             "episodes_per_maze": EPISODES_PER_MAZE,
@@ -1137,7 +1138,6 @@ def run_experiments(config: Optional[Dict] = None):
     
     print("\n" + "=" * 60)
     print(f"{NUM_QUBITS}-QUBIT VQNN ADAPTIVE PROBLEM-SOLVING EXPERIMENTS")
-    print("WITH IMPROVED EMERGENCE DETECTION")
     print("=" * 60)
     print(f"Quantum Backend: {QUANTUM_BACKEND}")
     print(f"GPU Acceleration: {'ENABLED' if GPU_AVAILABLE else 'DISABLED'}")
@@ -1156,11 +1156,6 @@ def run_experiments(config: Optional[Dict] = None):
         est_total = "90-150"
     
     print(f"Expected total runtime: {est_total} minutes")
-    print("\nImproved emergence detection features:")
-    print("  • Stricter efficiency thresholds")
-    print("  • Actual random walk baselines")
-    print("  • Multi-criteria validation")
-    print("  • Performance consistency checks")
     print("=" * 60)
     print()
     
@@ -1425,14 +1420,9 @@ def run_experiments(config: Optional[Dict] = None):
 if __name__ == "__main__":
     print("\n" + "="*60)
     print("ADAPTIVE QUANTUM MAZE NAVIGATION EXPERIMENT")
-    print("WITH IMPROVED EMERGENCE DETECTION")
     print("="*60)
-    print("\nThis experiment features:")
-    print("  • User-configurable qubit count (8-25)")
-    print("  • Stricter emergence detection criteria")
-    print("  • Actual random walk baselines")
-    print("  • Multi-criteria validation")
-    print("  • Performance consistency checks")
+    print("\nThis experiment will configure a Variational Quantum Neural Network")
+    print("with your specified number of qubits to solve maze navigation tasks.")
     print("\nHigher qubit counts provide:")
     print("  • Better quantum advantage and entanglement")
     print("  • Richer state representations")
@@ -1453,5 +1443,5 @@ if __name__ == "__main__":
     
     results = run_experiments(config)
     
-    print(f"\n✅ {NUM_QUBITS}-qubit experiment with improved emergence detection complete!")
+    print(f"\n✅ {NUM_QUBITS}-qubit experiment complete!")
     print("=" * 60)
