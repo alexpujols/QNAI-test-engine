@@ -15,22 +15,21 @@ __author__ = "Alex Pujols"
 __copyright__ = "Alex Pujols"
 __credits__ = ["Alex Pujols"]
 __license__ = "MIT"
-__version__ = "1.11-alpha"
+__version__ = "1.12-alpha"
 __maintainer__ = "Alex Pujols"
 __email__ = "A.Pujols@o365.ncu.edu; alexpujols@ieee.org"
 __status__ = "Prototype"
 
 '''
-Title         : {Variational Quantum Neural Network for Adaptive Problem Solving}
+Title         : {Variational Quantum Neural Network for Adaptive Problem Solving - Improved Emergence}
 Date          : {05-18-2025}
-Description   : {Full 25-qubit implementation utilizing all qubits for maximum
-                quantum advantage. Each qubit maps directly to a cell in the 5x5 maze,
-                providing a natural quantum representation of the spatial problem.}
+Description   : {Enhanced version with stricter emergence detection criteria and realistic baselines.
+                Features multi-criteria emergence validation and proper random walk baselines.}
 Options       : {GPU acceleration via PennyLane-Lightning-GPU (NVIDIA cuQuantum SDK) or CPU fallback}
 Dependencies  : {numpy scipy pennylane pennylane-lightning-gpu matplotlib}
 Requirements  : {Python 3.8+, Optional: CUDA 11.0+ and cuQuantum for GPU acceleration}
-Usage         : {python run-ps-test.py}
-Notes         : {Available at Github at https://github.com/alexpujols/QNAI-test-engine/blob/main/Tests/Problem-Solving-TEST/run-ps-test.py}
+Usage         : {python run-ps-test-improved.py}
+Notes         : {Improved emergence detection with stricter thresholds and multiple criteria}
 '''
 import json
 import csv
@@ -839,6 +838,46 @@ class MazeGenerator:
         return -1
 
 # ============================================================================
+# RANDOM WALK BASELINE
+# ============================================================================
+
+def calculate_random_walk_average(maze: np.ndarray, trials: int = 100) -> float:
+    """
+    Calculate average steps for random walk to reach goal.
+    
+    Args:
+        maze: The maze to test
+        trials: Number of random walk trials
+        
+    Returns:
+        Average steps to reach goal (or max_steps if rarely succeeds)
+    """
+    env = MazeEnvironment(maze)
+    total_steps = 0
+    successes = 0
+    max_steps = 200
+    
+    for _ in range(trials):
+        env.reset()
+        steps = 0
+        
+        while steps < max_steps:
+            # Random action selection
+            action = np.random.choice(ACTIONS)
+            position, _, done = env.step(action)
+            steps += 1
+            
+            if done and position == env.goal_pos:
+                total_steps += steps
+                successes += 1
+                break
+    
+    if successes > 0:
+        return total_steps / successes
+    else:
+        return max_steps  # If random walk rarely succeeds
+
+# ============================================================================
 # COMPLEXITY METRICS
 # ============================================================================
 
@@ -907,19 +946,36 @@ def approximate_entropy(U: List[Any], m: int = 2, r: float = 0.2) -> float:
         return 0.0
 
 # ============================================================================
-# EMERGENCE DETECTION
+# IMPROVED EMERGENCE DETECTION
 # ============================================================================
 
 def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
-                    learning_curve: List[float]) -> Dict[str, Any]:
+                    learning_curve: List[float], maze: np.ndarray) -> Dict[str, Any]:
+    """
+    Improved emergence detection with stricter criteria.
+    
+    Args:
+        solution: The maze solution to evaluate
+        baseline_steps: Dictionary with baseline performance metrics
+        learning_curve: Episode rewards over training
+        maze: The maze array for random walk calculation
+        
+    Returns:
+        Dictionary with emergence assessment
+    """
     efficiency = solution.efficiency_score
     
-    if len(learning_curve) > 10:
-        window = 5
+    # Detect performance discontinuity (sudden jumps in learning)
+    solution.performance_discontinuity = False
+    solution.convergence_episode = len(learning_curve)
+    
+    if len(learning_curve) > 20:
+        window = 10
         for i in range(window, len(learning_curve) - window):
             before = np.mean(learning_curve[i-window:i])
             after = np.mean(learning_curve[i:i+window])
-            if after - before > 30:
+            # Require larger jump (50 points instead of 30)
+            if after - before > 50:
                 solution.performance_discontinuity = True
                 solution.convergence_episode = i
                 break
@@ -928,43 +984,96 @@ def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
     emergence_type = "none"
     emergence_score = 0.0
     
-    # Adaptive thresholds based on qubit count
+    # STRICTER thresholds based on qubit count
     if NUM_QUBITS <= 12:
-        perfect_threshold = 0.85
-        efficient_threshold = 0.70
+        perfect_threshold = 0.95  # Was 0.85
+        good_threshold = 0.85     # Was 0.70
+        min_threshold = 0.75      # New minimum threshold
     elif NUM_QUBITS <= 16:
-        perfect_threshold = 0.88
-        efficient_threshold = 0.75
+        perfect_threshold = 0.97  # Was 0.88
+        good_threshold = 0.90     # Was 0.75
+        min_threshold = 0.80
     elif NUM_QUBITS <= 20:
-        perfect_threshold = 0.90
-        efficient_threshold = 0.78
+        perfect_threshold = 0.98  # Was 0.90
+        good_threshold = 0.92     # Was 0.78
+        min_threshold = 0.85
     else:
-        perfect_threshold = 0.92
-        efficient_threshold = 0.80
+        perfect_threshold = 0.99  # Was 0.92
+        good_threshold = 0.95     # Was 0.80
+        min_threshold = 0.88
     
+    # Calculate actual random walk performance
+    actual_random_steps = calculate_random_walk_average(maze, trials=50)
+    random_improvement = (actual_random_steps - solution.steps_to_goal) / actual_random_steps
+    
+    # Track which criteria are met
+    emergence_criteria_met = 0
+    criteria_details = []
+    
+    # Criterion 1: Near-optimal performance
     if efficiency >= perfect_threshold:
-        is_emergent = True
-        emergence_type = "perfect_navigation"
-        emergence_score = 1.0
-    elif efficiency >= efficient_threshold:
-        is_emergent = True
-        emergence_type = "efficient_navigation"
-        emergence_score = 0.85
+        emergence_criteria_met += 2  # Weight this heavily
+        criteria_details.append("perfect_efficiency")
+    elif efficiency >= good_threshold:
+        emergence_criteria_met += 1
+        criteria_details.append("good_efficiency")
+    elif efficiency >= min_threshold:
+        emergence_criteria_met += 0.5
+        criteria_details.append("acceptable_efficiency")
     
+    # Criterion 2: Significant learning discontinuity with sustained improvement
     if solution.performance_discontinuity:
+        # Check if the jump led to sustained improvement
+        if len(learning_curve) > solution.convergence_episode + 10:
+            post_jump = learning_curve[solution.convergence_episode:]
+            if np.mean(post_jump) > 80:  # Sustained high performance
+                emergence_criteria_met += 1
+                criteria_details.append("sustained_jump")
+    
+    # Criterion 3: Vastly outperforms random walk
+    if random_improvement > 0.85:  # Was 0.65, now much stricter
+        emergence_criteria_met += 1.5
+        criteria_details.append("beats_random_strongly")
+    elif random_improvement > 0.75:
+        emergence_criteria_met += 0.5
+        criteria_details.append("beats_random")
+    
+    # Criterion 4: Fast convergence to good solution
+    if solution.convergence_episode < 30 and efficiency >= good_threshold:
+        emergence_criteria_met += 1
+        criteria_details.append("fast_convergence")
+    elif solution.convergence_episode < 40 and efficiency >= min_threshold:
+        emergence_criteria_met += 0.5
+        criteria_details.append("moderate_convergence")
+    
+    # Criterion 5: Consistency check - low variance in final performance
+    if len(learning_curve) >= 20:
+        final_rewards = learning_curve[-20:]
+        reward_std = np.std(final_rewards)
+        if reward_std < 10 and np.mean(final_rewards) > 80:
+            emergence_criteria_met += 0.5
+            criteria_details.append("consistent_performance")
+    
+    # Require at least 2.5 points worth of criteria for emergence
+    if emergence_criteria_met >= 2.5:
         is_emergent = True
-        if emergence_type == "none":
+        
+        # Determine emergence type based on which criteria were met
+        if efficiency >= perfect_threshold and "fast_convergence" in criteria_details:
+            emergence_type = "perfect_navigation"
+            emergence_score = 1.0
+        elif solution.performance_discontinuity and "sustained_jump" in criteria_details:
             emergence_type = "sudden_insight"
-        emergence_score = max(emergence_score, 0.75)
-    
-    random_improvement = (baseline_steps["random"] - solution.steps_to_goal) / baseline_steps["random"]
-    improvement_threshold = 0.6 + (NUM_QUBITS - 8) * 0.01  # Scale with qubit count
-    
-    if random_improvement > improvement_threshold:
-        is_emergent = True
-        if emergence_type == "none":
+            emergence_score = 0.8
+        elif efficiency >= good_threshold and "beats_random_strongly" in criteria_details:
+            emergence_type = "efficient_navigation"
+            emergence_score = 0.7
+        elif "beats_random_strongly" in criteria_details:
             emergence_type = "intelligent_navigation"
-        emergence_score = max(emergence_score, 0.65)
+            emergence_score = 0.5
+        else:
+            emergence_type = "weak_emergence"
+            emergence_score = 0.4
     
     return {
         "is_emergent": is_emergent,
@@ -972,7 +1081,11 @@ def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
         "emergence_score": emergence_score,
         "efficiency_score": efficiency,
         "performance_discontinuity": solution.performance_discontinuity,
-        "convergence_episode": solution.convergence_episode
+        "convergence_episode": solution.convergence_episode,
+        "criteria_met": emergence_criteria_met,
+        "criteria_details": criteria_details,
+        "random_walk_baseline": actual_random_steps,
+        "random_improvement": random_improvement
     }
 
 # ============================================================================
@@ -1006,7 +1119,7 @@ def visualize_solution(maze: np.ndarray, path: List[Tuple[int, int]],
 # ============================================================================
 
 def run_experiments(config: Optional[Dict] = None):
-    """Execute quantum maze navigation experiments with user-specified qubits."""
+    """Execute quantum maze navigation experiments with improved emergence detection."""
     if config is None:
         config = {
             "episodes_per_maze": EPISODES_PER_MAZE,
@@ -1024,6 +1137,7 @@ def run_experiments(config: Optional[Dict] = None):
     
     print("\n" + "=" * 60)
     print(f"{NUM_QUBITS}-QUBIT VQNN ADAPTIVE PROBLEM-SOLVING EXPERIMENTS")
+    print("WITH IMPROVED EMERGENCE DETECTION")
     print("=" * 60)
     print(f"Quantum Backend: {QUANTUM_BACKEND}")
     print(f"GPU Acceleration: {'ENABLED' if GPU_AVAILABLE else 'DISABLED'}")
@@ -1042,6 +1156,11 @@ def run_experiments(config: Optional[Dict] = None):
         est_total = "90-150"
     
     print(f"Expected total runtime: {est_total} minutes")
+    print("\nImproved emergence detection features:")
+    print("  • Stricter efficiency thresholds")
+    print("  • Actual random walk baselines")
+    print("  • Multi-criteria validation")
+    print("  • Performance consistency checks")
     print("=" * 60)
     print()
     
@@ -1060,7 +1179,7 @@ def run_experiments(config: Optional[Dict] = None):
         "action_approximate_entropy", "is_emergent", "emergence_type", 
         "emergence_score", "solution_path", "action_sequence",
         "quantum_backend", "gpu_accelerated", "num_qubits", "shots",
-        "training_time_minutes"
+        "training_time_minutes", "criteria_met", "random_walk_baseline", "random_improvement"
     ]
     
     results = []
@@ -1086,7 +1205,10 @@ def run_experiments(config: Optional[Dict] = None):
         optimal_steps = generator.bfs_shortest_path(maze)
         print(f"Optimal path: {optimal_steps} steps")
         
-        random_steps = optimal_steps * 5
+        # Calculate actual random walk baseline
+        print("Calculating random walk baseline...", end="")
+        random_walk_avg = calculate_random_walk_average(maze, trials=50)
+        print(f" {random_walk_avg:.1f} steps average")
         
         # Create new agent for each maze
         agent = QLearningAgent(
@@ -1195,18 +1317,22 @@ def run_experiments(config: Optional[Dict] = None):
         action_numeric = [ACTIONS.index(a) for a in best_solution.action_sequence]
         action_apen = approximate_entropy(action_numeric) if len(action_numeric) > 2 else 0
         
-        baselines = {"random": random_steps, "optimal": optimal_steps}
-        emergence = detect_emergence(best_solution, baselines, learning_curve)
+        baselines = {"random": random_walk_avg, "optimal": optimal_steps}
+        emergence = detect_emergence(best_solution, baselines, learning_curve, maze)
         
         training_time = (time.time() - maze_start) / 60
         
         print(f"\nResults:")
         print(f"  Steps to goal: {best_solution.steps_to_goal}")
+        print(f"  Optimal steps: {optimal_steps}")
+        print(f"  Random walk avg: {random_walk_avg:.1f}")
         print(f"  Efficiency: {best_solution.efficiency_score:.2%}")
+        print(f"  Random improvement: {emergence['random_improvement']:.2%}")
+        print(f"  Criteria met: {emergence['criteria_met']:.1f}")
         print(f"  Emergent: {emergence['is_emergent']} ({emergence['emergence_type']})")
         print(f"  Training time: {training_time:.1f} minutes")
         
-        if config.get("visualize", True):
+        if config.get("visualize", True) and emergence['is_emergent']:
             visualize_solution(maze, best_solution.solution_path, maze_name)
         
         # Save results
@@ -1238,7 +1364,10 @@ def run_experiments(config: Optional[Dict] = None):
             GPU_AVAILABLE,
             NUM_QUBITS,
             SHOTS,
-            training_time
+            training_time,
+            emergence["criteria_met"],
+            emergence["random_walk_baseline"],
+            emergence["random_improvement"]
         ])
     
     # Save all results
@@ -1254,12 +1383,14 @@ def run_experiments(config: Optional[Dict] = None):
     print("EXPERIMENT COMPLETE")
     print("=" * 60)
     
-    total_emergent = sum(1 for r in results if r[19])
+    total_emergent = sum(1 for r in results if r[18])
     avg_efficiency = np.mean([r[7] for r in results])
+    avg_criteria = np.mean([r[28] for r in results])
     
     print(f"Total mazes: {len(results)}")
     print(f"Emergent solutions: {total_emergent} ({total_emergent/len(results)*100:.1f}%)")
     print(f"Average efficiency: {avg_efficiency:.3f}")
+    print(f"Average criteria met: {avg_criteria:.2f}")
     print(f"Total time: {total_time:.1f} minutes")
     print(f"Average time per maze: {total_time/len(mazes):.1f} minutes")
     print(f"Quantum backend: {QUANTUM_BACKEND}")
@@ -1269,14 +1400,16 @@ def run_experiments(config: Optional[Dict] = None):
     
     emergence_types = {}
     for r in results:
-        if r[19]:
-            etype = r[20]
+        if r[18]:
+            etype = r[19]
             emergence_types[etype] = emergence_types.get(etype, 0) + 1
     
     if emergence_types:
         print("\nEmergence breakdown:")
         for etype, count in emergence_types.items():
             print(f"  {etype}: {count}")
+    else:
+        print("\nNo emergent behaviors detected with stricter criteria.")
     
     print(f"\nResults saved to: {output_file}")
     
@@ -1292,9 +1425,14 @@ def run_experiments(config: Optional[Dict] = None):
 if __name__ == "__main__":
     print("\n" + "="*60)
     print("ADAPTIVE QUANTUM MAZE NAVIGATION EXPERIMENT")
+    print("WITH IMPROVED EMERGENCE DETECTION")
     print("="*60)
-    print("\nThis experiment will configure a Variational Quantum Neural Network")
-    print("with your specified number of qubits to solve maze navigation tasks.")
+    print("\nThis experiment features:")
+    print("  • User-configurable qubit count (8-25)")
+    print("  • Stricter emergence detection criteria")
+    print("  • Actual random walk baselines")
+    print("  • Multi-criteria validation")
+    print("  • Performance consistency checks")
     print("\nHigher qubit counts provide:")
     print("  • Better quantum advantage and entanglement")
     print("  • Richer state representations")
@@ -1315,5 +1453,5 @@ if __name__ == "__main__":
     
     results = run_experiments(config)
     
-    print(f"\n✅ {NUM_QUBITS}-qubit experiment complete!")
+    print(f"\n✅ {NUM_QUBITS}-qubit experiment with improved emergence detection complete!")
     print("=" * 60)
