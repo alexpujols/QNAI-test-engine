@@ -178,7 +178,7 @@ import pennylane as qml
 # ============================================================================
 
 # Quantum circuit configuration
-NUM_QUBITS = 12      # Reduced to 12 for practical runtime
+NUM_QUBITS = 16      # Reduced to 12 for practical runtime
 NUM_LAYERS = 1        # Single layer is sufficient
 SHOTS = 200           # Fewer shots for speed with 12 qubits
 
