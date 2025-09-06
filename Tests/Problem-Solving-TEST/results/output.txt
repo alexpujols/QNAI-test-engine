@@ -1,0 +1,339 @@
+(qnai-env) pooh@beast-server-0:~/QNAI-test-engine/Tests/Problem-Solving-TEST$ python run-ps-test.py 
+
+============================================================
+QUANTUM CIRCUIT CONFIGURATION
+============================================================
+
+Enter the number of qubits for the experiment
+Recommended ranges:
+  - 8-12 qubits: Fast execution (5-20 minutes)
+  - 13-16 qubits: Balanced (20-40 minutes)
+  - 17-20 qubits: Enhanced quantum advantage (40-90 minutes)
+  - 21-25 qubits: Maximum complexity (90+ minutes)
+
+Note: Higher qubit counts provide better quantum advantage
+but require more computational resources and time.
+
+Number of qubits (8-25): 25
+
+You selected 25 qubits.
+Estimated total runtime: 90-150 minutes
+Proceed with this configuration? (y/n): Y
+✓ GPU settings configured for 25-qubit simulation
+============================================================
+✓ NVIDIA cuQuantum SDK detected!
+✓ Using Lightning.GPU for 25-qubit simulation
+✓ Expected runtime: 9-15 minutes per maze
+============================================================
+
+============================================================
+ADAPTIVE QUANTUM MAZE NAVIGATION EXPERIMENT
+============================================================
+
+This experiment will configure a Variational Quantum Neural Network
+with your specified number of qubits to solve maze navigation tasks.
+
+Higher qubit counts provide:
+  • Better quantum advantage and entanglement
+  • Richer state representations
+  • Potentially higher solution quality
+  • Longer runtime due to increased complexity
+
+============================================================
+25-QUBIT VQNN ADAPTIVE PROBLEM-SOLVING EXPERIMENTS
+============================================================
+Quantum Backend: lightning.gpu
+GPU Acceleration: ENABLED
+Qubits: 25
+Shots: 100
+Episodes per maze: 80
+Expected total runtime: 90-150 minutes
+============================================================
+
+Running 25-qubit quantum experiments...
+
+
+Initializing 25-Qubit VQNN...
+  Configuration:
+    - Qubits: 25
+    - Layers: 1
+    - Shots: 100
+    - Statistical error: ±10.0%
+    - Backend: lightning.gpu
+  ✓ 25-qubit quantum circuit initialized
+
+============================================================
+Maze 1/10: simple_corridor
+============================================================
+Optimal path: 6 steps
+Calculating random walk baseline... 80.0 steps average
+
+Training with 25-qubit quantum circuit (100 shots)...
+Progress:
+  Episode   0/80: Avg reward = -309.0, ε = 0.258, Time = 4.8 min
+  Episode  20/80: Avg reward = -763.0, ε = 0.258, Time = 172.9 min
+  Episode  40/80: Avg reward = -724.2, ε = 0.258, Time = 344.4 min
+  Episode  60/80: Avg reward = -794.8, ε = 0.258, Time = 503.4 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 15
+  Optimal steps: 6
+  Random walk avg: 80.0
+  Efficiency: 40.00%
+  Random improvement: 82.18%
+  Criteria met: 0.5
+  Emergent: False (none)
+  Training time: 662.7 minutes
+
+============================================================
+Maze 2/10: spiral
+============================================================
+Optimal path: 16 steps
+Calculating random walk baseline... 142.9 steps average
+
+Training with 25-qubit quantum circuit (100 shots)...
+Progress:
+  Episode   0/80: Avg reward = -838.0, ε = 0.258, Time = 7.7 min
+  Episode  20/80: Avg reward = -809.2, ε = 0.258, Time = 185.2 min
+  Episode  40/80: Avg reward = -754.3, ε = 0.258, Time = 362.7 min
+  Episode  60/80: Avg reward = -829.0, ε = 0.258, Time = 540.4 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 100
+  Optimal steps: 16
+  Random walk avg: 142.9
+  Efficiency: 16.00%
+  Random improvement: 24.86%
+  Criteria met: 0.0
+  Emergent: False (none)
+  Training time: 709.5 minutes
+
+============================================================
+Maze 3/10: multiple_paths
+============================================================
+Optimal path: 10 steps
+Calculating random walk baseline... 129.4 steps average
+
+Training with 25-qubit quantum circuit (100 shots)...
+Progress:
+  Episode   0/80: Avg reward = -865.0, ε = 0.258, Time = 7.7 min
+  Episode  20/80: Avg reward = -776.8, ε = 0.258, Time = 185.3 min
+  Episode  40/80: Avg reward = -645.1, ε = 0.258, Time = 356.3 min
+  Episode  60/80: Avg reward = -784.0, ε = 0.258, Time = 533.8 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 27
+  Optimal steps: 10
+  Random walk avg: 129.4
+  Efficiency: 37.04%
+  Random improvement: 74.38%
+  Criteria met: 0.0
+  Emergent: False (none)
+  Training time: 702.5 minutes
+
+============================================================
+Maze 4/10: dead_ends
+============================================================
+Optimal path: 8 steps
+Calculating random walk baseline... 97.3 steps average
+
+Training with 25-qubit quantum circuit (100 shots)...
+Progress:
+  Episode   0/80: Avg reward = -856.0, ε = 0.258, Time = 7.7 min
+  Episode  20/80: Avg reward = -831.7, ε = 0.258, Time = 185.2 min
+  Episode  40/80: Avg reward = -562.6, ε = 0.258, Time = 349.9 min
+  Episode  60/80: Avg reward = -861.4, ε = 0.258, Time = 527.4 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 19
+  Optimal steps: 8
+  Random walk avg: 97.3
+  Efficiency: 42.11%
+  Random improvement: 80.62%
+  Criteria met: 0.5
+  Emergent: False (none)
+  Training time: 691.0 minutes
+
+============================================================
+Maze 5/10: central_barrier
+============================================================
+Optimal path: 8 steps
+Calculating random walk baseline... 91.8 steps average
+
+Training with 25-qubit quantum circuit (100 shots)...
+Progress:
+  Episode   0/80: Avg reward = -811.0, ε = 0.258, Time = 7.6 min
+  Episode  20/80: Avg reward = -612.6, ε = 0.258, Time = 174.8 min
+  Episode  40/80: Avg reward = -852.4, ε = 0.258, Time = 352.4 min
+  Episode  60/80: Avg reward = -769.6, ε = 0.258, Time = 530.0 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 38
+  Optimal steps: 8
+  Random walk avg: 91.8
+  Efficiency: 21.05%
+  Random improvement: 51.47%
+  Criteria met: 0.0
+  Emergent: False (none)
+  Training time: 691.8 minutes
+
+============================================================
+Maze 6/10: zigzag
+============================================================
+Optimal path: 8 steps
+Calculating random walk baseline... 84.7 steps average
+
+Training with 25-qubit quantum circuit (100 shots)...
+Progress:
+  Episode   0/80: Avg reward = -874.0, ε = 0.258, Time = 7.7 min
+  Episode  20/80: Avg reward = -901.0, ε = 0.258, Time = 185.3 min
+  Episode  40/80: Avg reward = -886.6, ε = 0.258, Time = 362.8 min
+  Episode  60/80: Avg reward = -669.9, ε = 0.258, Time = 519.8 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 23
+  Optimal steps: 8
+  Random walk avg: 84.7
+  Efficiency: 34.78%
+  Random improvement: 78.62%
+  Criteria met: 0.5
+  Emergent: False (none)
+  Training time: 684.1 minutes
+
+============================================================
+Maze 7/10: open_field
+============================================================
+Optimal path: 8 steps
+Calculating random walk baseline... 95.3 steps average
+
+Training with 25-qubit quantum circuit (100 shots)...
+Progress:
+  Episode   0/80: Avg reward = -730.0, ε = 0.258, Time = 7.7 min
+  Episode  20/80: Avg reward = -763.3, ε = 0.258, Time = 174.6 min
+  Episode  40/80: Avg reward = -597.4, ε = 0.258, Time = 340.3 min
+  Episode  60/80: Avg reward = -621.8, ε = 0.258, Time = 502.3 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 19
+  Optimal steps: 8
+  Random walk avg: 95.3
+  Efficiency: 42.11%
+  Random improvement: 78.04%
+  Criteria met: 0.5
+  Emergent: False (none)
+  Training time: 666.7 minutes
+
+============================================================
+Maze 8/10: narrow_passages
+============================================================
+Optimal path: 8 steps
+Calculating random walk baseline... 90.8 steps average
+
+Training with 25-qubit quantum circuit (100 shots)...
+Progress:
+  Episode   0/80: Avg reward = -838.0, ε = 0.258, Time = 7.7 min
+  Episode  20/80: Avg reward = -877.6, ε = 0.258, Time = 181.1 min
+  Episode  40/80: Avg reward = -815.0, ε = 0.258, Time = 355.2 min
+  Episode  60/80: Avg reward = -889.3, ε = 0.258, Time = 532.8 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 53
+  Optimal steps: 8
+  Random walk avg: 90.8
+  Efficiency: 15.09%
+  Random improvement: 49.69%
+  Criteria met: 0.0
+  Emergent: False (none)
+  Training time: 701.8 minutes
+
+============================================================
+Maze 9/10: complex_branching
+============================================================
+Optimal path: 8 steps
+Calculating random walk baseline... 89.8 steps average
+
+Training with 25-qubit quantum circuit (100 shots)...
+Progress:
+  Episode   0/80: Avg reward = -892.0, ε = 0.258, Time = 7.6 min
+  Episode  20/80: Avg reward = -845.2, ε = 0.258, Time = 185.3 min
+  Episode  40/80: Avg reward = -815.0, ε = 0.258, Time = 362.6 min
+  Episode  60/80: Avg reward = -840.7, ε = 0.258, Time = 540.3 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 97
+  Optimal steps: 8
+  Random walk avg: 89.8
+  Efficiency: 8.25%
+  Random improvement: 16.03%
+  Criteria met: 0.0
+  Emergent: False (none)
+  Training time: 709.4 minutes
+
+============================================================
+Maze 10/10: deceptive_path
+============================================================
+Optimal path: 14 steps
+Calculating random walk baseline... 130.3 steps average
+
+Training with 25-qubit quantum circuit (100 shots)...
+Progress:
+  Episode   0/80: Avg reward = -892.0, ε = 0.258, Time = 7.7 min
+  Episode  20/80: Avg reward = -847.0, ε = 0.258, Time = 185.3 min
+  Episode  40/80: Avg reward = -774.1, ε = 0.258, Time = 362.9 min
+  Episode  60/80: Avg reward = -767.8, ε = 0.258, Time = 540.6 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 100
+  Optimal steps: 14
+  Random walk avg: 130.3
+  Efficiency: 14.00%
+  Random improvement: 28.78%
+  Criteria met: 0.0
+  Emergent: False (none)
+  Training time: 709.7 minutes
+
+============================================================
+EXPERIMENT COMPLETE
+============================================================
+Total mazes: 10
+Emergent solutions: 0 (0.0%)
+Average efficiency: 0.270
+Average criteria met: 0.20
+Total time: 6929.3 minutes
+Average time per maze: 692.9 minutes
+Quantum backend: lightning.gpu
+Qubits: 25
+Shots: 100
+Statistical error: ±10.0%
+
+No emergent behaviors detected with stricter criteria.
+
+Results saved to: results/vqnn_results_25q_09012025_203534.csv
+
+📊 Performance Report:
+Total runtime: 6929.3 minutes
+  circuit_eval_time: avg=1756967157.071, min=1756758935.098, max=1757174693.558
+  loss: avg=82.525, min=0.000, max=10209.688
+
+✅ 25-qubit experiment complete!
+============================================================
