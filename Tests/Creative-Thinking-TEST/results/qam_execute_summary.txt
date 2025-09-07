@@ -1,0 +1,367 @@
+(qnai-env) pooh@beast-server-0:~/QNAI-Experiment/QNAI-test-engine/Tests/Creative-Thinking-TEST$ python run-ct-test.py 
+
+============================================================
+QUANTUM CIRCUIT CONFIGURATION FOR CREATIVE THINKING
+============================================================
+
+Enter the number of qubits for the creative thinking experiment
+Recommended ranges:
+  - 8-10 qubits: Fast execution, basic creativity
+  - 11-15 qubits: Balanced creativity and runtime
+  - 16-20 qubits: Enhanced creative associations
+  - 21-25 qubits: Maximum creative complexity
+
+Note: Higher qubit counts enable richer creative associations
+but require more computational resources.
+
+Number of qubits (8-25): 9
+
+You selected 9 qubits.
+Estimated runtime: 5-10 minutes
+Creative space dimensionality: 512 quantum states
+Proceed with this configuration? (y/n): y
+
+✓ Quantum configuration set:
+  - Qubits: 9
+  - Shots: 200
+  - Quantum noise: 0.049
+============================================================
+
+============================================================
+ADAPTIVE QUANTUM CREATIVE THINKING EXPERIMENT
+============================================================
+
+This experiment uses a Quantum Associative Memory network
+to generate creative conceptual associations.
+
+Higher qubit counts enable:
+  • Richer semantic representations
+  • More complex association patterns
+  • Greater creative potential
+  • Increased computational requirements
+
+============================================================
+9-QUBIT QUANTUM CREATIVE THINKING EXPERIMENTS
+============================================================
+Configuration:
+  Qubits: 9
+  Shots: 200
+  Temperature: 0.5
+  Quantum noise: 0.049
+  Creativity threshold: 5.55
+  AI Scoring: Enabled
+  Seed: True random
+  .env file support: Enabled
+
+Semantic network initialized with 10 concepts
+Association complexity: 20 connections
+Initializing 9-qubit Quantum Associative Memory...
+  Temperature: 0.475
+  State space: 512 dimensions
+✅ All API keys loaded successfully from environment
+✅ AI scoring APIs initialized
+Running experiments...
+
+Testing 5 themes with 5 prompts each
+  Run 1: Theme 'animal' (iteration 1)🔧 Quantum device: GPU (lightning.gpu)
+ -> Creativity: 3.63, Emergent: False
+  Run 2: Theme 'animal' (iteration 2) -> Creativity: 4.22, Emergent: False
+  Run 3: Theme 'animal' (iteration 3) -> Creativity: 3.81, Emergent: False
+  Run 4: Theme 'animal' (iteration 4) -> Creativity: 3.85, Emergent: False
+  Run 5: Theme 'animal' (iteration 5) -> Creativity: 3.96, Emergent: False
+  Run 6: Theme 'machine' (iteration 1) -> Creativity: 3.81, Emergent: False
+  Run 7: Theme 'machine' (iteration 2) -> Creativity: 3.85, Emergent: False
+  Run 8: Theme 'machine' (iteration 3) -> Creativity: 3.59, Emergent: False
+  Run 9: Theme 'machine' (iteration 4) -> Creativity: 4.41, Emergent: False
+  Run 10: Theme 'machine' (iteration 5) -> Creativity: 4.11, Emergent: False
+  Run 11: Theme 'emotion' (iteration 1) -> Creativity: 4.78, Emergent: True
+  Run 12: Theme 'emotion' (iteration 2) -> Creativity: 4.78, Emergent: True
+  Run 13: Theme 'emotion' (iteration 3) -> Creativity: 4.33, Emergent: False
+  Run 14: Theme 'emotion' (iteration 4) -> Creativity: 4.41, Emergent: False
+  Run 15: Theme 'emotion' (iteration 5) -> Creativity: 4.30, Emergent: False
+  Run 16: Theme 'nature' (iteration 1) -> Creativity: 4.30, Emergent: False
+  Run 17: Theme 'nature' (iteration 2) -> Creativity: 3.96, Emergent: False
+  Run 18: Theme 'nature' (iteration 3) -> Creativity: 4.67, Emergent: True
+  Run 19: Theme 'nature' (iteration 4) -> Creativity: 4.70, Emergent: True
+  Run 20: Theme 'nature' (iteration 5) -> Creativity: 3.85, Emergent: False
+  Run 21: Theme 'algorithm' (iteration 1) -> Creativity: 4.19, Emergent: False
+  Run 22: Theme 'algorithm' (iteration 2) -> Creativity: 3.96, Emergent: False
+  Run 23: Theme 'algorithm' (iteration 3) -> Creativity: 4.59, Emergent: True
+  Run 24: Theme 'algorithm' (iteration 4) -> Creativity: 4.15, Emergent: False
+  Run 25: Theme 'algorithm' (iteration 5) -> Creativity: 4.00, Emergent: False
+
+Results saved to: results/qam_creative_results_9q_09072025_145308.csv
+
+============================================================
+SUMMARY
+============================================================
+Total runs: 25
+Emergent cases: 5 (20.0%)
+Average creativity score: 4.17/7.0
+
+Emergence types:
+  semantic_leap: 5 (100.0% of emergent)
+
+Quantum configuration used:
+  Qubits: 9
+  Shots: 200
+  State space: 512 dimensions
+
+✅ 9-qubit creative thinking experiment complete!
+============================================================
+(qnai-env) pooh@beast-server-0:~/QNAI-Experiment/QNAI-test-engine/Tests/Creative-Thinking-TEST$ python run-ct-test.py 
+
+============================================================
+QUANTUM CIRCUIT CONFIGURATION FOR CREATIVE THINKING
+============================================================
+
+Enter the number of qubits for the creative thinking experiment
+Recommended ranges:
+  - 8-10 qubits: Fast execution, basic creativity
+  - 11-15 qubits: Balanced creativity and runtime
+  - 16-20 qubits: Enhanced creative associations
+  - 21-25 qubits: Maximum creative complexity
+
+Note: Higher qubit counts enable richer creative associations
+but require more computational resources.
+
+Number of qubits (8-25): 16
+
+You selected 16 qubits.
+Estimated runtime: 20-30 minutes
+Creative space dimensionality: 65536 quantum states
+Proceed with this configuration? (y/n): y
+
+✓ Quantum configuration set:
+  - Qubits: 16
+  - Shots: 100
+  - Quantum noise: 0.057
+============================================================
+
+============================================================
+ADAPTIVE QUANTUM CREATIVE THINKING EXPERIMENT
+============================================================
+
+This experiment uses a Quantum Associative Memory network
+to generate creative conceptual associations.
+
+Higher qubit counts enable:
+  • Richer semantic representations
+  • More complex association patterns
+  • Greater creative potential
+  • Increased computational requirements
+
+============================================================
+16-QUBIT QUANTUM CREATIVE THINKING EXPERIMENTS
+============================================================
+Configuration:
+  Qubits: 16
+  Shots: 100
+  Temperature: 0.5
+  Quantum noise: 0.057
+  Creativity threshold: 5.20
+  AI Scoring: Enabled
+  Seed: True random
+  .env file support: Enabled
+
+Semantic network initialized with 18 concepts
+Association complexity: 28 connections
+Initializing 16-qubit Quantum Associative Memory...
+  Temperature: 0.650
+  State space: 65536 dimensions
+✅ All API keys loaded successfully from environment
+✅ AI scoring APIs initialized
+Running experiments...
+
+Testing 7 themes with 5 prompts each
+  Run 1: Theme 'animal' (iteration 1)🔧 Quantum device: GPU (lightning.gpu)
+ -> Creativity: 3.85, Emergent: False
+  Run 2: Theme 'animal' (iteration 2) -> Creativity: 3.70, Emergent: False
+  Run 3: Theme 'animal' (iteration 3) -> Creativity: 3.74, Emergent: False
+  Run 4: Theme 'animal' (iteration 4) -> Creativity: 4.07, Emergent: False
+  Run 5: Theme 'animal' (iteration 5) -> Creativity: 4.00, Emergent: False
+  Run 6: Theme 'machine' (iteration 1) -> Creativity: 4.78, Emergent: True
+  Run 7: Theme 'machine' (iteration 2) -> Creativity: 4.81, Emergent: True
+  Run 8: Theme 'machine' (iteration 3) -> Creativity: 5.04, Emergent: True
+  Run 9: Theme 'machine' (iteration 4) -> Creativity: 4.81, Emergent: True
+  Run 10: Theme 'machine' (iteration 5) -> Creativity: 4.81, Emergent: True
+  Run 11: Theme 'emotion' (iteration 1) -> Creativity: 5.04, Emergent: True
+  Run 12: Theme 'emotion' (iteration 2) -> Creativity: 4.33, Emergent: False
+  Run 13: Theme 'emotion' (iteration 3) -> Creativity: 4.81, Emergent: True
+  Run 14: Theme 'emotion' (iteration 4) -> Creativity: 4.56, Emergent: True
+  Run 15: Theme 'emotion' (iteration 5) -> Creativity: 4.52, Emergent: True
+  Run 16: Theme 'nature' (iteration 1) -> Creativity: 5.22, Emergent: True
+  Run 17: Theme 'nature' (iteration 2) -> Creativity: 5.44, Emergent: True
+  Run 18: Theme 'nature' (iteration 3) -> Creativity: 5.30, Emergent: True
+  Run 19: Theme 'nature' (iteration 4) -> Creativity: 5.11, Emergent: True
+  Run 20: Theme 'nature' (iteration 5) -> Creativity: 5.41, Emergent: True
+  Run 21: Theme 'algorithm' (iteration 1) -> Creativity: 4.11, Emergent: False
+  Run 22: Theme 'algorithm' (iteration 2) -> Creativity: 4.52, Emergent: True
+  Run 23: Theme 'algorithm' (iteration 3) -> Creativity: 4.15, Emergent: False
+  Run 24: Theme 'algorithm' (iteration 4) -> Creativity: 4.30, Emergent: False
+  Run 25: Theme 'algorithm' (iteration 5) -> Creativity: 4.15, Emergent: False
+  Run 26: Theme 'quantum' (iteration 1) -> Creativity: 3.07, Emergent: False
+  Run 27: Theme 'quantum' (iteration 2) -> Creativity: 4.33, Emergent: False
+  Run 28: Theme 'quantum' (iteration 3) -> Creativity: 4.41, Emergent: False
+  Run 29: Theme 'quantum' (iteration 4) -> Creativity: 3.63, Emergent: False
+  Run 30: Theme 'quantum' (iteration 5) -> Creativity: 3.85, Emergent: False
+  Run 31: Theme 'consciousness' (iteration 1) -> Creativity: 4.48, Emergent: False
+  Run 32: Theme 'consciousness' (iteration 2) -> Creativity: 4.52, Emergent: False
+  Run 33: Theme 'consciousness' (iteration 3) -> Creativity: 4.41, Emergent: False
+  Run 34: Theme 'consciousness' (iteration 4) -> Creativity: 4.48, Emergent: False
+  Run 35: Theme 'consciousness' (iteration 5) -> Creativity: 4.48, Emergent: False
+
+Results saved to: results/qam_creative_results_16q_09072025_145512.csv
+
+============================================================
+SUMMARY
+============================================================
+Total runs: 35
+Emergent cases: 15 (42.9%)
+Average creativity score: 4.46/7.0
+
+Emergence types:
+  semantic_leap: 11 (73.3% of emergent)
+  creative_association: 4 (26.7% of emergent)
+
+Quantum configuration used:
+  Qubits: 16
+  Shots: 100
+  State space: 65536 dimensions
+
+✅ 16-qubit creative thinking experiment complete!
+============================================================
+(qnai-env) pooh@beast-server-0:~/QNAI-Experiment/QNAI-test-engine/Tests/Creative-Thinking-TEST$ python run-ct-test.py 
+
+============================================================
+QUANTUM CIRCUIT CONFIGURATION FOR CREATIVE THINKING
+============================================================
+
+Enter the number of qubits for the creative thinking experiment
+Recommended ranges:
+  - 8-10 qubits: Fast execution, basic creativity
+  - 11-15 qubits: Balanced creativity and runtime
+  - 16-20 qubits: Enhanced creative associations
+  - 21-25 qubits: Maximum creative complexity
+
+Note: Higher qubit counts enable richer creative associations
+but require more computational resources.
+
+Number of qubits (8-25): 25
+
+You selected 25 qubits.
+Estimated runtime: 30-45 minutes
+Creative space dimensionality: 33554432 quantum states
+Proceed with this configuration? (y/n): y
+
+✓ Quantum configuration set:
+  - Qubits: 25
+  - Shots: 75
+  - Quantum noise: 0.069
+============================================================
+
+============================================================
+ADAPTIVE QUANTUM CREATIVE THINKING EXPERIMENT
+============================================================
+
+This experiment uses a Quantum Associative Memory network
+to generate creative conceptual associations.
+
+Higher qubit counts enable:
+  • Richer semantic representations
+  • More complex association patterns
+  • Greater creative potential
+  • Increased computational requirements
+
+============================================================
+25-QUBIT QUANTUM CREATIVE THINKING EXPERIMENTS
+============================================================
+Configuration:
+  Qubits: 25
+  Shots: 75
+  Temperature: 0.5
+  Quantum noise: 0.069
+  Creativity threshold: 4.75
+  AI Scoring: Enabled
+  Seed: True random
+  .env file support: Enabled
+
+Semantic network initialized with 26 concepts
+Association complexity: 32 connections
+Initializing 25-qubit Quantum Associative Memory...
+  Temperature: 0.875
+  State space: 33554432 dimensions
+✅ All API keys loaded successfully from environment
+✅ AI scoring APIs initialized
+Running experiments...
+
+Testing 9 themes with 5 prompts each
+  Run 1: Theme 'animal' (iteration 1)🔧 Quantum device: GPU (lightning.gpu)
+ -> Creativity: 2.89, Emergent: False
+  Run 2: Theme 'animal' (iteration 2) -> Creativity: 3.74, Emergent: False
+  Run 3: Theme 'animal' (iteration 3) -> Creativity: 4.11, Emergent: False
+  Run 4: Theme 'animal' (iteration 4) -> Creativity: 3.70, Emergent: False
+  Run 5: Theme 'animal' (iteration 5) -> Creativity: 3.59, Emergent: False
+  Run 6: Theme 'machine' (iteration 1) -> Creativity: 4.56, Emergent: True
+  Run 7: Theme 'machine' (iteration 2) -> Creativity: 3.93, Emergent: False
+  Run 8: Theme 'machine' (iteration 3) -> Creativity: 4.44, Emergent: False
+  Run 9: Theme 'machine' (iteration 4) -> Creativity: 5.00, Emergent: True
+  Run 10: Theme 'machine' (iteration 5) -> Creativity: 4.30, Emergent: False
+  Run 11: Theme 'emotion' (iteration 1) -> Creativity: 3.48, Emergent: False
+  Run 12: Theme 'emotion' (iteration 2) -> Creativity: 3.41, Emergent: False
+  Run 13: Theme 'emotion' (iteration 3) -> Creativity: 3.04, Emergent: False
+  Run 14: Theme 'emotion' (iteration 4) -> Creativity: 3.22, Emergent: False
+  Run 15: Theme 'emotion' (iteration 5) -> Creativity: 3.67, Emergent: False
+  Run 16: Theme 'nature' (iteration 1) -> Creativity: 3.30, Emergent: False
+  Run 17: Theme 'nature' (iteration 2) -> Creativity: 4.11, Emergent: False
+  Run 18: Theme 'nature' (iteration 3) -> Creativity: 3.44, Emergent: False
+  Run 19: Theme 'nature' (iteration 4) -> Creativity: 3.33, Emergent: False
+  Run 20: Theme 'nature' (iteration 5) -> Creativity: 4.00, Emergent: False
+  Run 21: Theme 'algorithm' (iteration 1) -> Creativity: 4.22, Emergent: False
+  Run 22: Theme 'algorithm' (iteration 2) -> Creativity: 4.44, Emergent: False
+  Run 23: Theme 'algorithm' (iteration 3) -> Creativity: 5.11, Emergent: True
+  Run 24: Theme 'algorithm' (iteration 4) -> Creativity: 3.63, Emergent: False
+  Run 25: Theme 'algorithm' (iteration 5) -> Creativity: 4.81, Emergent: True
+  Run 26: Theme 'quantum' (iteration 1) -> Creativity: 4.44, Emergent: False
+  Run 27: Theme 'quantum' (iteration 2) -> Creativity: 5.04, Emergent: True
+  Run 28: Theme 'quantum' (iteration 3) -> Creativity: 4.74, Emergent: True
+  Run 29: Theme 'quantum' (iteration 4) -> Creativity: 3.67, Emergent: False
+  Run 30: Theme 'quantum' (iteration 5) -> Creativity: 4.44, Emergent: False
+  Run 31: Theme 'consciousness' (iteration 1) -> Creativity: 4.56, Emergent: True
+  Run 32: Theme 'consciousness' (iteration 2) -> Creativity: 4.37, Emergent: False
+  Run 33: Theme 'consciousness' (iteration 3) -> Creativity: 4.30, Emergent: False
+  Run 34: Theme 'consciousness' (iteration 4) -> Creativity: 3.70, Emergent: False
+  Run 35: Theme 'consciousness' (iteration 5) -> Creativity: 3.81, Emergent: False
+  Run 36: Theme 'paradox' (iteration 1) -> Creativity: 4.19, Emergent: False
+  Run 37: Theme 'paradox' (iteration 2) -> Creativity: 3.81, Emergent: False
+  Run 38: Theme 'paradox' (iteration 3) -> Creativity: 4.56, Emergent: True
+  Run 39: Theme 'paradox' (iteration 4) -> Creativity: 4.00, Emergent: False
+  Run 40: Theme 'paradox' (iteration 5) -> Creativity: 3.56, Emergent: False
+  Run 41: Theme 'beauty' (iteration 1) -> Creativity: 4.52, Emergent: True
+  Run 42: Theme 'beauty' (iteration 2) -> Creativity: 4.33, Emergent: False
+  Run 43: Theme 'beauty' (iteration 3) -> Creativity: 4.30, Emergent: False
+  Run 44: Theme 'beauty' (iteration 4) -> Creativity: 4.48, Emergent: False
+  Run 45: Theme 'beauty' (iteration 5) -> Creativity: 4.59, Emergent: True
+
+Results saved to: results/qam_creative_results_25q_09072025_145807.csv
+
+============================================================
+SUMMARY
+============================================================
+Total runs: 45
+Emergent cases: 10 (22.2%)
+Average creativity score: 4.06/7.0
+
+Emergence types:
+  semantic_leap: 6 (60.0% of emergent)
+  creative_association: 4 (40.0% of emergent)
+
+Quantum configuration used:
+  Qubits: 25
+  Shots: 75
+  State space: 33554432 dimensions
+
+✅ 25-qubit creative thinking experiment complete!
+============================================================
+(qnai-env) pooh@beast-server-0:~/QNAI-Experiment/QNAI-test-engine/Tests/Creative-Thinking-TEST$ 
+

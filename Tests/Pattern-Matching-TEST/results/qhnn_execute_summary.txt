@@ -1,0 +1,421 @@
+(qnai-env) pooh@beast-server-0:~/QNAI-Experiment/QNAI-test-engine/Tests/Pattern-Matching-TEST$ python run-pm-test.py 
+
+============================================================
+QUANTUM HOPFIELD NETWORK CONFIGURATION
+============================================================
+
+Select pattern size for the Quantum Hopfield Network:
+
+Available configurations:
+  1. 3x3 patterns (9 qubits)
+     - Simple patterns: I, L, T
+     - Fastest execution (~2-5 minutes)
+     - Good for initial testing
+
+  2. 4x4 patterns (16 qubits)
+     - Medium patterns: T, O, H
+     - Moderate runtime (~5-10 minutes)
+     - Balanced complexity
+
+  3. 5x5 patterns (25 qubits)
+     - Complex patterns: T, O, X
+     - Longer runtime (~10-20 minutes)
+     - Maximum pattern complexity
+
+Each configuration uses N² qubits for NxN patterns
+ensuring proper problem-solution scaling
+
+Enter your choice (1, 2, or 3): 1
+
+You selected: 3x3 patterns
+Configuration details:
+  - Pattern size: 3x3
+  - Qubits required: 9
+  - Pattern types: I, L, T
+  - Estimated runtime: 2-5 minutes
+
+Proceed with this configuration? (y/n): y
+
+============================================================
+SCALABLE QUANTUM HOPFIELD NETWORK EXPERIMENT
+============================================================
+
+This experiment tests a Quantum Hopfield Neural Network
+with properly scaled pattern sizes and qubit allocations.
+
+Each configuration uses N² qubits for NxN patterns,
+ensuring scientifically valid problem-solution scaling.
+
+Smaller patterns (3x3) run faster but have less complexity,
+while larger patterns (5x5) provide richer dynamics.
+
+============================================================
+3x3 QUANTUM HOPFIELD NETWORK EXPERIMENTS
+============================================================
+Pattern size: 3x3
+Qubits: 9
+Temperature: 0.150
+Quantum noise: 0.060
+Shots per retrieval: 250
+Seed: True random
+============================================================
+
+Patterns to test: I, L, T
+
+Initializing 3x3 Quantum Hopfield Network...
+  Configuration:
+    - Pattern size: 3x3
+    - Neurons/Qubits: 9
+    - Temperature: 0.150
+    - Quantum noise: 0.060
+    - Shots per trial: 250
+
+Running experiments...
+
+  Run 1: I + noise 10.0%🔧 Quantum device: GPU (lightning.gpu, 9 qubits)
+ -> Accuracy: 1.00, Emergent: True
+  Run 2: I + noise 15.0% -> Accuracy: 0.89, Emergent: False
+  Run 3: I + noise 20.0% -> Accuracy: 0.89, Emergent: False
+  Run 4: I + noise 25.0% -> Accuracy: 0.78, Emergent: False
+  Run 5: I + noise 30.0% -> Accuracy: 0.78, Emergent: False
+  Run 6: I + mask 10.0% -> Accuracy: 1.00, Emergent: False
+  Run 7: I + mask 15.0% -> Accuracy: 1.00, Emergent: True
+  Run 8: I + mask 20.0% -> Accuracy: 1.00, Emergent: True
+  Run 9: I + mask 25.0% -> Accuracy: 0.89, Emergent: False
+  Run 10: I + mask 30.0% -> Accuracy: 0.89, Emergent: False
+  Run 11: L + noise 10.0% -> Accuracy: 1.00, Emergent: True
+  Run 12: L + noise 15.0% -> Accuracy: 0.89, Emergent: False
+  Run 13: L + noise 20.0% -> Accuracy: 0.89, Emergent: False
+  Run 14: L + noise 25.0% -> Accuracy: 0.78, Emergent: False
+  Run 15: L + noise 30.0% -> Accuracy: 0.78, Emergent: False
+  Run 16: L + mask 10.0% -> Accuracy: 1.00, Emergent: False
+  Run 17: L + mask 15.0% -> Accuracy: 1.00, Emergent: False
+  Run 18: L + mask 20.0% -> Accuracy: 1.00, Emergent: True
+  Run 19: L + mask 25.0% -> Accuracy: 1.00, Emergent: True
+  Run 20: L + mask 30.0% -> Accuracy: 0.89, Emergent: False
+  Run 21: T + noise 10.0% -> Accuracy: 1.00, Emergent: True
+  Run 22: T + noise 15.0% -> Accuracy: 0.89, Emergent: False
+  Run 23: T + noise 20.0% -> Accuracy: 0.89, Emergent: False
+  Run 24: T + noise 25.0% -> Accuracy: 0.78, Emergent: False
+  Run 25: T + noise 30.0% -> Accuracy: 0.78, Emergent: False
+  Run 26: T + mask 10.0% -> Accuracy: 1.00, Emergent: False
+  Run 27: T + mask 15.0% -> Accuracy: 1.00, Emergent: True
+  Run 28: T + mask 20.0% -> Accuracy: 1.00, Emergent: True
+  Run 29: T + mask 25.0% -> Accuracy: 1.00, Emergent: True
+  Run 30: T + mask 30.0% -> Accuracy: 1.00, Emergent: True
+
+Results saved to: results/qhnn_results_9q_09072025_142438.csv
+
+============================================================
+VALIDATION REPORT
+============================================================
+Pattern size: 3x3
+Noise emergence rate: 20.0%
+Mask emergence rate: 53.3%
+
+✓ No anomalies detected
+
+============================================================
+EXPERIMENT SUMMARY
+============================================================
+Pattern size: 3x3
+Total runs: 30
+Emergent cases: 11 (36.7%)
+Runtime: 0.3 minutes
+Qubits used: 9
+  noise: 3/15 (20.0%)
+  incompleteness: 8/15 (53.3%)
+
+Emergence breakdown by type:
+  exceptional_recall: 3
+  perfect_recall: 3
+  perfect_reconstruction: 5
+
+Per-pattern performance:
+  I: 3/10 emergent, avg accuracy: 0.911
+  L: 3/10 emergent, avg accuracy: 0.922
+  T: 5/10 emergent, avg accuracy: 0.933
+
+✅ 3x3 experiment complete!
+============================================================
+(qnai-env) pooh@beast-server-0:~/QNAI-Experiment/QNAI-test-engine/Tests/Pattern-Matching-TEST$ python run-pm-test.py 
+
+============================================================
+QUANTUM HOPFIELD NETWORK CONFIGURATION
+============================================================
+
+Select pattern size for the Quantum Hopfield Network:
+
+Available configurations:
+  1. 3x3 patterns (9 qubits)
+     - Simple patterns: I, L, T
+     - Fastest execution (~2-5 minutes)
+     - Good for initial testing
+
+  2. 4x4 patterns (16 qubits)
+     - Medium patterns: T, O, H
+     - Moderate runtime (~5-10 minutes)
+     - Balanced complexity
+
+  3. 5x5 patterns (25 qubits)
+     - Complex patterns: T, O, X
+     - Longer runtime (~10-20 minutes)
+     - Maximum pattern complexity
+
+Each configuration uses N² qubits for NxN patterns
+ensuring proper problem-solution scaling
+
+Enter your choice (1, 2, or 3): 2
+
+You selected: 4x4 patterns
+Configuration details:
+  - Pattern size: 4x4
+  - Qubits required: 16
+  - Pattern types: T, O, H
+  - Estimated runtime: 5-10 minutes
+
+Proceed with this configuration? (y/n): y
+
+============================================================
+SCALABLE QUANTUM HOPFIELD NETWORK EXPERIMENT
+============================================================
+
+This experiment tests a Quantum Hopfield Neural Network
+with properly scaled pattern sizes and qubit allocations.
+
+Each configuration uses N² qubits for NxN patterns,
+ensuring scientifically valid problem-solution scaling.
+
+Smaller patterns (3x3) run faster but have less complexity,
+while larger patterns (5x5) provide richer dynamics.
+
+============================================================
+4x4 QUANTUM HOPFIELD NETWORK EXPERIMENTS
+============================================================
+Pattern size: 4x4
+Qubits: 16
+Temperature: 0.120
+Quantum noise: 0.050
+Shots per retrieval: 200
+Seed: True random
+============================================================
+
+Patterns to test: T, O, H
+
+Initializing 4x4 Quantum Hopfield Network...
+  Configuration:
+    - Pattern size: 4x4
+    - Neurons/Qubits: 16
+    - Temperature: 0.120
+    - Quantum noise: 0.050
+    - Shots per trial: 200
+
+Running experiments...
+
+  Run 1: T + noise 10.0%🔧 Quantum device: GPU (lightning.gpu, 16 qubits)
+ -> Accuracy: 0.94, Emergent: False
+  Run 2: T + noise 15.0% -> Accuracy: 0.88, Emergent: False
+  Run 3: T + noise 20.0% -> Accuracy: 0.81, Emergent: False
+  Run 4: T + noise 25.0% -> Accuracy: 0.75, Emergent: False
+  Run 5: T + noise 30.0% -> Accuracy: 0.75, Emergent: False
+  Run 6: T + mask 10.0% -> Accuracy: 1.00, Emergent: False
+  Run 7: T + mask 15.0% -> Accuracy: 1.00, Emergent: False
+  Run 8: T + mask 20.0% -> Accuracy: 1.00, Emergent: True
+  Run 9: T + mask 25.0% -> Accuracy: 1.00, Emergent: True
+  Run 10: T + mask 30.0% -> Accuracy: 1.00, Emergent: True
+  Run 11: O + noise 10.0% -> Accuracy: 0.94, Emergent: False
+  Run 12: O + noise 15.0% -> Accuracy: 0.88, Emergent: False
+  Run 13: O + noise 20.0% -> Accuracy: 0.81, Emergent: False
+  Run 14: O + noise 25.0% -> Accuracy: 0.75, Emergent: False
+  Run 15: O + noise 30.0% -> Accuracy: 0.75, Emergent: False
+  Run 16: O + mask 10.0% -> Accuracy: 1.00, Emergent: False
+  Run 17: O + mask 15.0% -> Accuracy: 1.00, Emergent: False
+  Run 18: O + mask 20.0% -> Accuracy: 1.00, Emergent: True
+  Run 19: O + mask 25.0% -> Accuracy: 1.00, Emergent: True
+  Run 20: O + mask 30.0% -> Accuracy: 1.00, Emergent: True
+  Run 21: H + noise 10.0% -> Accuracy: 0.94, Emergent: False
+  Run 22: H + noise 15.0% -> Accuracy: 0.88, Emergent: False
+  Run 23: H + noise 20.0% -> Accuracy: 0.81, Emergent: False
+  Run 24: H + noise 25.0% -> Accuracy: 0.75, Emergent: False
+  Run 25: H + noise 30.0% -> Accuracy: 0.75, Emergent: False
+  Run 26: H + mask 10.0% -> Accuracy: 1.00, Emergent: False
+  Run 27: H + mask 15.0% -> Accuracy: 1.00, Emergent: False
+  Run 28: H + mask 20.0% -> Accuracy: 1.00, Emergent: True
+  Run 29: H + mask 25.0% -> Accuracy: 1.00, Emergent: True
+  Run 30: H + mask 30.0% -> Accuracy: 1.00, Emergent: True
+
+Results saved to: results/qhnn_results_16q_09072025_142502.csv
+
+============================================================
+VALIDATION REPORT
+============================================================
+Pattern size: 4x4
+Noise emergence rate: 0.0%
+Mask emergence rate: 60.0%
+
+⚠️ WARNINGS:
+  - Asymmetry detected: masking shows significantly higher emergence than noise
+
+============================================================
+EXPERIMENT SUMMARY
+============================================================
+Pattern size: 4x4
+Total runs: 30
+Emergent cases: 9 (30.0%)
+Runtime: 0.2 minutes
+Qubits used: 16
+  noise: 0/15 (0.0%)
+  incompleteness: 9/15 (60.0%)
+
+Emergence breakdown by type:
+  exceptional_recall: 6
+  perfect_reconstruction: 3
+
+Per-pattern performance:
+  T: 3/10 emergent, avg accuracy: 0.912
+  O: 3/10 emergent, avg accuracy: 0.912
+  H: 3/10 emergent, avg accuracy: 0.912
+
+✅ 4x4 experiment complete!
+============================================================
+(qnai-env) pooh@beast-server-0:~/QNAI-Experiment/QNAI-test-engine/Tests/Pattern-Matching-TEST$ python run-pm-test.py 
+
+============================================================
+QUANTUM HOPFIELD NETWORK CONFIGURATION
+============================================================
+
+Select pattern size for the Quantum Hopfield Network:
+
+Available configurations:
+  1. 3x3 patterns (9 qubits)
+     - Simple patterns: I, L, T
+     - Fastest execution (~2-5 minutes)
+     - Good for initial testing
+
+  2. 4x4 patterns (16 qubits)
+     - Medium patterns: T, O, H
+     - Moderate runtime (~5-10 minutes)
+     - Balanced complexity
+
+  3. 5x5 patterns (25 qubits)
+     - Complex patterns: T, O, X
+     - Longer runtime (~10-20 minutes)
+     - Maximum pattern complexity
+
+Each configuration uses N² qubits for NxN patterns
+ensuring proper problem-solution scaling
+
+Enter your choice (1, 2, or 3): 3
+
+You selected: 5x5 patterns
+Configuration details:
+  - Pattern size: 5x5
+  - Qubits required: 25
+  - Pattern types: T, O, X
+  - Estimated runtime: 10-20 minutes
+
+Proceed with this configuration? (y/n): y
+
+============================================================
+SCALABLE QUANTUM HOPFIELD NETWORK EXPERIMENT
+============================================================
+
+This experiment tests a Quantum Hopfield Neural Network
+with properly scaled pattern sizes and qubit allocations.
+
+Each configuration uses N² qubits for NxN patterns,
+ensuring scientifically valid problem-solution scaling.
+
+Smaller patterns (3x3) run faster but have less complexity,
+while larger patterns (5x5) provide richer dynamics.
+
+============================================================
+5x5 QUANTUM HOPFIELD NETWORK EXPERIMENTS
+============================================================
+Pattern size: 5x5
+Qubits: 25
+Temperature: 0.100
+Quantum noise: 0.040
+Shots per retrieval: 150
+Seed: True random
+============================================================
+
+Patterns to test: T, O, X
+
+Initializing 5x5 Quantum Hopfield Network...
+  Configuration:
+    - Pattern size: 5x5
+    - Neurons/Qubits: 25
+    - Temperature: 0.100
+    - Quantum noise: 0.040
+    - Shots per trial: 150
+
+Running experiments...
+
+  Run 1: T + noise 10.0%🔧 Quantum device: GPU (lightning.gpu, 25 qubits)
+ -> Accuracy: 0.92, Emergent: False
+  Run 2: T + noise 15.0% -> Accuracy: 0.88, Emergent: False
+  Run 3: T + noise 20.0% -> Accuracy: 0.80, Emergent: False
+  Run 4: T + noise 25.0% -> Accuracy: 0.76, Emergent: False
+  Run 5: T + noise 30.0% -> Accuracy: 0.72, Emergent: False
+  Run 6: T + mask 10.0% -> Accuracy: 1.00, Emergent: False
+  Run 7: T + mask 15.0% -> Accuracy: 1.00, Emergent: False
+  Run 8: T + mask 20.0% -> Accuracy: 1.00, Emergent: True
+  Run 9: T + mask 25.0% -> Accuracy: 1.00, Emergent: True
+  Run 10: T + mask 30.0% -> Accuracy: 1.00, Emergent: True
+  Run 11: O + noise 10.0% -> Accuracy: 0.92, Emergent: False
+  Run 12: O + noise 15.0% -> Accuracy: 0.88, Emergent: False
+  Run 13: O + noise 20.0% -> Accuracy: 0.80, Emergent: False
+  Run 14: O + noise 25.0% -> Accuracy: 0.76, Emergent: False
+  Run 15: O + noise 30.0% -> Accuracy: 0.72, Emergent: False
+  Run 16: O + mask 10.0% -> Accuracy: 1.00, Emergent: False
+  Run 17: O + mask 15.0% -> Accuracy: 1.00, Emergent: False
+  Run 18: O + mask 20.0% -> Accuracy: 1.00, Emergent: True
+  Run 19: O + mask 25.0% -> Accuracy: 1.00, Emergent: True
+  Run 20: O + mask 30.0% -> Accuracy: 1.00, Emergent: True
+  Run 21: X + noise 10.0% -> Accuracy: 0.92, Emergent: False
+  Run 22: X + noise 15.0% -> Accuracy: 0.88, Emergent: False
+  Run 23: X + noise 20.0% -> Accuracy: 0.80, Emergent: False
+  Run 24: X + noise 25.0% -> Accuracy: 0.76, Emergent: False
+  Run 25: X + noise 30.0% -> Accuracy: 0.72, Emergent: False
+  Run 26: X + mask 10.0% -> Accuracy: 1.00, Emergent: False
+  Run 27: X + mask 15.0% -> Accuracy: 1.00, Emergent: False
+  Run 28: X + mask 20.0% -> Accuracy: 1.00, Emergent: True
+  Run 29: X + mask 25.0% -> Accuracy: 1.00, Emergent: True
+  Run 30: X + mask 30.0% -> Accuracy: 1.00, Emergent: True
+
+Results saved to: results/qhnn_results_25q_09072025_142525.csv
+
+============================================================
+VALIDATION REPORT
+============================================================
+Pattern size: 5x5
+Noise emergence rate: 0.0%
+Mask emergence rate: 60.0%
+
+⚠️ WARNINGS:
+  - Asymmetry detected: masking shows significantly higher emergence than noise
+
+============================================================
+EXPERIMENT SUMMARY
+============================================================
+Pattern size: 5x5
+Total runs: 30
+Emergent cases: 9 (30.0%)
+Runtime: 1.2 minutes
+Qubits used: 25
+  noise: 0/15 (0.0%)
+  incompleteness: 9/15 (60.0%)
+
+Emergence breakdown by type:
+  exceptional_recall: 6
+  perfect_reconstruction: 3
+
+Per-pattern performance:
+  T: 3/10 emergent, avg accuracy: 0.908
+  O: 3/10 emergent, avg accuracy: 0.908
+  X: 3/10 emergent, avg accuracy: 0.908
+
+✅ 5x5 experiment complete!
+============================================================
+(qnai-env) pooh@beast-server-0:~/QNAI-Experiment/QNAI-test-engine/Tests/Pattern-Matching-TEST$ 
