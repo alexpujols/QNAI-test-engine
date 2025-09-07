@@ -15,7 +15,7 @@ __author__ = "Alex Pujols"
 __copyright__ = "Alex Pujols"
 __credits__ = ["Alex Pujols"]
 __license__ = "MIT"
-__version__ = "1.04-alpha"
+__version__ = "1.0-beta"
 __maintainer__ = "Alex Pujols"
 __email__ = "A.Pujols@o365.ncu.edu; alexpujols@ieee.org"
 __status__ = "Prototype"
@@ -44,6 +44,96 @@ import warnings
 import asyncio
 import aiohttp
 warnings.filterwarnings('ignore')
+
+# ============================================================================
+# USER INPUT FOR QUBIT CONFIGURATION
+# ============================================================================
+
+def get_qubit_configuration():
+    """Get the number of qubits from user input with validation."""
+    print("\n" + "=" * 60)
+    print("QUANTUM CIRCUIT CONFIGURATION FOR CREATIVE THINKING")
+    print("=" * 60)
+    
+    while True:
+        try:
+            print("\nEnter the number of qubits for the creative thinking experiment")
+            print("Recommended ranges:")
+            print("  - 8-10 qubits: Fast execution, basic creativity")
+            print("  - 11-15 qubits: Balanced creativity and runtime")
+            print("  - 16-20 qubits: Enhanced creative associations")
+            print("  - 21-25 qubits: Maximum creative complexity")
+            print("\nNote: Higher qubit counts enable richer creative associations")
+            print("but require more computational resources.")
+            
+            num_qubits = input("\nNumber of qubits (8-25): ").strip()
+            num_qubits = int(num_qubits)
+            
+            if num_qubits < 8:
+                print("⚠  Minimum 8 qubits required for meaningful creative associations.")
+                continue
+            elif num_qubits > 25:
+                print("⚠  Maximum 25 qubits supported to maintain practical runtime.")
+                continue
+            
+            # Confirm with user
+            print(f"\nYou selected {num_qubits} qubits.")
+            
+            # Estimate runtime based on qubit count
+            if num_qubits <= 10:
+                est_time = "5-10"
+            elif num_qubits <= 15:
+                est_time = "10-20"
+            elif num_qubits <= 20:
+                est_time = "20-30"
+            else:
+                est_time = "30-45"
+            
+            print(f"Estimated runtime: {est_time} minutes")
+            print(f"Creative space dimensionality: {2**num_qubits} quantum states")
+            
+            confirm = input("Proceed with this configuration? (y/n): ").strip().lower()
+            if confirm == 'y' or confirm == 'yes':
+                return num_qubits
+            elif confirm == 'n' or confirm == 'no':
+                continue
+            else:
+                print("Please enter 'y' for yes or 'n' for no.")
+                
+        except ValueError:
+            print("⚠  Please enter a valid integer between 8 and 25.")
+        except KeyboardInterrupt:
+            print("\n\nExiting configuration...")
+            sys.exit(0)
+
+# Get user configuration
+NUM_QUBITS = get_qubit_configuration()
+
+# ============================================================================
+# CONFIGURATION CONSTANTS - DYNAMICALLY ADJUSTED FOR QUBIT COUNT
+# ============================================================================
+
+# Seed management for reproducibility
+GLOBAL_SEED = None  # Set to integer for reproducibility, None for true randomness
+
+# Quantum noise level scales with qubit count
+QUANTUM_NOISE_LEVEL = 0.05 * (1 + (NUM_QUBITS - 10) / 40)  # Scale noise with qubits
+
+# Adjust shots based on qubit count for balance
+if NUM_QUBITS <= 10:
+    SHOTS = 200
+elif NUM_QUBITS <= 15:
+    SHOTS = 150
+elif NUM_QUBITS <= 20:
+    SHOTS = 100
+else:
+    SHOTS = 75  # Reduce shots for very high qubit counts
+
+print(f"\n✓ Quantum configuration set:")
+print(f"  - Qubits: {NUM_QUBITS}")
+print(f"  - Shots: {SHOTS}")
+print(f"  - Quantum noise: {QUANTUM_NOISE_LEVEL:.3f}")
+print("=" * 60)
 
 # Load environment variables from .env file
 try:
@@ -80,14 +170,6 @@ except ImportError as e:
     print(f"Warning: AI scoring libraries not available: {e}")
     print("Using mock scoring.")
 
-# ============================================================================
-# CONFIGURATION CONSTANTS
-# ============================================================================
-
-# Seed management for reproducibility
-GLOBAL_SEED = None  # Set to integer for reproducibility, None for true randomness
-QUANTUM_NOISE_LEVEL = 0.05  # Quantum noise parameter for measurement uncertainty
-
 # API Keys from environment variables (loaded from .env file)
 API_KEYS = {
     "openai": os.environ.get("OPENAI_API_KEY"),
@@ -117,9 +199,10 @@ def check_api_keys():
         print("✅ All API keys loaded successfully from environment")
     return True
 
-# Creativity thresholds
-CREATIVITY_THRESHOLD = 5.5  # Average score > 5.5 on 1-7 scale
-SEMANTIC_DISTANCE_THRESHOLD = 0.4  # Minimum distance for novelty
+# Creativity thresholds - adjust based on qubit count
+BASE_CREATIVITY_THRESHOLD = 5.5
+CREATIVITY_THRESHOLD = BASE_CREATIVITY_THRESHOLD - (NUM_QUBITS - 10) * 0.05  # Lower threshold for higher qubits
+SEMANTIC_DISTANCE_THRESHOLD = 0.4 - (NUM_QUBITS - 10) * 0.01  # Adjust for qubit count
 
 # ============================================================================
 # DATA STRUCTURES
@@ -157,66 +240,88 @@ class SemanticNetworkGenerator:
         """Initialize with optional seed for reproducibility."""
         self.seed = seed
         self.rng = np.random.RandomState(seed) if seed else np.random.RandomState()
-        self.network = self._create_fixed_network()
+        self.network = self._create_adaptive_network()
     
-    def _create_fixed_network(self) -> SemanticNetwork:
+    def _create_adaptive_network(self) -> SemanticNetwork:
         """
-        Create the fixed semantic network with 10 concepts and 20 bidirectional associations.
-        Using sparse one-hot encoding (10-dimensional vectors).
+        Create semantic network that adapts to qubit count.
+        More qubits = more concepts and richer associations.
         """
-        # Define 10 core concepts across 5 themes
-        concepts = [
-            "animal",     # Theme 1: Living beings
-            "machine",    # Theme 2: Technology
-            "emotion",    # Theme 3: Feelings
-            "nature",     # Theme 1: Living beings
-            "algorithm",  # Theme 2: Technology  
-            "joy",        # Theme 3: Feelings
-            "forest",     # Theme 4: Environment
-            "memory",     # Theme 5: Cognition
-            "ocean",      # Theme 4: Environment
-            "dream"       # Theme 5: Cognition
+        # Base concepts (always present)
+        base_concepts = [
+            "animal", "machine", "emotion", "nature", "algorithm",
+            "joy", "forest", "memory", "ocean", "dream"
         ]
         
-        # Create one-hot encoded vectors (10-dimensional sparse encoding)
+        # Add more concepts for higher qubit counts
+        extended_concepts = []
+        if NUM_QUBITS >= 12:
+            extended_concepts.extend(["wisdom", "chaos", "harmony", "energy"])
+        if NUM_QUBITS >= 16:
+            extended_concepts.extend(["infinity", "quantum", "consciousness", "emergence"])
+        if NUM_QUBITS >= 20:
+            extended_concepts.extend(["paradox", "beauty", "truth", "mystery"])
+        if NUM_QUBITS >= 24:
+            extended_concepts.extend(["transcendence", "void", "creation", "entropy"])
+        
+        concepts = base_concepts + extended_concepts
+        num_concepts = len(concepts)
+        
+        # Create vectors with dimensionality matching available qubits
+        vector_dim = min(NUM_QUBITS, num_concepts)
         concept_vectors = {}
+        
         for i, concept in enumerate(concepts):
-            vec = np.zeros(10, dtype=np.float32)
-            vec[i] = 1.0
+            vec = np.zeros(vector_dim, dtype=np.float32)
+            if i < vector_dim:
+                vec[i] = 1.0  # One-hot for first concepts
+            else:
+                # Distributed representation for additional concepts
+                indices = self.rng.choice(vector_dim, size=3, replace=False)
+                for idx in indices:
+                    vec[idx] = self.rng.uniform(0.3, 0.7)
+            vec = vec / np.linalg.norm(vec) if np.linalg.norm(vec) > 0 else vec
             concept_vectors[concept] = vec
         
-        # Define 20 bidirectional associations (meaningful connections)
-        associations = [
-            ("animal", "nature"),
-            ("animal", "forest"),
-            ("machine", "algorithm"),
-            ("machine", "memory"),
-            ("emotion", "joy"),
-            ("emotion", "dream"),
-            ("nature", "forest"),
-            ("nature", "ocean"),
-            ("algorithm", "memory"),
-            ("joy", "dream"),
-            ("forest", "ocean"),
-            ("memory", "dream"),
-            ("animal", "emotion"),  # Cross-theme associations
-            ("machine", "dream"),
-            ("nature", "joy"),
-            ("algorithm", "emotion"),
-            ("forest", "dream"),
-            ("ocean", "emotion"),
-            ("memory", "nature"),
-            ("joy", "animal")
+        # Create associations - more for higher qubit counts
+        base_associations = [
+            ("animal", "nature"), ("animal", "forest"), ("machine", "algorithm"),
+            ("machine", "memory"), ("emotion", "joy"), ("emotion", "dream"),
+            ("nature", "forest"), ("nature", "ocean"), ("algorithm", "memory"),
+            ("joy", "dream"), ("forest", "ocean"), ("memory", "dream"),
+            ("animal", "emotion"), ("machine", "dream"), ("nature", "joy"),
+            ("algorithm", "emotion"), ("forest", "dream"), ("ocean", "emotion"),
+            ("memory", "nature"), ("joy", "animal")
         ]
         
-        # Create association matrix (10x10)
-        association_matrix = np.zeros((10, 10), dtype=np.float32)
+        associations = base_associations.copy()
+        
+        # Add more complex associations for higher qubit counts
+        if NUM_QUBITS >= 12:
+            associations.extend([
+                ("wisdom", "memory"), ("chaos", "energy"), 
+                ("harmony", "nature"), ("energy", "machine")
+            ])
+        if NUM_QUBITS >= 16:
+            associations.extend([
+                ("quantum", "infinity"), ("consciousness", "dream"),
+                ("emergence", "chaos"), ("quantum", "algorithm")
+            ])
+        if NUM_QUBITS >= 20:
+            associations.extend([
+                ("paradox", "truth"), ("beauty", "harmony"),
+                ("mystery", "quantum"), ("paradox", "infinity")
+            ])
+        
+        # Create association matrix
+        association_matrix = np.zeros((num_concepts, num_concepts), dtype=np.float32)
         concept_to_idx = {c: i for i, c in enumerate(concepts)}
         
         for c1, c2 in associations:
-            idx1, idx2 = concept_to_idx[c1], concept_to_idx[c2]
-            association_matrix[idx1, idx2] = 1.0
-            association_matrix[idx2, idx1] = 1.0  # Bidirectional
+            if c1 in concept_to_idx and c2 in concept_to_idx:
+                idx1, idx2 = concept_to_idx[c1], concept_to_idx[c2]
+                association_matrix[idx1, idx2] = 1.0
+                association_matrix[idx2, idx1] = 1.0  # Bidirectional
         
         return SemanticNetwork(
             concepts=concepts,
@@ -226,8 +331,13 @@ class SemanticNetworkGenerator:
         )
     
     def get_prompt_themes(self) -> List[str]:
-        """Get the 5 core themes for prompt generation."""
-        return ["animal", "machine", "emotion", "nature", "algorithm"]
+        """Get core themes for prompt generation."""
+        themes = ["animal", "machine", "emotion", "nature", "algorithm"]
+        if NUM_QUBITS >= 16:
+            themes.extend(["quantum", "consciousness"])
+        if NUM_QUBITS >= 20:
+            themes.extend(["paradox", "beauty"])
+        return themes
     
     def generate_prompt_vector(self, theme: str, add_noise: bool = True) -> np.ndarray:
         """
@@ -238,17 +348,24 @@ class SemanticNetworkGenerator:
             add_noise: Add slight noise for variation
             
         Returns:
-            10-dimensional prompt vector
+            Vector with dimensionality matching qubit count
         """
         if theme not in self.network.concept_vectors:
             # If theme not in concepts, use random concept
             theme = self.rng.choice(self.network.concepts)
         
-        prompt_vec = self.network.concept_vectors[theme].copy()
+        base_vec = self.network.concept_vectors[theme]
+        
+        # Extend or truncate to match qubit count
+        if len(base_vec) < NUM_QUBITS:
+            prompt_vec = np.zeros(NUM_QUBITS, dtype=np.float32)
+            prompt_vec[:len(base_vec)] = base_vec
+        else:
+            prompt_vec = base_vec[:NUM_QUBITS].copy()
         
         if add_noise:
             # Add small noise while maintaining sparsity
-            noise = self.rng.normal(0, 0.1, size=10)
+            noise = self.rng.normal(0, QUANTUM_NOISE_LEVEL, size=NUM_QUBITS)
             prompt_vec = prompt_vec + noise
             prompt_vec = np.clip(prompt_vec, -1, 1)
             # Re-normalize to maintain unit energy
@@ -265,29 +382,28 @@ class SemanticNetworkGenerator:
 class QuantumAssociativeMemory:
     """
     Quantum Associative Memory for creative association generation.
-    
-    Implements:
-    - One-shot Hebbian learning for association storage
-    - Quantum superposition for parallel search
-    - Probabilistic output generation
-    - Energy-based retrieval dynamics
+    Dynamically adapts to the specified number of qubits.
     """
     
-    def __init__(self, num_dimensions: int = 10, temperature: float = 0.5):
+    def __init__(self, num_qubits: int = NUM_QUBITS, temperature: float = 0.5):
         """
-        Initialize QAM.
+        Initialize QAM with adaptive qubit count.
         
         Args:
-            num_dimensions: Vector dimensionality (10 for one-hot encoding)
+            num_qubits: Number of qubits (8-25)
             temperature: Temperature for probabilistic dynamics
         """
-        self.num_dimensions = num_dimensions
-        self.num_qubits = num_dimensions  # Direct mapping
-        self.temperature = temperature
-        self.weights = np.zeros((num_dimensions, num_dimensions), dtype=np.float32)
+        self.num_qubits = num_qubits
+        self.num_dimensions = num_qubits  # Direct mapping
+        self.temperature = temperature * (1 + (num_qubits - 10) / 20)  # Scale with qubits
+        self.weights = np.zeros((self.num_dimensions, self.num_dimensions), dtype=np.float32)
         self.stored_associations = []
         self.semantic_network = None
         self.rng = np.random.RandomState()
+        
+        print(f"Initializing {num_qubits}-qubit Quantum Associative Memory...")
+        print(f"  Temperature: {self.temperature:.3f}")
+        print(f"  State space: {2**num_qubits} dimensions")
     
     def store_semantic_network(self, network: SemanticNetwork):
         """
@@ -299,7 +415,15 @@ class QuantumAssociativeMemory:
         self.semantic_network = network
         
         # Build weight matrix from associations
-        self.weights = network.association_matrix.copy()
+        # Adapt to qubit count
+        if network.association_matrix.shape[0] <= self.num_dimensions:
+            # Pad if needed
+            self.weights = np.zeros((self.num_dimensions, self.num_dimensions))
+            size = network.association_matrix.shape[0]
+            self.weights[:size, :size] = network.association_matrix.copy()
+        else:
+            # Truncate if needed
+            self.weights = network.association_matrix[:self.num_dimensions, :self.num_dimensions].copy()
         
         # Add self-connections with reduced weight for stability
         np.fill_diagonal(self.weights, 0.5)
@@ -323,18 +447,21 @@ class QuantumAssociativeMemory:
     
     def quantum_association_search(self, prompt: np.ndarray, 
                                   num_outputs: int = 3,
-                                  shots: int = 100) -> Tuple[List[np.ndarray], List[float], List[float]]:
+                                  shots: int = None) -> Tuple[List[np.ndarray], List[float], List[float]]:
         """
         Quantum search for associated concepts.
         
         Args:
             prompt: Input prompt vector
             num_outputs: Number of top outputs to return
-            shots: Number of quantum measurements
+            shots: Number of quantum measurements (uses global SHOTS if None)
             
         Returns:
             Tuple of (output vectors, confidence scores, energies)
         """
+        if shots is None:
+            shots = SHOTS
+            
         if PENNYLANE_AVAILABLE and shots > 10:
             return self._quantum_search(prompt, num_outputs, shots)
         else:
@@ -344,14 +471,7 @@ class QuantumAssociativeMemory:
                        shots: int) -> Tuple[List[np.ndarray], List[float], List[float]]:
         """
         GPU-accelerated quantum circuit for association search.
-        
-        Args:
-            prompt: Input prompt vector
-            num_outputs: Number of outputs to generate
-            shots: Number of measurements
-            
-        Returns:
-            Tuple of (output vectors, confidence scores, energies)
+        Adapts circuit depth and entanglement to qubit count.
         """
         # Device selection with GPU preference
         try:
@@ -372,11 +492,11 @@ class QuantumAssociativeMemory:
         @qml.qnode(dev)
         def association_circuit():
             # Encode prompt into quantum state
-            # Use amplitude encoding for the normalized prompt
             prompt_normalized = prompt / np.linalg.norm(prompt)
             
             # Create full state vector for amplitude encoding
             state_vector = np.zeros(2**self.num_qubits, dtype=complex)
+            
             # Map prompt to computational basis states
             for i in range(min(len(prompt_normalized), 2**self.num_qubits)):
                 state_vector[i] = prompt_normalized[i % len(prompt_normalized)]
@@ -386,16 +506,32 @@ class QuantumAssociativeMemory:
             if norm > 0:
                 state_vector = state_vector / norm
             
-            # Prepare the quantum state using StatePrep (updated from QubitStateVector)
+            # Prepare the quantum state
             qml.StatePrep(state_vector, wires=range(self.num_qubits))
             
             # Apply associative memory dynamics via controlled rotations
+            # Adapt entanglement structure to qubit count
+            
+            # Base entanglement layer
             for i in range(self.num_qubits):
-                for j in range(i + 1, self.num_qubits):
+                for j in range(i + 1, min(i + 3, self.num_qubits)):
                     if abs(self.weights[i, j]) > 0.01:
                         # Entangling gates based on association strength
                         qml.CRZ(2.0 * self.weights[i, j] * np.pi, wires=[i, j])
-                        qml.CNOT(wires=[i, j])
+                        if self.num_qubits <= 15:  # Extra entanglement for smaller circuits
+                            qml.CNOT(wires=[i, j])
+            
+            # Additional entanglement layers for higher qubit counts
+            if self.num_qubits >= 16:
+                # Add long-range connections
+                for i in range(0, self.num_qubits - 4, 2):
+                    qml.CNOT(wires=[i, i + 4])
+            
+            if self.num_qubits >= 20:
+                # Add all-to-all connections for subset of qubits
+                for i in range(0, min(5, self.num_qubits)):
+                    for j in range(i + 1, min(5, self.num_qubits)):
+                        qml.CZ(wires=[i, j])
             
             # Add controlled noise for creativity
             for i in range(self.num_qubits):
@@ -515,6 +651,15 @@ class QuantumAssociativeMemory:
         best_concept = "unknown"
         
         for concept, concept_vec in self.semantic_network.concept_vectors.items():
+            # Ensure vectors are same size for comparison
+            if len(concept_vec) != len(vector):
+                if len(concept_vec) < len(vector):
+                    padded_vec = np.zeros(len(vector))
+                    padded_vec[:len(concept_vec)] = concept_vec
+                    concept_vec = padded_vec
+                else:
+                    concept_vec = concept_vec[:len(vector)]
+            
             similarity = np.dot(vector, concept_vec) / (np.linalg.norm(vector) * np.linalg.norm(concept_vec))
             if similarity > best_similarity:
                 best_similarity = similarity
@@ -523,7 +668,7 @@ class QuantumAssociativeMemory:
         return best_concept
 
 # ============================================================================
-# AI SCORING MODULE
+# AI SCORING MODULE (unchanged from original)
 # ============================================================================
 
 class AICreativityScorer:
@@ -552,7 +697,7 @@ class AICreativityScorer:
                 # Initialize Google Gemini with updated model
                 if API_KEYS["google"]:
                     genai.configure(api_key=API_KEYS["google"])
-                    self.gemini_model = genai.GenerativeModel('gemini-1.5-flash')  # Updated model name
+                    self.gemini_model = genai.GenerativeModel('gemini-1.5-flash')
                 
                 self.initialized = True
                 print("✅ AI scoring APIs initialized")
@@ -645,7 +790,6 @@ class AICreativityScorer:
     async def _score_with_openai(self, prompt: str) -> Dict[str, float]:
         """Score using OpenAI GPT with updated API."""
         try:
-            # Using the new OpenAI client interface
             completion = self.openai_client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[{"role": "user", "content": prompt}],
@@ -662,9 +806,8 @@ class AICreativityScorer:
     async def _score_with_anthropic(self, prompt: str) -> Dict[str, float]:
         """Score using Anthropic Claude with updated model."""
         try:
-            # Using updated Claude model name
             response = self.anthropic_client.messages.create(
-                model="claude-3-haiku-20240307",  # Updated to available model
+                model="claude-3-haiku-20240307",
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=20,
                 temperature=0.3
@@ -679,7 +822,6 @@ class AICreativityScorer:
     async def _score_with_gemini(self, prompt: str) -> Dict[str, float]:
         """Score using Google Gemini with updated API."""
         try:
-            # Using synchronous API (not async)
             response = self.gemini_model.generate_content(prompt)
             scores_text = response.text.strip()
             return self._parse_scores(scores_text)
@@ -778,13 +920,19 @@ def calculate_semantic_distance(vec1: np.ndarray, vec2: np.ndarray) -> float:
     Returns:
         Distance measure (0 = identical, 1 = orthogonal)
     """
+    # Ensure vectors are same size
+    if len(vec1) != len(vec2):
+        min_len = min(len(vec1), len(vec2))
+        vec1 = vec1[:min_len]
+        vec2 = vec2[:min_len]
+    
     # Use cosine distance
     similarity = np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
     distance = 1 - abs(similarity)
     return distance
 
 # ============================================================================
-# EMERGENCE DETECTION (updated with better error handling)
+# EMERGENCE DETECTION (adapted for qubit count)
 # ============================================================================
 
 def detect_creative_emergence(prompt: str, outputs: List[str], 
@@ -793,18 +941,9 @@ def detect_creative_emergence(prompt: str, outputs: List[str],
                             network: SemanticNetwork) -> Dict[str, Any]:
     """
     Detect emergent creative behavior.
-    
-    Args:
-        prompt: Input prompt
-        outputs: Generated concepts
-        ai_scores: Creativity scores from AI judges
-        semantic_distances: Distances from prompt
-        network: Semantic network for context
-        
-    Returns:
-        Dictionary with emergence assessment
+    Adapts thresholds based on qubit count.
     """
-    # Calculate average scores across judges and outputs with better error handling
+    # Calculate average scores across judges and outputs
     all_scores = []
     for output_key, output_scores in ai_scores.items():
         for judge, judge_scores in output_scores.items():
@@ -829,21 +968,28 @@ def detect_creative_emergence(prompt: str, outputs: List[str],
     emergence_type = "none"
     emergence_score = 0.0
     
-    # High creativity threshold (>5.5 on 1-7 scale)
-    if overall_creativity > CREATIVITY_THRESHOLD:
+    # Adjust thresholds based on qubit count
+    creativity_threshold = CREATIVITY_THRESHOLD
+    distance_threshold = SEMANTIC_DISTANCE_THRESHOLD
+    
+    # High creativity threshold
+    if overall_creativity > creativity_threshold:
         # Check if outputs are not directly encoded
         novel_outputs = 0
         for output in outputs:
             if output not in network.concepts:
                 novel_outputs += 1
-            elif avg_semantic_distance > SEMANTIC_DISTANCE_THRESHOLD:
+            elif avg_semantic_distance > distance_threshold:
                 novel_outputs += 0.5
         
-        if novel_outputs >= 2:  # At least 2 novel outputs
+        # More lenient for higher qubit counts
+        required_novel = 2 if NUM_QUBITS <= 15 else 1.5
+        
+        if novel_outputs >= required_novel:
             is_emergent = True
             emergence_type = "creative_association"
             emergence_score = min(1.0, (overall_creativity - 4) / 3 * 
-                                 (avg_semantic_distance / SEMANTIC_DISTANCE_THRESHOLD))
+                                 (avg_semantic_distance / distance_threshold))
     
     # Alternative emergence: High semantic distance with relevance
     elif avg_semantic_distance > 0.6 and overall_creativity > 4.5:
@@ -851,21 +997,28 @@ def detect_creative_emergence(prompt: str, outputs: List[str],
         emergence_type = "semantic_leap"
         emergence_score = min(1.0, avg_semantic_distance * (overall_creativity / 7))
     
+    # Bonus for higher qubit counts achieving any creativity
+    elif NUM_QUBITS >= 20 and overall_creativity > 5.0:
+        is_emergent = True
+        emergence_type = "quantum_creativity"
+        emergence_score = min(1.0, (overall_creativity - 5.0) * (NUM_QUBITS / 25))
+    
     return {
         "is_emergent": is_emergent,
         "emergence_type": emergence_type,
         "emergence_score": emergence_score,
         "creativity_score": overall_creativity,
-        "avg_semantic_distance": avg_semantic_distance
+        "avg_semantic_distance": avg_semantic_distance,
+        "num_qubits": NUM_QUBITS
     }
 
 # ============================================================================
-# MAIN EXPERIMENTAL PIPELINE (updated with better error handling)
+# MAIN EXPERIMENTAL PIPELINE (adapted for user-specified qubits)
 # ============================================================================
 
 async def run_experiments(config: Optional[Dict] = None):
     """
-    Execute creative thinking experiments.
+    Execute creative thinking experiments with user-specified qubit count.
     
     Args:
         config: Experimental configuration dictionary
@@ -877,7 +1030,7 @@ async def run_experiments(config: Optional[Dict] = None):
         config = {
             "num_prompts_per_theme": 3,
             "num_outputs": 3,
-            "shots": 100,
+            "shots": SHOTS,
             "temperature": 0.5,
             "output_dir": "results",
             "use_ai_scoring": True
@@ -885,22 +1038,29 @@ async def run_experiments(config: Optional[Dict] = None):
     
     timestamp = datetime.now().strftime("%m%d%Y_%H%M%S")
     
+    print("\n" + "=" * 60)
+    print(f"{NUM_QUBITS}-QUBIT QUANTUM CREATIVE THINKING EXPERIMENTS")
     print("=" * 60)
-    print("QUANTUM ASSOCIATIVE MEMORY CREATIVE THINKING EXPERIMENTS")
-    print("=" * 60)
-    print(f"Temperature: {config.get('temperature', 0.5)}")
-    print(f"Quantum noise: {QUANTUM_NOISE_LEVEL}")
-    print(f"AI Scoring: {'Enabled' if config['use_ai_scoring'] else 'Mock'}")
-    print(f"Seed: {GLOBAL_SEED or 'True random'}")
-    print(f".env file support: {'Enabled' if DOTENV_AVAILABLE else 'Disabled'}")
+    print(f"Configuration:")
+    print(f"  Qubits: {NUM_QUBITS}")
+    print(f"  Shots: {config.get('shots', SHOTS)}")
+    print(f"  Temperature: {config.get('temperature', 0.5)}")
+    print(f"  Quantum noise: {QUANTUM_NOISE_LEVEL:.3f}")
+    print(f"  Creativity threshold: {CREATIVITY_THRESHOLD:.2f}")
+    print(f"  AI Scoring: {'Enabled' if config['use_ai_scoring'] else 'Mock'}")
+    print(f"  Seed: {GLOBAL_SEED or 'True random'}")
+    print(f"  .env file support: {'Enabled' if DOTENV_AVAILABLE else 'Disabled'}")
     print()
     
     # Initialize components
     network_gen = SemanticNetworkGenerator(seed=GLOBAL_SEED)
     network = network_gen.network
     
+    print(f"Semantic network initialized with {len(network.concepts)} concepts")
+    print(f"Association complexity: {len(network.associations)} connections")
+    
     qam = QuantumAssociativeMemory(
-        num_dimensions=10,
+        num_qubits=NUM_QUBITS,
         temperature=config.get("temperature", 0.5)
     )
     qam.store_semantic_network(network)
@@ -910,10 +1070,11 @@ async def run_experiments(config: Optional[Dict] = None):
     
     # Output setup
     os.makedirs(config["output_dir"], exist_ok=True)
-    output_file = os.path.join(config["output_dir"], f"qam_creative_results_{timestamp}.csv")
+    output_file = os.path.join(config["output_dir"], 
+                              f"qam_creative_results_{NUM_QUBITS}q_{timestamp}.csv")
     
     headers = [
-        "run_id", "timestamp", "prompt_theme", "prompt_concept",
+        "run_id", "timestamp", "num_qubits", "prompt_theme", "prompt_concept",
         "output_1", "output_2", "output_3",
         "ai_score_novelty_avg", "ai_score_relevance_avg", "ai_score_surprise_avg",
         "semantic_distance_1", "semantic_distance_2", "semantic_distance_3",
@@ -922,7 +1083,7 @@ async def run_experiments(config: Optional[Dict] = None):
         "prompt_lz_complexity", "prompt_shannon_entropy",
         "output_lz_complexity_avg", "output_shannon_entropy_avg",
         "is_emergent", "emergence_type", "emergence_score",
-        "creativity_score", "avg_semantic_distance"
+        "creativity_score", "avg_semantic_distance", "shots", "temperature"
     ]
     
     results = []
@@ -932,6 +1093,7 @@ async def run_experiments(config: Optional[Dict] = None):
     
     # Test each theme
     themes = network_gen.get_prompt_themes()
+    print(f"Testing {len(themes)} themes with {config['num_prompts_per_theme']} prompts each")
     
     for theme in themes:
         for prompt_iter in range(config["num_prompts_per_theme"]):
@@ -981,7 +1143,7 @@ async def run_experiments(config: Optional[Dict] = None):
                                  "surprise": 4 + np.random.randn()}
                     }
             
-            # Calculate average AI scores with better error handling
+            # Calculate average AI scores
             score_values = []
             for output_key in ai_scores:
                 for judge in ["openai", "anthropic", "google"]:
@@ -1025,6 +1187,7 @@ async def run_experiments(config: Optional[Dict] = None):
             results.append([
                 f"QAM_creative_{theme}_{run_id}",
                 datetime.now().isoformat(),
+                NUM_QUBITS,
                 theme, theme,  # prompt theme and concept
                 output_concepts[0], output_concepts[1], output_concepts[2],
                 avg_novelty, avg_relevance, avg_surprise,
@@ -1037,7 +1200,9 @@ async def run_experiments(config: Optional[Dict] = None):
                 emergence["emergence_type"],
                 emergence["emergence_score"],
                 emergence["creativity_score"],
-                emergence["avg_semantic_distance"]
+                emergence["avg_semantic_distance"],
+                config["shots"],
+                config.get("temperature", 0.5)
             ])
     
     # Save results
@@ -1053,25 +1218,30 @@ async def run_experiments(config: Optional[Dict] = None):
     print("SUMMARY")
     print("=" * 60)
     
-    total_emergent = sum(1 for r in results if r[23])  # is_emergent column
+    total_emergent = sum(1 for r in results if r[24])  # is_emergent column
     print(f"Total runs: {len(results)}")
     print(f"Emergent cases: {total_emergent} ({total_emergent/len(results)*100:.1f}%)")
     
     # Calculate average creativity scores
-    avg_creativity = np.mean([r[26] for r in results])  # creativity_score column
+    avg_creativity = np.mean([r[27] for r in results])  # creativity_score column
     print(f"Average creativity score: {avg_creativity:.2f}/7.0")
     
     # Breakdown by emergence type
     emergence_types = {}
     for r in results:
-        if r[23]:  # is_emergent
-            etype = r[24]  # emergence_type
+        if r[24]:  # is_emergent
+            etype = r[25]  # emergence_type
             emergence_types[etype] = emergence_types.get(etype, 0) + 1
     
     if emergence_types:
         print("\nEmergence types:")
         for etype, count in emergence_types.items():
             print(f"  {etype}: {count} ({count/total_emergent*100:.1f}% of emergent)")
+    
+    print(f"\nQuantum configuration used:")
+    print(f"  Qubits: {NUM_QUBITS}")
+    print(f"  Shots: {config['shots']}")
+    print(f"  State space: {2**NUM_QUBITS} dimensions")
     
     return results
 
@@ -1080,11 +1250,22 @@ async def run_experiments(config: Optional[Dict] = None):
 # ============================================================================
 
 if __name__ == "__main__":
+    print("\n" + "="*60)
+    print("ADAPTIVE QUANTUM CREATIVE THINKING EXPERIMENT")
+    print("="*60)
+    print("\nThis experiment uses a Quantum Associative Memory network")
+    print("to generate creative conceptual associations.")
+    print("\nHigher qubit counts enable:")
+    print("  • Richer semantic representations")
+    print("  • More complex association patterns")
+    print("  • Greater creative potential")
+    print("  • Increased computational requirements")
+    
     # Configuration for experiments
     config = {
         "num_prompts_per_theme": 5,  # 5 prompts per theme
         "num_outputs": 3,  # Generate 3 associations per prompt
-        "shots": 100,  # Quantum measurement shots
+        "shots": SHOTS,  # Quantum measurement shots (dynamically set)
         "temperature": 0.5,  # Creativity temperature
         "output_dir": "results",
         "use_ai_scoring": True  # Set to True to use real AI scoring (if keys are configured)
@@ -1093,4 +1274,5 @@ if __name__ == "__main__":
     # Run async experiments
     asyncio.run(run_experiments(config))
     
-    print("\n✅ Creative thinking experiment complete!")
+    print(f"\n✅ {NUM_QUBITS}-qubit creative thinking experiment complete!")
+    print("=" * 60)

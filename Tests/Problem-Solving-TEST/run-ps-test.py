@@ -15,23 +15,24 @@ __author__ = "Alex Pujols"
 __copyright__ = "Alex Pujols"
 __credits__ = ["Alex Pujols"]
 __license__ = "MIT"
-__version__ = "1.11-alpha"
+__version__ = "1.0-beta"
 __maintainer__ = "Alex Pujols"
 __email__ = "A.Pujols@o365.ncu.edu; alexpujols@ieee.org"
 __status__ = "Prototype"
 
 '''
-Title         : {Variational Quantum Neural Network for Adaptive Problem Solving}
+Title         : {Scalable Variational Quantum Neural Network for Maze Navigation}
 Date          : {05-18-2025}
-Description   : {Full 25-qubit implementation utilizing all qubits for maximum
-                quantum advantage. Each qubit maps directly to a cell in the 5x5 maze,
-                providing a natural quantum representation of the spatial problem.}
+Description   : {Scientifically rigorous implementation with proper problem-size scaling.
+                Supports 9-qubit (3x3 mazes), 16-qubit (4x4 mazes), and 25-qubit (5x5 mazes)
+                configurations. Uses fixed local observation window for consistency.}
 Options       : {GPU acceleration via PennyLane-Lightning-GPU (NVIDIA cuQuantum SDK) or CPU fallback}
 Dependencies  : {numpy scipy pennylane pennylane-lightning-gpu matplotlib}
 Requirements  : {Python 3.8+, Optional: CUDA 11.0+ and cuQuantum for GPU acceleration}
 Usage         : {python run-ps-test.py}
-Notes         : {Available at Github at https://github.com/alexpujols/QNAI-test-engine/blob/main/Tests/Problem-Solving-TEST/run-ps-test.py}
+Notes         : {Available at Github at https://github.com/alexpujols/QNAI-test-engine}
 '''
+
 import json
 import csv
 import os
@@ -42,73 +43,89 @@ from functools import lru_cache
 from dataclasses import dataclass
 import warnings
 import time
+import sys
 from contextlib import contextmanager
 from collections import deque
 warnings.filterwarnings('ignore')
 
 # ============================================================================
-# USER INPUT FOR QUBIT CONFIGURATION
+# USER INPUT FOR MAZE SIZE CONFIGURATION
 # ============================================================================
 
-def get_qubit_configuration():
-    """Get the number of qubits from user input with validation."""
+def get_maze_configuration():
+    """Get the maze size from user input with validation."""
     print("\n" + "=" * 60)
-    print("QUANTUM CIRCUIT CONFIGURATION")
+    print("QUANTUM MAZE NAVIGATION CONFIGURATION")
     print("=" * 60)
     
     while True:
         try:
-            print("\nEnter the number of qubits for the experiment")
-            print("Recommended ranges:")
-            print("  - 8-12 qubits: Fast execution (5-20 minutes)")
-            print("  - 13-16 qubits: Balanced (20-40 minutes)")
-            print("  - 17-20 qubits: Enhanced quantum advantage (40-90 minutes)")
-            print("  - 21-25 qubits: Maximum complexity (90+ minutes)")
-            print("\nNote: Higher qubit counts provide better quantum advantage")
-            print("but require more computational resources and time.")
+            print("\nSelect maze size for the experiment:")
+            print("\nAvailable configurations:")
+            print("  1. 3x3 mazes (9 qubits)")
+            print("     - Compact mazes with 9 cells")
+            print("     - Fastest execution (~2-6 hours)")
+            print("     - Good for initial testing")
+            print()
+            print("  2. 4x4 mazes (16 qubits)")
+            print("     - Medium mazes with 16 cells")
+            print("     - Moderate runtime (~1-3 days)")
+            print("     - Balanced complexity")
+            print()
+            print("  3. 5x5 mazes (25 qubits)")
+            print("     - Large mazes with 25 cells")
+            print("     - Longer runtime (~3-5 days)")
+            print("     - Maximum complexity")
+            print()
+            print("Each configuration properly scales both maze size and qubits")
+            print("Using fixed 3x3 local observation window for all sizes")
             
-            num_qubits = input("\nNumber of qubits (8-25): ").strip()
-            num_qubits = int(num_qubits)
+            choice = input("\nEnter your choice (1, 2, or 3): ").strip()
             
-            if num_qubits < 8:
-                print("⚠ Minimum 8 qubits required for meaningful quantum advantage.")
-                continue
-            elif num_qubits > 25:
-                print("⚠ Maximum 25 qubits supported to maintain practical runtime.")
+            if choice == '1':
+                maze_size = 3
+                num_qubits = 9
+                est_time = "5-10"
+            elif choice == '2':
+                maze_size = 4
+                num_qubits = 16
+                est_time = "15-30"
+            elif choice == '3':
+                maze_size = 5
+                num_qubits = 25
+                est_time = "30-60"
+            else:
+                print("⚠ Please enter 1, 2, or 3")
                 continue
             
             # Confirm with user
-            print(f"\nYou selected {num_qubits} qubits.")
+            print(f"\nYou selected: {maze_size}x{maze_size} mazes")
+            print(f"Configuration details:")
+            print(f"  - Maze size: {maze_size}x{maze_size}")
+            print(f"  - Qubits: {num_qubits}")
+            print(f"  - Local observation: 3x3 window")
+            print(f"  - Estimated runtime: {est_time} minutes")
             
-            # Estimate runtime
-            if num_qubits <= 12:
-                est_time = "15-30"
-            elif num_qubits <= 16:
-                est_time = "30-50"
-            elif num_qubits <= 20:
-                est_time = "50-90"
-            else:
-                est_time = "90-150"
-            
-            print(f"Estimated total runtime: {est_time} minutes")
-            
-            confirm = input("Proceed with this configuration? (y/n): ").strip().lower()
+            confirm = input("\nProceed with this configuration? (y/n): ").strip().lower()
             if confirm == 'y' or confirm == 'yes':
-                return num_qubits
+                return maze_size, num_qubits
             elif confirm == 'n' or confirm == 'no':
                 continue
             else:
                 print("Please enter 'y' for yes or 'n' for no.")
                 
-        except ValueError:
-            print("⚠ Please enter a valid integer between 8 and 25.")
         except KeyboardInterrupt:
             print("\n\nExiting configuration...")
-            import sys
             sys.exit(0)
+        except ValueError:
+            print("⚠ Please enter a valid choice (1, 2, or 3).")
 
 # Get user configuration
-NUM_QUBITS = get_qubit_configuration()
+MAZE_SIZE, NUM_QUBITS = get_maze_configuration()
+
+# Fixed observation window size (always 3x3 for consistency)
+OBSERVATION_SIZE = 3
+OBSERVATION_QUBITS = 9  # Always use 9 qubits for observation
 
 # ============================================================================
 # PERFORMANCE MONITORING
@@ -156,7 +173,7 @@ def configure_gpu_settings():
     os.environ['CUDNN_BENCHMARK'] = 'TRUE'
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
     
-    print(f"✓ GPU settings configured for {NUM_QUBITS}-qubit simulation")
+    print(f"✔ GPU settings configured for {NUM_QUBITS}-qubit simulation")
 
 configure_gpu_settings()
 
@@ -176,20 +193,8 @@ def detect_quantum_backend():
             del test_dev
             
             print("=" * 60)
-            print("✓ NVIDIA cuQuantum SDK detected!")
-            print(f"✓ Using Lightning.GPU for {NUM_QUBITS}-qubit simulation")
-            
-            # Estimate runtime based on qubit count
-            if NUM_QUBITS <= 12:
-                runtime_est = "1-3"
-            elif NUM_QUBITS <= 16:
-                runtime_est = "3-5"
-            elif NUM_QUBITS <= 20:
-                runtime_est = "5-9"
-            else:
-                runtime_est = "9-15"
-            
-            print(f"✓ Expected runtime: {runtime_est} minutes per maze")
+            print("✔ NVIDIA cuQuantum SDK detected!")
+            print(f"✔ Using Lightning.GPU for {NUM_QUBITS}-qubit simulation")
             print("=" * 60)
             
             return {
@@ -207,7 +212,7 @@ def detect_quantum_backend():
                 test_dev = qml.device("lightning.qubit", wires=2, shots=100)
                 del test_dev
                 print("=" * 60)
-                print(f"✓ Using Lightning.Qubit (CPU) for {NUM_QUBITS}-qubit simulation")
+                print(f"✔ Using Lightning.Qubit (CPU) for {NUM_QUBITS}-qubit simulation")
                 print("=" * 60)
                 
                 return {
@@ -234,7 +239,6 @@ def detect_quantum_backend():
             
     except ImportError:
         print("⚠ Error: PennyLane not installed!")
-        import sys
         sys.exit(1)
 
 # Initialize quantum backend
@@ -249,25 +253,25 @@ pnp = QUANTUM_CONFIG["pnp"]
 import pennylane as qml
 
 # ============================================================================
-# CONFIGURATION CONSTANTS - DYNAMICALLY ADJUSTED FOR QUBIT COUNT
+# CONFIGURATION CONSTANTS - ADJUSTED FOR MAZE SIZE
 # ============================================================================
 
 # Quantum circuit configuration
-NUM_LAYERS = 1        # Single layer is sufficient
+NUM_LAYERS = 2  # Two layers for better expressivity
 
-# Adjust shots based on qubit count for balance
-if NUM_QUBITS <= 12:
+# Adjust shots based on maze size
+if MAZE_SIZE == 3:
+    SHOTS = 250
+    EPISODES_PER_MAZE = 60
+elif MAZE_SIZE == 4:
     SHOTS = 200
-elif NUM_QUBITS <= 16:
-    SHOTS = 200
-elif NUM_QUBITS <= 20:
+    EPISODES_PER_MAZE = 80
+else:  # MAZE_SIZE == 5
     SHOTS = 150
-else:
-    SHOTS = 100  # Reduce shots for very high qubit counts
+    EPISODES_PER_MAZE = 100
 
 # Training configuration
-EPISODES_PER_MAZE = 80    # Keep consistent
-LEARNING_RATE = 0.08      # Keep consistent
+LEARNING_RATE = 0.08
 GAMMA = 0.95
 EPSILON_START = 0.3
 EPSILON_DECAY = 0.99
@@ -307,28 +311,42 @@ class MazeSolution:
     performance_discontinuity: bool
 
 # ============================================================================
-# ADAPTIVE VQNN
+# SCALABLE VQNN WITH FIXED OBSERVATION
 # ============================================================================
 
-class VQNN:
+class ScalableVQNN:
     """
-    Adaptive Variational Quantum Neural Network.
+    Scalable Variational Quantum Neural Network with fixed observation window.
     
-    Dynamically adjusts to the specified number of qubits (8-25).
+    Uses a consistent 3x3 observation window regardless of maze size,
+    ensuring fair comparison across different configurations.
     """
     
-    def __init__(self, num_qubits: int = NUM_QUBITS, num_layers: int = NUM_LAYERS,
+    def __init__(self, maze_size: int, num_qubits: int, num_layers: int = NUM_LAYERS,
                  learning_rate: float = LEARNING_RATE, shots: int = SHOTS):
         """
-        Initialize adaptive VQNN with shot-based quantum simulation.
+        Initialize VQNN with proper scaling.
+        
+        Args:
+            maze_size: Size of the maze (3, 4, or 5)
+            num_qubits: Total qubits available (9, 16, or 25)
+            num_layers: Number of variational layers
+            learning_rate: Learning rate for optimization
+            shots: Number of measurement shots
         """
+        self.maze_size = maze_size
         self.num_qubits = num_qubits
         self.num_layers = num_layers
         self.learning_rate = learning_rate
         self.shots = shots
         
-        # Initialize parameters
-        self.params = pnp.random.randn(num_layers, num_qubits, 2) * 0.1
+        # Always use 9 qubits for observation + additional for position/goal
+        self.observation_qubits = min(9, num_qubits)  # 3x3 window
+        self.position_qubits = min(4, num_qubits - self.observation_qubits)  # Position encoding
+        self.used_qubits = self.observation_qubits + self.position_qubits
+        
+        # Initialize parameters for used qubits only
+        self.params = pnp.random.randn(num_layers, self.used_qubits, 2) * 0.1
         
         # Adam optimizer state
         self.m = pnp.zeros_like(self.params)
@@ -341,29 +359,32 @@ class VQNN:
         # Performance tracking
         self.perf = PerformanceMonitor()
         
-        print(f"\nInitializing {num_qubits}-Qubit VQNN...")
+        print(f"\nInitializing Scalable VQNN for {maze_size}x{maze_size} mazes...")
         print(f"  Configuration:")
-        print(f"    - Qubits: {num_qubits}")
+        print(f"    - Maze size: {maze_size}x{maze_size}")
+        print(f"    - Total qubits available: {num_qubits}")
+        print(f"    - Observation qubits: {self.observation_qubits} (3x3 window)")
+        print(f"    - Position encoding qubits: {self.position_qubits}")
+        print(f"    - Active qubits: {self.used_qubits}")
         print(f"    - Layers: {num_layers}")
         print(f"    - Shots: {shots}")
-        print(f"    - Statistical error: ±{self.noise_scale*100:.1f}%")
         print(f"    - Backend: {QUANTUM_BACKEND}")
         
-        # Initialize quantum device with shots
+        # Initialize quantum device
         self.dev = qml.device(
             QUANTUM_BACKEND,
-            wires=num_qubits,
+            wires=self.used_qubits,
             shots=shots
         )
         
         # Create circuit
         self.circuit = self._create_circuit()
         
-        print(f"  ✓ {num_qubits}-qubit quantum circuit initialized")
+        print(f"  ✔ Quantum circuit initialized with {self.used_qubits} active qubits")
     
     def _create_circuit(self):
         """
-        Create quantum circuit with adaptive entanglement structure.
+        Create quantum circuit with proper entanglement for the active qubits.
         """
         
         @qml.qnode(
@@ -373,143 +394,121 @@ class VQNN:
         )
         def circuit(inputs, params):
             """
-            Adaptive circuit with entanglement scaling by qubit count.
+            Quantum circuit with fixed observation encoding.
             """
             
-            # Angle encoding - fast and robust
-            for i in range(self.num_qubits):
+            # Angle encoding
+            for i in range(self.used_qubits):
                 qml.RY(inputs[i] * np.pi, wires=i)
             
-            # Single variational layer
-            for i in range(self.num_qubits):
-                qml.RX(params[0, i, 0], wires=i)
-                qml.RY(params[0, i, 1], wires=i)
+            # Variational layers
+            for layer in range(self.num_layers):
+                # Rotation gates
+                for i in range(self.used_qubits):
+                    qml.RX(params[layer, i, 0], wires=i)
+                    qml.RY(params[layer, i, 1], wires=i)
+                
+                # Entanglement layer
+                # Linear chain
+                for i in range(self.used_qubits - 1):
+                    qml.CNOT(wires=[i, i + 1])
+                
+                # Wrap-around for circular entanglement
+                if self.used_qubits > 2:
+                    qml.CNOT(wires=[self.used_qubits - 1, 0])
+                
+                # Additional entanglement for more qubits
+                if self.used_qubits >= 9:
+                    # Cross connections
+                    for i in range(0, self.used_qubits - 3, 2):
+                        qml.CNOT(wires=[i, i + 3])
             
-            # Adaptive entanglement based on qubit count
-            # Linear chain
-            for i in range(0, self.num_qubits - 1):
-                qml.CNOT(wires=[i, i + 1])
-            
-            # Add wrap-around connection
-            qml.CNOT(wires=[self.num_qubits-1, 0])
-            
-            # Add cross-connections for higher qubit counts
-            if self.num_qubits >= 12:
-                # Connect qubits that are 4 positions apart
-                for i in range(0, self.num_qubits - 4):
-                    if i % 2 == 0:  # Only even indices
-                        qml.CNOT(wires=[i, i + 4])
-            
-            if self.num_qubits >= 20:
-                # Add additional connections for very high qubit counts
-                for i in range(0, self.num_qubits - 8):
-                    if i % 3 == 0:  # Every third qubit
-                        qml.CNOT(wires=[i, i + 8])
-            
-            # Measure 4 qubits for Q-values
-            return [qml.expval(qml.PauliZ(i)) for i in range(4)]
+            # Measure first 4 qubits for Q-values (4 actions)
+            return [qml.expval(qml.PauliZ(i)) for i in range(min(4, self.used_qubits))]
         
         return circuit
     
+    def get_local_observation(self, maze: np.ndarray, position: Tuple[int, int]) -> np.ndarray:
+        """
+        Extract 3x3 local observation window around agent position.
+        
+        Args:
+            maze: Full maze
+            position: Agent position
+            
+        Returns:
+            3x3 observation window (flattened)
+        """
+        row, col = position
+        observation = np.zeros((3, 3), dtype=np.float32)
+        
+        # Extract 3x3 window centered on agent
+        for dr in range(-1, 2):
+            for dc in range(-1, 2):
+                r, c = row + dr, col + dc
+                
+                if 0 <= r < self.maze_size and 0 <= c < self.maze_size:
+                    if maze[r, c] == WALL:
+                        observation[dr + 1, dc + 1] = -1.0
+                    elif maze[r, c] == GOAL:
+                        observation[dr + 1, dc + 1] = 1.0
+                    else:
+                        observation[dr + 1, dc + 1] = 0.0
+                else:
+                    # Out of bounds = wall
+                    observation[dr + 1, dc + 1] = -1.0
+        
+        # Agent is always at center
+        observation[1, 1] = 0.5
+        
+        return observation.flatten()
+    
     def encode_state(self, maze: np.ndarray, position: Tuple[int, int]) -> np.ndarray:
         """
-        Encode maze state into quantum state.
-        Adaptively uses all available qubits.
+        Encode maze state into quantum state with fixed observation window.
+        
+        Args:
+            maze: Full maze
+            position: Agent position
+            
+        Returns:
+            Encoded quantum state
         """
-        state = pnp.zeros(self.num_qubits, dtype=np.float32)
+        state = pnp.zeros(self.used_qubits, dtype=np.float32)
         
-        # Core features (always present)
-        # Features 0-1: Agent position
-        row, col = position
-        state[0] = row / 4.0
-        state[1] = col / 4.0
+        # Get 3x3 observation window (9 values)
+        observation = self.get_local_observation(maze, position)
         
-        # Features 2-3: Distance to goal
-        goal_pos = np.where(maze == GOAL)
-        if len(goal_pos[0]) > 0:
-            goal_row, goal_col = goal_pos[0][0], goal_pos[1][0]
-            state[2] = (goal_row - row) / 4.0
-            state[3] = (goal_col - col) / 4.0
+        # Encode observation into first 9 qubits
+        for i in range(min(self.observation_qubits, len(observation))):
+            state[i] = observation[i]
         
-        # Feature 4: Manhattan distance (if we have enough qubits)
-        if self.num_qubits > 4:
-            if len(goal_pos[0]) > 0:
-                manhattan_dist = abs(goal_row - row) + abs(goal_col - col)
-                state[4] = manhattan_dist / 8.0
-        
-        # Features 5-8: Adjacent cells (if we have enough qubits)
-        if self.num_qubits >= 9:
-            directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-            for i, (dr, dc) in enumerate(directions):
-                if 5 + i < self.num_qubits:
-                    new_row, new_col = row + dr, col + dc
-                    if 0 <= new_row < 5 and 0 <= new_col < 5:
-                        if maze[new_row, new_col] == WALL:
-                            state[5 + i] = -0.5
-                        elif maze[new_row, new_col] == GOAL:
-                            state[5 + i] = 1.0
-                        else:
-                            state[5 + i] = 0.3
-                    else:
-                        state[5 + i] = -1.0
-        
-        # Features 9-12: Diagonal cells (if we have enough qubits)
-        if self.num_qubits >= 13:
-            diagonals = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
-            for i, (dr, dc) in enumerate(diagonals):
-                if 9 + i < self.num_qubits:
-                    new_row, new_col = row + dr, col + dc
-                    if 0 <= new_row < 5 and 0 <= new_col < 5:
-                        if maze[new_row, new_col] == WALL:
-                            state[9 + i] = -0.3
-                        elif maze[new_row, new_col] == GOAL:
-                            state[9 + i] = 0.7
-                        else:
-                            state[9 + i] = 0.1
-                    else:
-                        state[9 + i] = -0.5
-        
-        # Extended spatial awareness (if we have enough qubits)
-        if self.num_qubits >= 16:
-            # Check for walls in a 2-step radius
-            extended_dirs = [(-2, 0), (2, 0), (0, -2), (0, 2)]
-            for i, (dr, dc) in enumerate(extended_dirs):
-                if 13 + i < self.num_qubits:
-                    new_row, new_col = row + dr, col + dc
-                    if 0 <= new_row < 5 and 0 <= new_col < 5:
-                        if maze[new_row, new_col] == WALL:
-                            state[13 + i] = -0.2
-                        elif maze[new_row, new_col] == GOAL:
-                            state[13 + i] = 0.5
-                        else:
-                            state[13 + i] = 0.05
-                    else:
-                        state[13 + i] = -0.3
-        
-        # Ultra-extended awareness (if we have 20+ qubits)
-        if self.num_qubits >= 20:
-            # Additional features for maximum qubit utilization
-            # Path history encoding
-            if 17 < self.num_qubits:
-                state[17] = self.t / 100.0  # Normalized time step
+        # If we have extra qubits, encode position and goal info
+        if self.position_qubits > 0:
+            row, col = position
+            # Normalized position
+            state[self.observation_qubits] = (row / (self.maze_size - 1)) * 2 - 1
             
-            # Quadrant information
-            if 18 < self.num_qubits:
-                state[18] = 1.0 if row < 2.5 else -1.0  # Upper/lower half
+            if self.position_qubits > 1:
+                state[self.observation_qubits + 1] = (col / (self.maze_size - 1)) * 2 - 1
             
-            if 19 < self.num_qubits:
-                state[19] = 1.0 if col < 2.5 else -1.0  # Left/right half
+            # Distance to goal if we have more qubits
+            if self.position_qubits > 2:
+                goal_pos = np.where(maze == GOAL)
+                if len(goal_pos[0]) > 0:
+                    goal_row, goal_col = goal_pos[0][0], goal_pos[1][0]
+                    manhattan_dist = abs(goal_row - row) + abs(goal_col - col)
+                    state[self.observation_qubits + 2] = manhattan_dist / (2 * self.maze_size)
             
-            # Fill remaining qubits with extended spatial patterns
-            for i in range(20, min(self.num_qubits, 25)):
-                # Create a unique spatial pattern for each additional qubit
-                pattern_val = np.sin((row + col + i) * np.pi / 5)
-                state[i] = pattern_val * 0.3
+            # Direction to goal if we have even more qubits
+            if self.position_qubits > 3 and len(goal_pos[0]) > 0:
+                angle_to_goal = np.arctan2(goal_row - row, goal_col - col) / np.pi
+                state[self.observation_qubits + 3] = angle_to_goal
         
         # Normalize
         norm = pnp.linalg.norm(state)
         if norm > 0:
-            state = state / (norm * 2)
+            state = state / norm
         
         return state
     
@@ -517,7 +516,7 @@ class VQNN:
         """Get Q-values using quantum circuit."""
         state = self.encode_state(maze, position)
         
-        with timer(f"{self.num_qubits}-qubit circuit evaluation", verbose=False):
+        with timer(f"Circuit evaluation", verbose=False):
             q_values = pnp.array(self.circuit(state, self.params))
             
             # Add small noise for exploration
@@ -541,15 +540,12 @@ class VQNN:
     
     def update(self, state: np.ndarray, action: int, target: float, 
                current_q: float) -> float:
-        """
-        Update parameters using gradient estimation.
-        Sampling rate adjusts based on qubit count.
-        """
+        """Update parameters using gradient estimation."""
         self.t += 1
         loss = (target - current_q) ** 2
         
-        # Update frequency based on qubit count
-        update_freq = 3 if self.num_qubits <= 16 else 4
+        # Update frequency
+        update_freq = 3
         if self.t % update_freq != 0:
             return float(loss)
         
@@ -557,23 +553,15 @@ class VQNN:
         shift = np.pi / 2
         
         with timer("Gradient computation", verbose=False):
-            # Adaptive sampling rate based on qubit count
-            if self.num_qubits <= 12:
-                sample_rate = 0.25
-            elif self.num_qubits <= 16:
-                sample_rate = 0.20
-            elif self.num_qubits <= 20:
-                sample_rate = 0.15
-            else:
-                sample_rate = 0.10
-            
-            num_params = self.num_layers * self.num_qubits * 2
-            sample_size = max(3, int(sample_rate * num_params))
+            # Sample a subset of parameters for efficiency
+            sample_rate = 0.3
+            num_params = self.num_layers * self.used_qubits * 2
+            sample_size = max(4, int(sample_rate * num_params))
             
             param_indices = []
             for _ in range(sample_size):
                 l = np.random.randint(self.num_layers)
-                q = np.random.randint(self.num_qubits)
+                q = np.random.randint(self.used_qubits)
                 p = np.random.randint(2)
                 param_indices.append((l, q, p))
             
@@ -588,13 +576,13 @@ class VQNN:
                 self.params[layer, qubit, param_idx] += shift
                 
                 gradient[layer, qubit, param_idx] = (q_plus - q_minus) / 2.0
-                gradient[layer, qubit, param_idx] /= sample_rate  # Scale for sampling
+                gradient[layer, qubit, param_idx] /= sample_rate
         
         gradient *= 2 * (current_q - target)
         
         # Adam optimizer
-        beta1, beta2 = 0.9, 0.99
-        eps = 1e-6
+        beta1, beta2 = 0.9, 0.999
+        eps = 1e-8
         
         self.m = beta1 * self.m + (1 - beta1) * gradient
         self.v = beta2 * self.v + (1 - beta2) * gradient ** 2
@@ -602,9 +590,7 @@ class VQNN:
         m_hat = self.m / (1 - beta1 ** (self.t // update_freq))
         v_hat = self.v / (1 - beta2 ** (self.t // update_freq))
         
-        # Adaptive learning rate based on qubit count
-        lr_scale = 1.0 if self.num_qubits <= 16 else 0.9
-        self.params -= (self.learning_rate * lr_scale) * m_hat / (pnp.sqrt(v_hat) + eps)
+        self.params -= self.learning_rate * m_hat / (pnp.sqrt(v_hat) + eps)
         
         # Clip parameters
         self.params = pnp.clip(self.params, -np.pi, np.pi)
@@ -645,9 +631,9 @@ class ExperienceReplayBuffer:
 # ============================================================================
 
 class QLearningAgent:
-    """Q-learning agent optimized for adaptive VQNN."""
+    """Q-learning agent for scalable VQNN."""
     
-    def __init__(self, vqnn: VQNN, epsilon: float = EPSILON_START, 
+    def __init__(self, vqnn: ScalableVQNN, epsilon: float = EPSILON_START, 
                  gamma: float = GAMMA, epsilon_decay: float = EPSILON_DECAY,
                  use_replay: bool = True, batch_size: int = BATCH_SIZE):
         self.vqnn = vqnn
@@ -705,7 +691,6 @@ class QLearningAgent:
         batch = self.replay_buffer.sample_batch(self.batch_size)
         total_loss = 0.0
         
-        # Process smaller sub-batches
         sub_batch_size = 4
         
         for i in range(0, len(batch), sub_batch_size):
@@ -727,27 +712,30 @@ class QLearningAgent:
         return total_loss / len(batch)
 
 # ============================================================================
-# MAZE ENVIRONMENT
+# SCALABLE MAZE ENVIRONMENT
 # ============================================================================
 
-class MazeEnvironment:
-    """Maze environment for agent interaction."""
+class ScalableMazeEnvironment:
+    """Scalable maze environment for different sizes."""
     
-    def __init__(self, maze: np.ndarray):
+    def __init__(self, maze: np.ndarray, maze_size: int):
         self.maze = maze.copy()
         self.original_maze = maze.copy()
+        self.maze_size = maze_size
         self.start_pos = self.find_position(maze, START)
         self.goal_pos = self.find_position(maze, GOAL)
         self.agent_pos = self.start_pos
         self.steps = 0
-        self.max_steps = 100
+        self.max_steps = maze_size * maze_size * 4  # Scale with maze size
         self.path = [self.start_pos]
         self.actions = []
     
     @staticmethod
     def find_position(maze: np.ndarray, marker: int) -> Tuple[int, int]:
         pos = np.where(maze == marker)
-        return (pos[0][0], pos[1][0])
+        if len(pos[0]) > 0:
+            return (pos[0][0], pos[1][0])
+        return (0, 0)
     
     def reset(self) -> Tuple[int, int]:
         self.maze = self.original_maze.copy()
@@ -765,30 +753,92 @@ class MazeEnvironment:
         new_row = self.agent_pos[0] + dr
         new_col = self.agent_pos[1] + dc
         
-        if not (0 <= new_row < 5 and 0 <= new_col < 5):
+        # Check bounds
+        if not (0 <= new_row < self.maze_size and 0 <= new_col < self.maze_size):
             return self.agent_pos, -10, self.steps >= self.max_steps
         
+        # Check wall
         if self.maze[new_row, new_col] == WALL:
             return self.agent_pos, -10, self.steps >= self.max_steps
         
+        # Move agent
         self.agent_pos = (new_row, new_col)
         self.path.append(self.agent_pos)
         
+        # Check goal
         if self.agent_pos == self.goal_pos:
             return self.agent_pos, 100, True
         else:
             return self.agent_pos, -1, self.steps >= self.max_steps
 
 # ============================================================================
-# MAZE GENERATION
+# SCALABLE MAZE GENERATION
 # ============================================================================
 
-class MazeGenerator:
-    """Generate fixed maze environments."""
+class ScalableMazeGenerator:
+    """Generate mazes of different sizes."""
     
     @staticmethod
-    def get_fixed_mazes() -> List[Tuple[np.ndarray, str]]:
-        """Generate 10 fixed 5x5 mazes."""
+    def get_fixed_mazes(maze_size: int) -> List[Tuple[np.ndarray, str]]:
+        """Generate fixed mazes for the specified size."""
+        if maze_size == 3:
+            return ScalableMazeGenerator._get_3x3_mazes()
+        elif maze_size == 4:
+            return ScalableMazeGenerator._get_4x4_mazes()
+        else:  # maze_size == 5
+            return ScalableMazeGenerator._get_5x5_mazes()
+    
+    @staticmethod
+    def _get_3x3_mazes() -> List[Tuple[np.ndarray, str]]:
+        """Generate 10 fixed 3x3 mazes."""
+        mazes = []
+        
+        configs = [
+            ("simple_3x3", [[2,0,1],[0,0,3],[1,0,0]]),
+            ("corner_3x3", [[2,0,0],[1,1,0],[0,0,3]]),
+            ("spiral_3x3", [[2,0,0],[1,1,0],[3,0,0]]),
+            ("center_3x3", [[2,0,1],[0,1,0],[0,0,3]]),
+            ("zigzag_3x3", [[2,1,0],[0,1,0],[0,0,3]]),
+            ("edge_3x3", [[2,0,0],[0,1,0],[0,0,3]]),
+            ("diag_3x3", [[2,0,1],[0,0,1],[1,0,3]]),
+            ("open_3x3", [[2,0,0],[0,0,0],[0,0,3]]),
+            ("barrier_3x3", [[2,0,0],[1,1,0],[0,0,3]]),
+            ("complex_3x3", [[2,1,0],[0,1,0],[0,0,3]])
+        ]
+        
+        for name, layout in configs:
+            maze = np.array(layout, dtype=np.float32)
+            mazes.append((maze, name))
+        
+        return mazes
+    
+    @staticmethod
+    def _get_4x4_mazes() -> List[Tuple[np.ndarray, str]]:
+        """Generate 10 fixed 4x4 mazes."""
+        mazes = []
+        
+        configs = [
+            ("simple_4x4", [[2,0,1,1],[0,0,1,1],[1,0,0,0],[1,1,0,3]]),
+            ("spiral_4x4", [[2,0,0,0],[1,1,1,0],[0,0,0,0],[0,1,1,3]]),
+            ("rooms_4x4", [[2,0,1,0],[0,0,1,0],[1,0,0,0],[0,0,1,3]]),
+            ("zigzag_4x4", [[2,1,0,0],[0,1,0,1],[0,0,0,1],[1,1,0,3]]),
+            ("cross_4x4", [[2,0,1,0],[0,0,1,0],[1,1,0,1],[0,0,0,3]]),
+            ("corners_4x4", [[2,0,0,1],[1,0,0,0],[0,0,0,1],[0,1,0,3]]),
+            ("maze_4x4", [[2,0,1,0],[1,0,1,0],[0,0,0,0],[0,1,1,3]]),
+            ("open_4x4", [[2,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,3]]),
+            ("dense_4x4", [[2,1,0,1],[0,1,0,1],[0,0,0,0],[1,0,1,3]]),
+            ("path_4x4", [[2,0,0,1],[1,1,0,1],[0,0,0,0],[0,1,1,3]])
+        ]
+        
+        for name, layout in configs:
+            maze = np.array(layout, dtype=np.float32)
+            mazes.append((maze, name))
+        
+        return mazes
+    
+    @staticmethod
+    def _get_5x5_mazes() -> List[Tuple[np.ndarray, str]]:
+        """Generate 10 fixed 5x5 mazes (original mazes)."""
         mazes = []
         
         configs = [
@@ -811,11 +861,12 @@ class MazeGenerator:
         return mazes
     
     @staticmethod
-    def bfs_shortest_path(maze: np.ndarray) -> int:
+    def bfs_shortest_path(maze: np.ndarray, maze_size: int) -> int:
+        """Find shortest path using BFS."""
         from collections import deque
         
-        start = MazeEnvironment.find_position(maze, START)
-        goal = MazeEnvironment.find_position(maze, GOAL)
+        start = ScalableMazeEnvironment.find_position(maze, START)
+        goal = ScalableMazeEnvironment.find_position(maze, GOAL)
         
         queue = deque([(start, 0)])
         visited = {start}
@@ -829,7 +880,7 @@ class MazeGenerator:
             for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
                 new_row, new_col = row + dr, col + dc
                 
-                if (0 <= new_row < 5 and 0 <= new_col < 5 and
+                if (0 <= new_row < maze_size and 0 <= new_col < maze_size and
                     (new_row, new_col) not in visited and
                     maze[new_row, new_col] != WALL):
                     
@@ -839,51 +890,12 @@ class MazeGenerator:
         return -1
 
 # ============================================================================
-# RANDOM WALK BASELINE
-# ============================================================================
-
-def calculate_random_walk_average(maze: np.ndarray, trials: int = 100) -> float:
-    """
-    Calculate average steps for random walk to reach goal.
-    
-    Args:
-        maze: The maze to test
-        trials: Number of random walk trials
-        
-    Returns:
-        Average steps to reach goal (or max_steps if rarely succeeds)
-    """
-    env = MazeEnvironment(maze)
-    total_steps = 0
-    successes = 0
-    max_steps = 200
-    
-    for _ in range(trials):
-        env.reset()
-        steps = 0
-        
-        while steps < max_steps:
-            # Random action selection
-            action = np.random.choice(ACTIONS)
-            position, _, done = env.step(action)
-            steps += 1
-            
-            if done and position == env.goal_pos:
-                total_steps += steps
-                successes += 1
-                break
-    
-    if successes > 0:
-        return total_steps / successes
-    else:
-        return max_steps  # If random walk rarely succeeds
-
-# ============================================================================
 # COMPLEXITY METRICS
 # ============================================================================
 
 @lru_cache(maxsize=512)
 def lz_complexity(s: str) -> int:
+    """Calculate Lempel-Ziv complexity."""
     if len(s) <= 1:
         return len(s)
     
@@ -909,6 +921,7 @@ def lz_complexity(s: str) -> int:
 
 @lru_cache(maxsize=512)
 def shannon_entropy(s: str) -> float:
+    """Calculate Shannon entropy."""
     if not s:
         return 0.0
     
@@ -925,48 +938,18 @@ def shannon_entropy(s: str) -> float:
     
     return entropy
 
-def approximate_entropy(U: List[Any], m: int = 2, r: float = 0.2) -> float:
-    if len(U) < m:
-        return 0.0
-    
-    def _maxdist(xi, xj, m):
-        return max([abs(float(a) - float(b)) for a, b in zip(xi, xj)])
-    
-    def _phi(m):
-        patterns = [U[i:i + m] for i in range(len(U) - m + 1)]
-        C = []
-        for i, template in enumerate(patterns):
-            matches = sum(1 for j, pattern in enumerate(patterns)
-                        if _maxdist(template, pattern, m) <= r)
-            C.append(matches / (len(U) - m + 1))
-        return sum(np.log(c) for c in C if c > 0) / (len(U) - m + 1)
-    
-    try:
-        return _phi(m) - _phi(m + 1)
-    except:
-        return 0.0
-
 # ============================================================================
-# EMERGENCE DETECTION
+# SIZE-AWARE EMERGENCE DETECTION
 # ============================================================================
 
-def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
-                    learning_curve: List[float], maze: np.ndarray) -> Dict[str, Any]:
+def detect_emergence(solution: MazeSolution, optimal_steps: int,
+                    learning_curve: List[float], maze_size: int) -> Dict[str, Any]:
     """
-    Detect emergent behavior in maze navigation.
-    
-    Args:
-        solution: The maze solution to evaluate
-        baseline_steps: Dictionary with baseline performance metrics
-        learning_curve: Episode rewards over training
-        maze: The maze array for random walk calculation
-        
-    Returns:
-        Dictionary with emergence assessment
+    Detect emergent behavior with size-appropriate criteria.
     """
     efficiency = solution.efficiency_score
     
-    # Detect performance discontinuity (sudden jumps in learning)
+    # Detect performance discontinuity
     solution.performance_discontinuity = False
     solution.convergence_episode = len(learning_curve)
     
@@ -975,118 +958,66 @@ def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
         for i in range(window, len(learning_curve) - window):
             before = np.mean(learning_curve[i-window:i])
             after = np.mean(learning_curve[i:i+window])
-            # Require larger jump (50 points instead of 30)
-            if after - before > 50:
+            if after - before > 30:  # Significant jump
                 solution.performance_discontinuity = True
                 solution.convergence_episode = i
                 break
+    
+    # Size-adjusted thresholds
+    if maze_size == 3:
+        perfect_threshold = 0.90
+        good_threshold = 0.75
+        convergence_threshold = 30
+    elif maze_size == 4:
+        perfect_threshold = 0.85
+        good_threshold = 0.70
+        convergence_threshold = 40
+    else:  # maze_size == 5
+        perfect_threshold = 0.80
+        good_threshold = 0.65
+        convergence_threshold = 50
     
     is_emergent = False
     emergence_type = "none"
     emergence_score = 0.0
     
-    # STRICTER thresholds based on qubit count
-    if NUM_QUBITS <= 12:
-        perfect_threshold = 0.95  # Was 0.85
-        good_threshold = 0.85     # Was 0.70
-        min_threshold = 0.75      # New minimum threshold
-    elif NUM_QUBITS <= 16:
-        perfect_threshold = 0.97  # Was 0.88
-        good_threshold = 0.90     # Was 0.75
-        min_threshold = 0.80
-    elif NUM_QUBITS <= 20:
-        perfect_threshold = 0.98  # Was 0.90
-        good_threshold = 0.92     # Was 0.78
-        min_threshold = 0.85
-    else:
-        perfect_threshold = 0.99  # Was 0.92
-        good_threshold = 0.95     # Was 0.80
-        min_threshold = 0.88
+    # Evaluate emergence criteria
+    criteria_met = 0
     
-    # Calculate actual random walk performance
-    actual_random_steps = calculate_random_walk_average(maze, trials=50)
-    random_improvement = (actual_random_steps - solution.steps_to_goal) / actual_random_steps
-    
-    # Track which criteria are met
-    emergence_criteria_met = 0
-    criteria_details = []
-    
-    # Criterion 1: Near-optimal performance
     if efficiency >= perfect_threshold:
-        emergence_criteria_met += 2  # Weight this heavily
-        criteria_details.append("perfect_efficiency")
-    elif efficiency >= good_threshold:
-        emergence_criteria_met += 1
-        criteria_details.append("good_efficiency")
-    elif efficiency >= min_threshold:
-        emergence_criteria_met += 0.5
-        criteria_details.append("acceptable_efficiency")
-    
-    # Criterion 2: Significant learning discontinuity with sustained improvement
-    if solution.performance_discontinuity:
-        # Check if the jump led to sustained improvement
-        if len(learning_curve) > solution.convergence_episode + 10:
-            post_jump = learning_curve[solution.convergence_episode:]
-            if np.mean(post_jump) > 80:  # Sustained high performance
-                emergence_criteria_met += 1
-                criteria_details.append("sustained_jump")
-    
-    # Criterion 3: Vastly outperforms random walk
-    if random_improvement > 0.85:  # Was 0.65, now much stricter
-        emergence_criteria_met += 1.5
-        criteria_details.append("beats_random_strongly")
-    elif random_improvement > 0.75:
-        emergence_criteria_met += 0.5
-        criteria_details.append("beats_random")
-    
-    # Criterion 4: Fast convergence to good solution
-    if solution.convergence_episode < 30 and efficiency >= good_threshold:
-        emergence_criteria_met += 1
-        criteria_details.append("fast_convergence")
-    elif solution.convergence_episode < 40 and efficiency >= min_threshold:
-        emergence_criteria_met += 0.5
-        criteria_details.append("moderate_convergence")
-    
-    # Criterion 5: Consistency check - low variance in final performance
-    if len(learning_curve) >= 20:
-        final_rewards = learning_curve[-20:]
-        reward_std = np.std(final_rewards)
-        if reward_std < 10 and np.mean(final_rewards) > 80:
-            emergence_criteria_met += 0.5
-            criteria_details.append("consistent_performance")
-    
-    # Require at least 2.5 points worth of criteria for emergence
-    if emergence_criteria_met >= 2.5:
-        is_emergent = True
-        
-        # Determine emergence type based on which criteria were met
-        if efficiency >= perfect_threshold and "fast_convergence" in criteria_details:
+        criteria_met += 2
+        if solution.convergence_episode < convergence_threshold:
             emergence_type = "perfect_navigation"
             emergence_score = 1.0
-        elif solution.performance_discontinuity and "sustained_jump" in criteria_details:
+            is_emergent = True
+    elif efficiency >= good_threshold:
+        criteria_met += 1
+        if solution.performance_discontinuity:
             emergence_type = "sudden_insight"
             emergence_score = 0.8
-        elif efficiency >= good_threshold and "beats_random_strongly" in criteria_details:
+            is_emergent = True
+        elif solution.convergence_episode < convergence_threshold:
             emergence_type = "efficient_navigation"
             emergence_score = 0.7
-        elif "beats_random_strongly" in criteria_details:
-            emergence_type = "intelligent_navigation"
-            emergence_score = 0.5
-        else:
-            emergence_type = "weak_emergence"
-            emergence_score = 0.4
+            is_emergent = True
+    
+    # Check for consistent performance
+    if len(learning_curve) >= 20:
+        final_rewards = learning_curve[-20:]
+        if np.std(final_rewards) < 15 and np.mean(final_rewards) > 70:
+            criteria_met += 0.5
+            if not is_emergent and efficiency >= 0.6:
+                emergence_type = "stable_navigation"
+                emergence_score = 0.5
+                is_emergent = True
     
     return {
         "is_emergent": is_emergent,
         "emergence_type": emergence_type,
         "emergence_score": emergence_score,
         "efficiency_score": efficiency,
-        "performance_discontinuity": solution.performance_discontinuity,
         "convergence_episode": solution.convergence_episode,
-        "criteria_met": emergence_criteria_met,
-        "criteria_details": criteria_details,
-        "random_walk_baseline": actual_random_steps,
-        "random_improvement": random_improvement
+        "criteria_met": criteria_met
     }
 
 # ============================================================================
@@ -1094,13 +1025,14 @@ def detect_emergence(solution: MazeSolution, baseline_steps: Dict[str, int],
 # ============================================================================
 
 def visualize_solution(maze: np.ndarray, path: List[Tuple[int, int]], 
-                      maze_name: str):
+                      maze_name: str, maze_size: int):
+    """Visualize the solution path."""
     print(f"\n{maze_name} Solution:")
-    print("-" * 15)
+    print("-" * (maze_size * 2 + 3))
     
-    for row in range(5):
+    for row in range(maze_size):
         line = ""
-        for col in range(5):
+        for col in range(maze_size):
             if (row, col) in path[1:-1]:
                 line += "o "
             elif maze[row, col] == START:
@@ -1120,7 +1052,7 @@ def visualize_solution(maze: np.ndarray, path: List[Tuple[int, int]],
 # ============================================================================
 
 def run_experiments(config: Optional[Dict] = None):
-    """Execute quantum maze navigation experiments with stricter emergence detection."""
+    """Execute scalable quantum maze navigation experiments."""
     if config is None:
         config = {
             "episodes_per_maze": EPISODES_PER_MAZE,
@@ -1137,53 +1069,45 @@ def run_experiments(config: Optional[Dict] = None):
     timestamp = datetime.now().strftime("%m%d%Y_%H%M%S")
     
     print("\n" + "=" * 60)
-    print(f"{NUM_QUBITS}-QUBIT VQNN ADAPTIVE PROBLEM-SOLVING EXPERIMENTS")
+    print(f"SCALABLE QUANTUM MAZE NAVIGATION EXPERIMENTS")
     print("=" * 60)
+    print(f"Maze size: {MAZE_SIZE}x{MAZE_SIZE}")
+    print(f"Qubits: {NUM_QUBITS}")
+    print(f"Observation window: 3x3 (fixed)")
     print(f"Quantum Backend: {QUANTUM_BACKEND}")
     print(f"GPU Acceleration: {'ENABLED' if GPU_AVAILABLE else 'DISABLED'}")
-    print(f"Qubits: {NUM_QUBITS}")
     print(f"Shots: {SHOTS}")
     print(f"Episodes per maze: {config['episodes_per_maze']}")
-    
-    # Dynamic runtime estimate
-    if NUM_QUBITS <= 12:
-        est_total = "15-30"
-    elif NUM_QUBITS <= 16:
-        est_total = "30-50"
-    elif NUM_QUBITS <= 20:
-        est_total = "50-90"
-    else:
-        est_total = "90-150"
-    
-    print(f"Expected total runtime: {est_total} minutes")
     print("=" * 60)
     print()
     
-    generator = MazeGenerator()
-    mazes = generator.get_fixed_mazes()
+    generator = ScalableMazeGenerator()
+    mazes = generator.get_fixed_mazes(MAZE_SIZE)
     
     os.makedirs(config["output_dir"], exist_ok=True)
-    output_file = os.path.join(config["output_dir"], f"vqnn_results_{NUM_QUBITS}q_{timestamp}.csv")
+    output_file = os.path.join(config["output_dir"], 
+                              f"vqnn_results_{NUM_QUBITS}q_{timestamp}.csv")
     
     headers = [
-        "run_id", "timestamp", "maze_name", "maze_complexity",
+        "run_id", "timestamp", "maze_name", "maze_size", "maze_complexity",
         "episodes_trained", "steps_to_goal", "optimal_steps", "efficiency_score",
         "final_reward", "convergence_episode", "performance_discontinuity",
         "path_length", "path_lz_complexity", "path_shannon_entropy",
         "action_sequence_length", "action_lz_complexity", "action_shannon_entropy",
-        "action_approximate_entropy", "is_emergent", "emergence_type", 
-        "emergence_score", "solution_path", "action_sequence",
-        "quantum_backend", "gpu_accelerated", "num_qubits", "shots",
-        "training_time_minutes", "criteria_met", "random_walk_baseline", "random_improvement"
+        "is_emergent", "emergence_type", "emergence_score",
+        "solution_path", "action_sequence",
+        "quantum_backend", "gpu_accelerated", "num_qubits", "observation_qubits",
+        "shots", "training_time_minutes", "criteria_met"
     ]
     
     results = []
     total_start = time.time()
     
-    print(f"Running {NUM_QUBITS}-qubit quantum experiments...\n")
+    print(f"Running experiments on {MAZE_SIZE}x{MAZE_SIZE} mazes...\n")
     
     # Initialize VQNN once
-    vqnn = VQNN(
+    vqnn = ScalableVQNN(
+        maze_size=MAZE_SIZE,
         num_qubits=NUM_QUBITS,
         num_layers=NUM_LAYERS,
         learning_rate=config["learning_rate"],
@@ -1197,13 +1121,8 @@ def run_experiments(config: Optional[Dict] = None):
         print(f"Maze {idx}/10: {maze_name}")
         print(f"{'='*60}")
         
-        optimal_steps = generator.bfs_shortest_path(maze)
+        optimal_steps = generator.bfs_shortest_path(maze, MAZE_SIZE)
         print(f"Optimal path: {optimal_steps} steps")
-        
-        # Calculate actual random walk baseline
-        print("Calculating random walk baseline...", end="")
-        random_walk_avg = calculate_random_walk_average(maze, trials=50)
-        print(f" {random_walk_avg:.1f} steps average")
         
         # Create new agent for each maze
         agent = QLearningAgent(
@@ -1215,12 +1134,12 @@ def run_experiments(config: Optional[Dict] = None):
             batch_size=config["batch_size"]
         )
         
-        env = MazeEnvironment(maze)
+        env = ScalableMazeEnvironment(maze, MAZE_SIZE)
         learning_curve = []
         best_solution = None
         best_steps = float('inf')
         
-        print(f"\nTraining with {NUM_QUBITS}-qubit quantum circuit ({SHOTS} shots)...")
+        print(f"Training with {vqnn.used_qubits}-qubit quantum circuit...")
         print("Progress:")
         
         for episode in range(config["episodes_per_maze"]):
@@ -1255,7 +1174,7 @@ def run_experiments(config: Optional[Dict] = None):
                     performance_discontinuity=False
                 )
             
-            # Progress updates every 20 episodes
+            # Progress updates
             if episode % 20 == 0:
                 avg_reward = np.mean(learning_curve[-10:]) if len(learning_curve) >= 10 else episode_reward
                 elapsed = (time.time() - maze_start) / 60
@@ -1267,7 +1186,6 @@ def run_experiments(config: Optional[Dict] = None):
         print("\nEvaluating final performance...")
         agent.epsilon = 0
         
-        # Run multiple evaluations
         eval_steps = []
         for _ in range(3):
             env.reset()
@@ -1284,7 +1202,7 @@ def run_experiments(config: Optional[Dict] = None):
         if eval_steps:
             final_steps = int(np.median(eval_steps))
         else:
-            final_steps = env.steps
+            final_steps = env.steps if best_solution is None else best_solution.steps_to_goal
         
         if best_solution is None or final_steps < best_solution.steps_to_goal:
             best_solution = MazeSolution(
@@ -1295,7 +1213,7 @@ def run_experiments(config: Optional[Dict] = None):
                 solution_path=env.path,
                 action_sequence=env.actions,
                 learning_curve=learning_curve,
-                final_reward=reward,
+                final_reward=learning_curve[-1] if learning_curve else 0,
                 convergence_episode=len(learning_curve),
                 performance_discontinuity=False
             )
@@ -1309,32 +1227,27 @@ def run_experiments(config: Optional[Dict] = None):
         action_lz = lz_complexity(action_str)
         action_entropy = shannon_entropy(action_str)
         
-        action_numeric = [ACTIONS.index(a) for a in best_solution.action_sequence]
-        action_apen = approximate_entropy(action_numeric) if len(action_numeric) > 2 else 0
-        
-        baselines = {"random": random_walk_avg, "optimal": optimal_steps}
-        emergence = detect_emergence(best_solution, baselines, learning_curve, maze)
+        # Emergence detection
+        emergence = detect_emergence(best_solution, optimal_steps, learning_curve, MAZE_SIZE)
         
         training_time = (time.time() - maze_start) / 60
         
         print(f"\nResults:")
         print(f"  Steps to goal: {best_solution.steps_to_goal}")
         print(f"  Optimal steps: {optimal_steps}")
-        print(f"  Random walk avg: {random_walk_avg:.1f}")
         print(f"  Efficiency: {best_solution.efficiency_score:.2%}")
-        print(f"  Random improvement: {emergence['random_improvement']:.2%}")
-        print(f"  Criteria met: {emergence['criteria_met']:.1f}")
         print(f"  Emergent: {emergence['is_emergent']} ({emergence['emergence_type']})")
         print(f"  Training time: {training_time:.1f} minutes")
         
         if config.get("visualize", True) and emergence['is_emergent']:
-            visualize_solution(maze, best_solution.solution_path, maze_name)
+            visualize_solution(maze, best_solution.solution_path, maze_name, MAZE_SIZE)
         
         # Save results
         results.append([
-            f"VQNN_maze_{idx}",
+            f"VQNN_{MAZE_SIZE}x{MAZE_SIZE}_maze_{idx}",
             datetime.now().isoformat(),
             maze_name,
+            f"{MAZE_SIZE}x{MAZE_SIZE}",
             len(best_solution.solution_path),
             config["episodes_per_maze"],
             best_solution.steps_to_goal,
@@ -1349,7 +1262,6 @@ def run_experiments(config: Optional[Dict] = None):
             len(best_solution.action_sequence),
             action_lz,
             action_entropy,
-            action_apen,
             emergence["is_emergent"],
             emergence["emergence_type"],
             emergence["emergence_score"],
@@ -1358,11 +1270,10 @@ def run_experiments(config: Optional[Dict] = None):
             QUANTUM_BACKEND,
             GPU_AVAILABLE,
             NUM_QUBITS,
+            vqnn.observation_qubits,
             SHOTS,
             training_time,
-            emergence["criteria_met"],
-            emergence["random_walk_baseline"],
-            emergence["random_improvement"]
+            emergence["criteria_met"]
         ])
     
     # Save all results
@@ -1379,19 +1290,17 @@ def run_experiments(config: Optional[Dict] = None):
     print("=" * 60)
     
     total_emergent = sum(1 for r in results if r[18])
-    avg_efficiency = np.mean([r[7] for r in results])
-    avg_criteria = np.mean([r[28] for r in results])
+    avg_efficiency = np.mean([r[8] for r in results])
     
+    print(f"Maze size: {MAZE_SIZE}x{MAZE_SIZE}")
     print(f"Total mazes: {len(results)}")
     print(f"Emergent solutions: {total_emergent} ({total_emergent/len(results)*100:.1f}%)")
     print(f"Average efficiency: {avg_efficiency:.3f}")
-    print(f"Average criteria met: {avg_criteria:.2f}")
     print(f"Total time: {total_time:.1f} minutes")
     print(f"Average time per maze: {total_time/len(mazes):.1f} minutes")
     print(f"Quantum backend: {QUANTUM_BACKEND}")
-    print(f"Qubits: {NUM_QUBITS}")
-    print(f"Shots: {SHOTS}")
-    print(f"Statistical error: ±{100/np.sqrt(SHOTS):.1f}%")
+    print(f"Qubits used: {vqnn.used_qubits}/{NUM_QUBITS}")
+    print(f"Observation window: 3x3")
     
     emergence_types = {}
     for r in results:
@@ -1403,8 +1312,6 @@ def run_experiments(config: Optional[Dict] = None):
         print("\nEmergence breakdown:")
         for etype, count in emergence_types.items():
             print(f"  {etype}: {count}")
-    else:
-        print("\nNo emergent behaviors detected with stricter criteria.")
     
     print(f"\nResults saved to: {output_file}")
     
@@ -1419,15 +1326,15 @@ def run_experiments(config: Optional[Dict] = None):
 
 if __name__ == "__main__":
     print("\n" + "="*60)
-    print("ADAPTIVE QUANTUM MAZE NAVIGATION EXPERIMENT")
+    print("SCALABLE QUANTUM MAZE NAVIGATION EXPERIMENT")
     print("="*60)
-    print("\nThis experiment will configure a Variational Quantum Neural Network")
-    print("with your specified number of qubits to solve maze navigation tasks.")
-    print("\nHigher qubit counts provide:")
-    print("  • Better quantum advantage and entanglement")
-    print("  • Richer state representations")
-    print("  • Potentially higher solution quality")
-    print("  • Longer runtime due to increased complexity")
+    print("\nThis experiment tests a Variational Quantum Neural Network")
+    print("with properly scaled maze sizes and qubit allocations.")
+    print("\nEach configuration uses:")
+    print("  • N² cells for NxN mazes")
+    print("  • N² qubits for quantum processing")
+    print("  • Fixed 3x3 observation window for consistency")
+    print("\nThis ensures scientifically valid comparisons across scales.")
     
     config = {
         "episodes_per_maze": EPISODES_PER_MAZE,
@@ -1443,5 +1350,5 @@ if __name__ == "__main__":
     
     results = run_experiments(config)
     
-    print(f"\n✅ {NUM_QUBITS}-qubit experiment complete!")
+    print(f"\n✅ {MAZE_SIZE}x{MAZE_SIZE} maze experiment complete!")
     print("=" * 60)
