@@ -24,7 +24,7 @@ __status__ = "Prototype"
 Title         : {Scalable Variational Quantum Neural Network for Maze Navigation}
 Date          : {05-18-2025}
 Description   : {Scientifically rigorous implementation with proper problem-size scaling.
-                Supports 9-qubit (3×3 mazes), 16-qubit (4×4 mazes), and 25-qubit (5×5 mazes)
+                Supports 9-qubit (3x3 mazes), 16-qubit (4x4 mazes), and 25-qubit (5x5 mazes)
                 configurations. Uses fixed local observation window for consistency.}
 Options       : {GPU acceleration via PennyLane-Lightning-GPU (NVIDIA cuQuantum SDK) or CPU fallback}
 Dependencies  : {numpy scipy pennylane pennylane-lightning-gpu matplotlib}
@@ -62,23 +62,23 @@ def get_maze_configuration():
         try:
             print("\nSelect maze size for the experiment:")
             print("\nAvailable configurations:")
-            print("  1. 3×3 mazes (9 qubits)")
+            print("  1. 3x3 mazes (9 qubits)")
             print("     - Compact mazes with 9 cells")
             print("     - Fastest execution (~5-10 minutes)")
             print("     - Good for initial testing")
             print()
-            print("  2. 4×4 mazes (16 qubits)")
+            print("  2. 4x4 mazes (16 qubits)")
             print("     - Medium mazes with 16 cells")
             print("     - Moderate runtime (~15-30 minutes)")
             print("     - Balanced complexity")
             print()
-            print("  3. 5×5 mazes (25 qubits)")
+            print("  3. 5x5 mazes (25 qubits)")
             print("     - Large mazes with 25 cells")
             print("     - Longer runtime (~30-60 minutes)")
             print("     - Maximum complexity")
             print()
             print("Each configuration properly scales both maze size and qubits")
-            print("Using fixed 3×3 local observation window for all sizes")
+            print("Using fixed 3x3 local observation window for all sizes")
             
             choice = input("\nEnter your choice (1, 2, or 3): ").strip()
             
@@ -99,11 +99,11 @@ def get_maze_configuration():
                 continue
             
             # Confirm with user
-            print(f"\nYou selected: {maze_size}×{maze_size} mazes")
+            print(f"\nYou selected: {maze_size}x{maze_size} mazes")
             print(f"Configuration details:")
-            print(f"  - Maze size: {maze_size}×{maze_size}")
+            print(f"  - Maze size: {maze_size}x{maze_size}")
             print(f"  - Qubits: {num_qubits}")
-            print(f"  - Local observation: 3×3 window")
+            print(f"  - Local observation: 3x3 window")
             print(f"  - Estimated runtime: {est_time} minutes")
             
             confirm = input("\nProceed with this configuration? (y/n): ").strip().lower()
@@ -123,7 +123,7 @@ def get_maze_configuration():
 # Get user configuration
 MAZE_SIZE, NUM_QUBITS = get_maze_configuration()
 
-# Fixed observation window size (always 3×3 for consistency)
+# Fixed observation window size (always 3x3 for consistency)
 OBSERVATION_SIZE = 3
 OBSERVATION_QUBITS = 9  # Always use 9 qubits for observation
 
@@ -318,7 +318,7 @@ class ScalableVQNN:
     """
     Scalable Variational Quantum Neural Network with fixed observation window.
     
-    Uses a consistent 3×3 observation window regardless of maze size,
+    Uses a consistent 3x3 observation window regardless of maze size,
     ensuring fair comparison across different configurations.
     """
     
@@ -342,7 +342,7 @@ class ScalableVQNN:
         
         # Use ALL available qubits
         self.used_qubits = num_qubits  # Use all qubits available
-        self.observation_qubits = min(9, num_qubits)  # 3×3 window encoding
+        self.observation_qubits = min(9, num_qubits)  # 3x3 window encoding
         self.position_qubits = num_qubits - self.observation_qubits  # Remaining for position/context
         
         # Initialize parameters for used qubits only
@@ -359,11 +359,11 @@ class ScalableVQNN:
         # Performance tracking
         self.perf = PerformanceMonitor()
         
-        print(f"\nInitializing Scalable VQNN for {maze_size}×{maze_size} mazes...")
+        print(f"\nInitializing Scalable VQNN for {maze_size}x{maze_size} mazes...")
         print(f"  Configuration:")
-        print(f"    - Maze size: {maze_size}×{maze_size}")
+        print(f"    - Maze size: {maze_size}x{maze_size}")
         print(f"    - Total qubits available: {num_qubits}")
-        print(f"    - Observation qubits: {self.observation_qubits} (3×3 window)")
+        print(f"    - Observation qubits: {self.observation_qubits} (3x3 window)")
         print(f"    - Position encoding qubits: {self.position_qubits}")
         print(f"    - Active qubits: {self.used_qubits}")
         print(f"    - Layers: {num_layers}")
@@ -430,19 +430,19 @@ class ScalableVQNN:
     
     def get_local_observation(self, maze: np.ndarray, position: Tuple[int, int]) -> np.ndarray:
         """
-        Extract 3×3 local observation window around agent position.
+        Extract 3x3 local observation window around agent position.
         
         Args:
             maze: Full maze
             position: Agent position
             
         Returns:
-            3×3 observation window (flattened)
+            3x3 observation window (flattened)
         """
         row, col = position
         observation = np.zeros((3, 3), dtype=np.float32)
         
-        # Extract 3×3 window centered on agent
+        # Extract 3x3 window centered on agent
         for dr in range(-1, 2):
             for dc in range(-1, 2):
                 r, c = row + dr, col + dc
@@ -476,7 +476,7 @@ class ScalableVQNN:
         """
         state = pnp.zeros(self.used_qubits, dtype=np.float32)
         
-        # Get 3×3 observation window (9 values)
+        # Get 3x3 observation window (9 values)
         observation = self.get_local_observation(maze, position)
         
         # Encode observation into first 9 qubits
@@ -855,7 +855,7 @@ class ScalableMazeGenerator:
     
     @staticmethod
     def _get_3x3_mazes() -> List[Tuple[np.ndarray, str]]:
-        """Generate 10 fixed 3×3 mazes."""
+        """Generate 10 fixed 3x3 mazes."""
         mazes = []
         
         configs = [
@@ -879,7 +879,7 @@ class ScalableMazeGenerator:
     
     @staticmethod
     def _get_4x4_mazes() -> List[Tuple[np.ndarray, str]]:
-        """Generate 10 fixed 4×4 mazes."""
+        """Generate 10 fixed 4x4 mazes."""
         mazes = []
         
         configs = [
@@ -903,7 +903,7 @@ class ScalableMazeGenerator:
     
     @staticmethod
     def _get_5x5_mazes() -> List[Tuple[np.ndarray, str]]:
-        """Generate 10 fixed 5×5 mazes (original mazes)."""
+        """Generate 10 fixed 5x5 mazes (original mazes)."""
         mazes = []
         
         configs = [
@@ -1136,9 +1136,9 @@ def run_experiments(config: Optional[Dict] = None):
     print("\n" + "=" * 60)
     print(f"SCALABLE QUANTUM MAZE NAVIGATION EXPERIMENTS")
     print("=" * 60)
-    print(f"Maze size: {MAZE_SIZE}×{MAZE_SIZE}")
+    print(f"Maze size: {MAZE_SIZE}x{MAZE_SIZE}")
     print(f"Qubits: {NUM_QUBITS}")
-    print(f"Observation window: 3×3 (fixed)")
+    print(f"Observation window: 3x3 (fixed)")
     print(f"Quantum Backend: {QUANTUM_BACKEND}")
     print(f"GPU Acceleration: {'ENABLED' if GPU_AVAILABLE else 'DISABLED'}")
     print(f"Shots: {SHOTS}")
@@ -1168,7 +1168,7 @@ def run_experiments(config: Optional[Dict] = None):
     results = []
     total_start = time.time()
     
-    print(f"Running experiments on {MAZE_SIZE}×{MAZE_SIZE} mazes...\n")
+    print(f"Running experiments on {MAZE_SIZE}x{MAZE_SIZE} mazes...\n")
     
     # Initialize VQNN once
     vqnn = ScalableVQNN(
@@ -1357,7 +1357,7 @@ def run_experiments(config: Optional[Dict] = None):
     total_emergent = sum(1 for r in results if r[18])
     avg_efficiency = np.mean([r[8] for r in results])
     
-    print(f"Maze size: {MAZE_SIZE}×{MAZE_SIZE}")
+    print(f"Maze size: {MAZE_SIZE}x{MAZE_SIZE}")
     print(f"Total mazes: {len(results)}")
     print(f"Emergent solutions: {total_emergent} ({total_emergent/len(results)*100:.1f}%)")
     print(f"Average efficiency: {avg_efficiency:.3f}")
@@ -1365,7 +1365,7 @@ def run_experiments(config: Optional[Dict] = None):
     print(f"Average time per maze: {total_time/len(mazes):.1f} minutes")
     print(f"Quantum backend: {QUANTUM_BACKEND}")
     print(f"Qubits used: {vqnn.used_qubits}/{NUM_QUBITS}")
-    print(f"Observation window: 3×3")
+    print(f"Observation window: 3x3")
     
     emergence_types = {}
     for r in results:
@@ -1396,9 +1396,9 @@ if __name__ == "__main__":
     print("\nThis experiment tests a Variational Quantum Neural Network")
     print("with properly scaled maze sizes and qubit allocations.")
     print("\nEach configuration uses:")
-    print("  • N² cells for N×N mazes")
+    print("  • N² cells for NxN mazes")
     print("  • N² qubits for quantum processing")
-    print("  • Fixed 3×3 observation window for consistency")
+    print("  • Fixed 3x3 observation window for consistency")
     print("\nThis ensures scientifically valid comparisons across scales.")
     
     config = {
@@ -1415,5 +1415,5 @@ if __name__ == "__main__":
     
     results = run_experiments(config)
     
-    print(f"\n✅ {MAZE_SIZE}×{MAZE_SIZE} maze experiment complete!")
+    print(f"\n✅ {MAZE_SIZE}x{MAZE_SIZE} maze experiment complete!")
     print("=" * 60)
