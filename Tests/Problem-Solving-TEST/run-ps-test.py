@@ -124,6 +124,10 @@ MAZE_SIZE, NUM_QUBITS = get_maze_configuration()
 OBSERVATION_SIZE = 3
 OBSERVATION_QUBITS = 9  # Always use 9 qubits for observation
 
+# Statistical power requirements
+MIN_SAMPLES_PER_CONFIG = 200  # Minimum samples for adequate power
+TARGET_TOTAL_SAMPLES = 602  # From dissertation power analysis
+
 # ============================================================================
 # PERFORMANCE MONITORING
 # ============================================================================
@@ -157,6 +161,53 @@ class PerformanceMonitor:
             if values:
                 avg = np.mean(values)
                 print(f"  {name}: avg={avg:.3f}, min={min(values):.3f}, max={max(values):.3f}")
+
+# ============================================================================
+# POWER ANALYSIS MODULE
+# ============================================================================
+
+class PowerAnalysis:
+    """Calculate and validate statistical power requirements."""
+    
+    @staticmethod
+    def calculate_required_samples(effect_size=0.02, alpha=0.05, power=0.80, k_predictors=4):
+        """Calculate required sample size for given power."""
+        from scipy.stats import f as f_dist
+        
+        # Non-centrality parameter for desired power
+        numerator_df = k_predictors
+        # Iterate to find required n
+        for n in range(50, 2000):
+            denominator_df = n - k_predictors - 1
+            if denominator_df <= 0:
+                continue
+            
+            critical_f = f_dist.ppf(1 - alpha, numerator_df, denominator_df)
+            lambda_nc = n * effect_size
+            achieved_power = 1 - f_dist.cdf(critical_f, numerator_df, denominator_df, lambda_nc)
+            
+            if achieved_power >= power:
+                return n
+        
+        return 602  # Default from dissertation
+    
+    @staticmethod
+    def validate_sample_size(n_samples, effect_size=0.02, alpha=0.05):
+        """Validate if sample size meets power requirements."""
+        from scipy.stats import f as f_dist
+        
+        k_predictors = 4
+        numerator_df = k_predictors
+        denominator_df = n_samples - k_predictors - 1
+        
+        if denominator_df <= 0:
+            return False, 0.0
+        
+        critical_f = f_dist.ppf(1 - alpha, numerator_df, denominator_df)
+        lambda_nc = n_samples * effect_size
+        power = 1 - f_dist.cdf(critical_f, numerator_df, denominator_df, lambda_nc)
+        
+        return power >= 0.80, power
 
 # ============================================================================
 # GPU CONFIGURATION
@@ -260,12 +311,15 @@ NUM_LAYERS = 2  # Two layers for better expressivity
 if MAZE_SIZE == 3:
     SHOTS = 250
     EPISODES_PER_MAZE = 60
+    NUM_BASE_MAZES = 20  # Increased from 10
 elif MAZE_SIZE == 4:
     SHOTS = 200
     EPISODES_PER_MAZE = 80
+    NUM_BASE_MAZES = 25  # Increased from 10
 else:  # MAZE_SIZE == 5
     SHOTS = 150
     EPISODES_PER_MAZE = 100
+    NUM_BASE_MAZES = 30  # Increased from 10
 
 # Training configuration
 LEARNING_RATE = 0.08
