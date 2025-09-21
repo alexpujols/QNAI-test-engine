@@ -15,7 +15,7 @@ __author__ = "Alex Pujols"
 __copyright__ = "Alex Pujols"
 __credits__ = ["Alex Pujols"]
 __license__ = "MIT"
-__version__ = "5.0-beta"
+__version__ = "3.0-beta"
 __maintainer__ = "Alex Pujols"
 __email__ = "A.Pujols@o365.ncu.edu; alexpujols@ieee.org"
 __status__ = "Prototype"
@@ -25,8 +25,7 @@ Title         : {Scalable Quantum Hopfield Neural Network Pattern Matching}
 Date          : {05-18-2025}
 Description   : {This code implements a GPU-accelerated Quantum Hopfield Neural Network with 
                 proper problem-size scaling. Tests 9-qubit (3x3), 16-qubit (4x4), and 
-                25-qubit (5x5) configurations for scientifically valid emergence detection.
-                Includes enhanced sampling for statistical power requirements.}
+                25-qubit (5x5) configurations for scientifically valid emergence detection.}
 Options       : {User-selectable pattern size with matched qubit allocation}
 Dependencies  : {pip install numpy scipy pandas matplotlib seaborn statsmodels pennylane>=0.30.0 pennylane-lightning[gpu] torch torchvision torchaudio cupy-cuda118 scikit-learn plotly}
 Requirements  : {Python 3.8+}
@@ -63,22 +62,21 @@ def get_pattern_configuration():
             print("\nAvailable configurations:")
             print("  1. 3x3 patterns (9 qubits)")
             print("     - Simple patterns: I, L, T")
-            print("     - Fastest execution (~5-10 minutes)")
+            print("     - Fastest execution (~2-5 minutes)")
             print("     - Good for initial testing")
             print()
             print("  2. 4x4 patterns (16 qubits)")
             print("     - Medium patterns: T, O, H")
-            print("     - Moderate runtime (~15-30 minutes)")
+            print("     - Moderate runtime (~5-10 minutes)")
             print("     - Balanced complexity")
             print()
             print("  3. 5x5 patterns (25 qubits)")
             print("     - Complex patterns: T, O, X")
-            print("     - Longer runtime (~30-60 minutes)")
+            print("     - Longer runtime (~10-20 minutes)")
             print("     - Maximum pattern complexity")
             print()
             print("Each configuration uses N² qubits for NxN patterns")
             print("ensuring proper problem-solution scaling")
-            print("\nNote: Enhanced sampling enabled for statistical power (n≥200 per config)")
             
             choice = input("\nEnter your choice (1, 2, or 3): ").strip()
             
@@ -86,17 +84,17 @@ def get_pattern_configuration():
                 pattern_size = 3
                 num_qubits = 9
                 pattern_names = "I, L, T"
-                est_time = "5-10"
+                est_time = "2-5"
             elif choice == '2':
                 pattern_size = 4
                 num_qubits = 16
                 pattern_names = "T, O, H"
-                est_time = "15-30"
+                est_time = "5-10"
             elif choice == '3':
                 pattern_size = 5
                 num_qubits = 25
                 pattern_names = "T, O, X"
-                est_time = "30-60"
+                est_time = "10-20"
             else:
                 print("⚠ Please enter 1, 2, or 3")
                 continue
@@ -108,7 +106,6 @@ def get_pattern_configuration():
             print(f"  - Qubits required: {num_qubits}")
             print(f"  - Pattern types: {pattern_names}")
             print(f"  - Estimated runtime: {est_time} minutes")
-            print(f"  - Target samples: ≥200 for statistical power")
             
             confirm = input("\nProceed with this configuration? (y/n): ").strip().lower()
             if confirm == 'y' or confirm == 'yes':
@@ -150,10 +147,6 @@ else:  # PATTERN_SIZE == 5
     DEFAULT_SHOTS = 150
     TEMPERATURE = 0.10
 
-# Statistical power requirements
-MIN_SAMPLES_PER_CONFIG = 200  # Minimum samples for adequate power
-TARGET_TOTAL_SAMPLES = 602  # From dissertation power analysis
-
 # Quantum backend handling
 try:
     import pennylane as qml
@@ -180,58 +173,11 @@ class RetrievalMetrics:
     spurious_state: bool
 
 # ============================================================================
-# POWER ANALYSIS MODULE
-# ============================================================================
-
-class PowerAnalysis:
-    """Calculate and validate statistical power requirements."""
-    
-    @staticmethod
-    def calculate_required_samples(effect_size=0.02, alpha=0.05, power=0.80, k_predictors=4):
-        """Calculate required sample size for given power."""
-        from scipy.stats import f as f_dist
-        
-        # Non-centrality parameter for desired power
-        numerator_df = k_predictors
-        # Iterate to find required n
-        for n in range(50, 2000):
-            denominator_df = n - k_predictors - 1
-            if denominator_df <= 0:
-                continue
-            
-            critical_f = f_dist.ppf(1 - alpha, numerator_df, denominator_df)
-            lambda_nc = n * effect_size
-            achieved_power = 1 - f_dist.cdf(critical_f, numerator_df, denominator_df, lambda_nc)
-            
-            if achieved_power >= power:
-                return n
-        
-        return 602  # Default from dissertation
-    
-    @staticmethod
-    def validate_sample_size(n_samples, effect_size=0.02, alpha=0.05):
-        """Validate if sample size meets power requirements."""
-        from scipy.stats import f as f_dist
-        
-        k_predictors = 4
-        numerator_df = k_predictors
-        denominator_df = n_samples - k_predictors - 1
-        
-        if denominator_df <= 0:
-            return False, 0.0
-        
-        critical_f = f_dist.ppf(1 - alpha, numerator_df, denominator_df)
-        lambda_nc = n_samples * effect_size
-        power = 1 - f_dist.cdf(critical_f, numerator_df, denominator_df, lambda_nc)
-        
-        return power >= 0.80, power
-
-# ============================================================================
 # SCALABLE PATTERN GENERATION MODULE
 # ============================================================================
 
 class ScalablePatternGenerator:
-    """Pattern generation for different grid sizes with variations."""
+    """Pattern generation for different grid sizes."""
     
     def __init__(self, pattern_size: int, seed: Optional[int] = None):
         """Initialize with pattern size and optional seed."""
@@ -247,24 +193,6 @@ class ScalablePatternGenerator:
             return self._get_4x4_patterns()
         else:  # pattern_size == 5
             return self._get_5x5_patterns()
-    
-    def get_pattern_variations(self, base_pattern: np.ndarray, name: str, 
-                             n_variations: int = 3) -> List[Tuple[np.ndarray, str]]:
-        """Generate variations of a base pattern for increased sampling."""
-        variations = [(base_pattern, f"{name}_original")]
-        
-        for v in range(1, n_variations):
-            varied = base_pattern.copy()
-            # Apply small systematic variations
-            n_changes = min(v, self.pattern_size)
-            for _ in range(n_changes):
-                i, j = self.rng.randint(0, self.pattern_size, 2)
-                # Flip with probability based on variation number
-                if self.rng.random() < 0.3 * v / n_variations:
-                    varied[i, j] *= -1
-            variations.append((varied, f"{name}_var{v}"))
-        
-        return variations
     
     def _get_3x3_patterns(self) -> Tuple[List[np.ndarray], List[str]]:
         """Generate 3x3 patterns: I, L, T"""
@@ -293,7 +221,7 @@ class ScalablePatternGenerator:
         """Generate 4x4 patterns: T, O, H"""
         patterns = {}
         
-        # T pattern: top row + center columns
+        # T pattern: top row + center column
         T = -np.ones((4, 4), dtype=np.int8)
         T[0, :] = 1
         T[:, 1:3] = 1  # Use two center columns for 4x4
@@ -817,19 +745,12 @@ def validate_results(results: List[List], pattern_size: int) -> Dict[str, Any]:
     noise_emergence = sum(1 for r in noise_results if r[17])
     mask_emergence = sum(1 for r in mask_results if r[17])
     
-    # Power analysis validation
-    power_analyzer = PowerAnalysis()
-    adequate_power, achieved_power = power_analyzer.validate_sample_size(len(results))
-    
     validation = {
         "pattern_size": pattern_size,
-        "total_samples": len(results),
         "noise_emergence_rate": noise_emergence / len(noise_results) if noise_results else 0,
         "mask_emergence_rate": mask_emergence / len(mask_results) if mask_results else 0,
         "anomaly_detected": False,
-        "warnings": [],
-        "adequate_power": adequate_power,
-        "achieved_power": achieved_power
+        "warnings": []
     }
     
     # Check for statistical anomalies
@@ -837,13 +758,6 @@ def validate_results(results: List[List], pattern_size: int) -> Dict[str, Any]:
         validation["anomaly_detected"] = True
         validation["warnings"].append(
             "Asymmetry detected: masking shows significantly higher emergence than noise"
-        )
-    
-    # Power-related warnings
-    if not adequate_power:
-        required_n = power_analyzer.calculate_required_samples()
-        validation["warnings"].append(
-            f"Insufficient statistical power: {achieved_power:.3f}. Need {required_n - len(results)} more samples."
         )
     
     # Size-specific warnings
@@ -860,67 +774,46 @@ def validate_results(results: List[List], pattern_size: int) -> Dict[str, Any]:
     return validation
 
 # ============================================================================
-# MAIN EXPERIMENTAL PIPELINE WITH ENHANCED SAMPLING
+# MAIN EXPERIMENTAL PIPELINE
 # ============================================================================
 
 def run_experiments(config: Optional[Dict] = None):
-    """Execute pattern matching experiments with enhanced sampling for statistical power."""
+    """Execute pattern matching experiments with proper size scaling."""
     if config is None:
         config = {
-            "noise_levels": [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35],  # 7 levels
-            "masking_levels": [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35],  # 7 levels
+            "noise_levels": [0.1, 0.2, 0.3],
+            "masking_levels": [0.1, 0.2, 0.3],
             "repetitions": DEFAULT_SHOTS,
             "temperature": TEMPERATURE,
             "output_dir": "results",
-            "validate": True,
-            "repetitions_per_condition": 3,  # Multiple repetitions for robustness
-            "use_pattern_variations": True,  # Generate pattern variations
-            "min_samples": MIN_SAMPLES_PER_CONFIG  # Minimum samples for power
+            "validate": True
         }
     
     timestamp = datetime.now().strftime("%m%d%Y_%H%M%S")
     
     print("\n" + "=" * 60)
     print(f"{PATTERN_SIZE}x{PATTERN_SIZE} QUANTUM HOPFIELD NETWORK EXPERIMENTS")
-    print("Enhanced Sampling for Statistical Power")
     print("=" * 60)
     print(f"Pattern size: {PATTERN_SIZE}x{PATTERN_SIZE}")
     print(f"Qubits: {NUM_QUBITS}")
     print(f"Temperature: {config.get('temperature', TEMPERATURE):.3f}")
     print(f"Quantum noise: {QUANTUM_NOISE_LEVEL:.3f}")
     print(f"Shots per retrieval: {config['repetitions']}")
-    print(f"Target samples: ≥{config['min_samples']}")
-    print(f"Degradation levels: {len(config['noise_levels'])} noise × {len(config['masking_levels'])} mask")
-    print(f"Repetitions per condition: {config['repetitions_per_condition']}")
     print(f"Seed: {GLOBAL_SEED or 'True random'}")
     print("=" * 60)
     print()
     
     # Initialize components
     generator = ScalablePatternGenerator(pattern_size=PATTERN_SIZE, seed=GLOBAL_SEED)
-    base_patterns, base_names = generator.get_fixed_patterns()
+    patterns, names = generator.get_fixed_patterns()
     
-    # Generate pattern variations if enabled
-    all_patterns = []
-    all_names = []
-    
-    if config.get("use_pattern_variations", True):
-        for pattern, name in zip(base_patterns, base_names):
-            variations = generator.get_pattern_variations(pattern, name, n_variations=3)
-            for var_pattern, var_name in variations:
-                all_patterns.append(var_pattern)
-                all_names.append(var_name)
-    else:
-        all_patterns = base_patterns
-        all_names = base_names
-    
-    print(f"Patterns to test: {len(all_patterns)} (including variations)")
+    print(f"Patterns to test: {', '.join(names)}")
     
     qhnn = ScalableQuantumHopfieldNetwork(
         pattern_size=PATTERN_SIZE,
         temperature=config.get("temperature", TEMPERATURE)
     )
-    qhnn.store_patterns([p.flatten() for p in base_patterns], base_names)
+    qhnn.store_patterns([p.flatten() for p in patterns], names)
     
     # Output setup
     os.makedirs(config["output_dir"], exist_ok=True)
@@ -934,144 +827,123 @@ def run_experiments(config: Optional[Dict] = None):
         "cue_lz_complexity", "cue_shannon_entropy", "output_lz_complexity", "output_shannon_entropy",
         "is_emergent", "emergence_type", "emergence_score", "closest_pattern",
         "closest_distance", "error_correction_capability", "energy", "spurious_state",
-        "grid_size", "num_qubits", "repetition", "pattern_variation"
+        "grid_size", "num_qubits"
     ]
     
     results = []
     run_id = 0
     start_time = time.time()
     
-    print("\nRunning experiments with enhanced sampling...\n")
+    print("\nRunning experiments...\n")
     
-    # Calculate total expected runs
-    total_expected = (len(all_patterns) * len(config["noise_levels"]) * config["repetitions_per_condition"] +
-                     len(all_patterns) * len(config["masking_levels"]) * config["repetitions_per_condition"])
-    
-    # Test each pattern with repetitions
-    for pattern_idx, (pattern, name) in enumerate(zip(all_patterns, all_names)):
+    # Test each pattern
+    for pattern, name in zip(patterns, names):
         
-        # Noise degradation tests with repetitions
+        # Noise degradation tests
         for noise_level in config["noise_levels"]:
-            for rep in range(config["repetitions_per_condition"]):
-                run_id += 1
-                
-                # Progress indicator
-                progress = run_id / total_expected * 100
-                print(f"  Run {run_id}/{total_expected} ({progress:.1f}%): {name} + noise {noise_level:.1%} (rep {rep+1})", end="")
-                
-                # Generate noisy pattern
-                degraded = generator.apply_noise(pattern, noise_level, ensure_randomness=True)
-                
-                # Retrieve pattern
-                metrics = qhnn.retrieve(
-                    degraded, pattern,
-                    shots=config["repetitions"],
-                    add_quantum_noise=True
-                )
-                
-                # Complexity analysis
-                cue_lz = lz_complexity(metrics["cue_bitstring"])
-                cue_ent = shannon_entropy(metrics["cue_bitstring"])
-                out_lz = lz_complexity(metrics["raw_output_bitstring"])
-                out_ent = shannon_entropy(metrics["raw_output_bitstring"])
-                
-                # Emergence detection
-                emergence = detect_emergence(
-                    noise_level, "noise", metrics, base_patterns, base_names, PATTERN_SIZE
-                )
-                
-                print(f" -> Acc: {metrics['prediction_accuracy']:.2f}, Em: {emergence['is_emergent']}")
-                
-                results.append([
-                    f"QHNN_{PATTERN_SIZE}x{PATTERN_SIZE}_noise_{name}_{run_id}",
-                    datetime.now().isoformat(),
-                    name, "noise", noise_level,
-                    PATTERN_SIZE * PATTERN_SIZE, len(base_patterns),
-                    metrics["prediction_accuracy"],
-                    metrics["hamming_distance"],
-                    metrics["confidence"],
-                    metrics["convergence_quality"],
-                    metrics["raw_output_bitstring"],
-                    metrics["cue_bitstring"],
-                    cue_lz, cue_ent, out_lz, out_ent,
-                    emergence["is_emergent"],
-                    emergence["emergence_type"],
-                    emergence["emergence_score"],
-                    emergence["closest_pattern"],
-                    emergence["closest_distance"],
-                    emergence["error_correction_capability"],
-                    metrics["energy"],
-                    metrics["spurious_state"],
-                    f"{PATTERN_SIZE}x{PATTERN_SIZE}",
-                    NUM_QUBITS,
-                    rep + 1,
-                    "variation" in name
-                ])
+            run_id += 1
+            print(f"  Run {run_id}: {name} + noise {noise_level:.1%}", end="")
+            
+            # Generate noisy pattern
+            degraded = generator.apply_noise(pattern, noise_level, ensure_randomness=True)
+            
+            # Retrieve pattern
+            metrics = qhnn.retrieve(
+                degraded, pattern,
+                shots=config["repetitions"],
+                add_quantum_noise=True
+            )
+            
+            # Complexity analysis
+            cue_lz = lz_complexity(metrics["cue_bitstring"])
+            cue_ent = shannon_entropy(metrics["cue_bitstring"])
+            out_lz = lz_complexity(metrics["raw_output_bitstring"])
+            out_ent = shannon_entropy(metrics["raw_output_bitstring"])
+            
+            # Emergence detection
+            emergence = detect_emergence(
+                noise_level, "noise", metrics, patterns, names, PATTERN_SIZE
+            )
+            
+            print(f" -> Accuracy: {metrics['prediction_accuracy']:.2f}, "
+                  f"Emergent: {emergence['is_emergent']}")
+            
+            results.append([
+                f"QHNN_{PATTERN_SIZE}x{PATTERN_SIZE}_noise_{name}_{run_id}",
+                datetime.now().isoformat(),
+                name, "noise", noise_level,
+                PATTERN_SIZE * PATTERN_SIZE, len(patterns),
+                metrics["prediction_accuracy"],
+                metrics["hamming_distance"],
+                metrics["confidence"],
+                metrics["convergence_quality"],
+                metrics["raw_output_bitstring"],
+                metrics["cue_bitstring"],
+                cue_lz, cue_ent, out_lz, out_ent,
+                emergence["is_emergent"],
+                emergence["emergence_type"],
+                emergence["emergence_score"],
+                emergence["closest_pattern"],
+                emergence["closest_distance"],
+                emergence["error_correction_capability"],
+                metrics["energy"],
+                metrics["spurious_state"],
+                f"{PATTERN_SIZE}x{PATTERN_SIZE}",
+                NUM_QUBITS
+            ])
         
-        # Masking degradation tests with repetitions
+        # Masking degradation tests
         for mask_level in config["masking_levels"]:
-            for rep in range(config["repetitions_per_condition"]):
-                run_id += 1
-                
-                # Progress indicator
-                progress = run_id / total_expected * 100
-                print(f"  Run {run_id}/{total_expected} ({progress:.1f}%): {name} + mask {mask_level:.1%} (rep {rep+1})", end="")
-                
-                # Generate masked pattern
-                degraded = generator.apply_mask(pattern, mask_level, ensure_randomness=True)
-                
-                # Retrieve pattern
-                metrics = qhnn.retrieve(
-                    degraded, pattern,
-                    shots=config["repetitions"],
-                    add_quantum_noise=True
-                )
-                
-                # Complexity analysis
-                cue_lz = lz_complexity(metrics["cue_bitstring"])
-                cue_ent = shannon_entropy(metrics["cue_bitstring"])
-                out_lz = lz_complexity(metrics["raw_output_bitstring"])
-                out_ent = shannon_entropy(metrics["raw_output_bitstring"])
-                
-                # Emergence detection
-                emergence = detect_emergence(
-                    mask_level, "incompleteness", metrics, base_patterns, base_names, PATTERN_SIZE
-                )
-                
-                print(f" -> Acc: {metrics['prediction_accuracy']:.2f}, Em: {emergence['is_emergent']}")
-                
-                results.append([
-                    f"QHNN_{PATTERN_SIZE}x{PATTERN_SIZE}_mask_{name}_{run_id}",
-                    datetime.now().isoformat(),
-                    name, "incompleteness", mask_level,
-                    PATTERN_SIZE * PATTERN_SIZE, len(base_patterns),
-                    metrics["prediction_accuracy"],
-                    metrics["hamming_distance"],
-                    metrics["confidence"],
-                    metrics["convergence_quality"],
-                    metrics["raw_output_bitstring"],
-                    metrics["cue_bitstring"],
-                    cue_lz, cue_ent, out_lz, out_ent,
-                    emergence["is_emergent"],
-                    emergence["emergence_type"],
-                    emergence["emergence_score"],
-                    emergence["closest_pattern"],
-                    emergence["closest_distance"],
-                    emergence["error_correction_capability"],
-                    metrics["energy"],
-                    metrics["spurious_state"],
-                    f"{PATTERN_SIZE}x{PATTERN_SIZE}",
-                    NUM_QUBITS,
-                    rep + 1,
-                    "variation" in name
-                ])
-        
-        # Check if we've reached minimum samples
-        if len(results) >= config["min_samples"]:
-            print(f"\n✓ Reached minimum sample size: {len(results)} samples")
-            if len(results) >= config["min_samples"] * 1.2:  # Stop at 120% of minimum
-                print("Stopping early - sufficient samples collected")
-                break
+            run_id += 1
+            print(f"  Run {run_id}: {name} + mask {mask_level:.1%}", end="")
+            
+            # Generate masked pattern
+            degraded = generator.apply_mask(pattern, mask_level, ensure_randomness=True)
+            
+            # Retrieve pattern
+            metrics = qhnn.retrieve(
+                degraded, pattern,
+                shots=config["repetitions"],
+                add_quantum_noise=True
+            )
+            
+            # Complexity analysis
+            cue_lz = lz_complexity(metrics["cue_bitstring"])
+            cue_ent = shannon_entropy(metrics["cue_bitstring"])
+            out_lz = lz_complexity(metrics["raw_output_bitstring"])
+            out_ent = shannon_entropy(metrics["raw_output_bitstring"])
+            
+            # Emergence detection
+            emergence = detect_emergence(
+                mask_level, "incompleteness", metrics, patterns, names, PATTERN_SIZE
+            )
+            
+            print(f" -> Accuracy: {metrics['prediction_accuracy']:.2f}, "
+                  f"Emergent: {emergence['is_emergent']}")
+            
+            results.append([
+                f"QHNN_{PATTERN_SIZE}x{PATTERN_SIZE}_mask_{name}_{run_id}",
+                datetime.now().isoformat(),
+                name, "incompleteness", mask_level,
+                PATTERN_SIZE * PATTERN_SIZE, len(patterns),
+                metrics["prediction_accuracy"],
+                metrics["hamming_distance"],
+                metrics["confidence"],
+                metrics["convergence_quality"],
+                metrics["raw_output_bitstring"],
+                metrics["cue_bitstring"],
+                cue_lz, cue_ent, out_lz, out_ent,
+                emergence["is_emergent"],
+                emergence["emergence_type"],
+                emergence["emergence_score"],
+                emergence["closest_pattern"],
+                emergence["closest_distance"],
+                emergence["error_correction_capability"],
+                metrics["energy"],
+                metrics["spurious_state"],
+                f"{PATTERN_SIZE}x{PATTERN_SIZE}",
+                NUM_QUBITS
+            ])
     
     # Save results
     with open(output_file, 'w', newline='') as f:
@@ -1093,8 +965,6 @@ def run_experiments(config: Optional[Dict] = None):
         validation = validate_results(results, PATTERN_SIZE)
         
         print(f"Pattern size: {PATTERN_SIZE}x{PATTERN_SIZE}")
-        print(f"Total samples: {validation['total_samples']}")
-        print(f"Statistical power: {validation['achieved_power']:.3f} ({'✓ Adequate' if validation['adequate_power'] else '✗ Insufficient'})")
         print(f"Noise emergence rate: {validation['noise_emergence_rate']:.1%}")
         print(f"Mask emergence rate: {validation['mask_emergence_rate']:.1%}")
         
@@ -1116,7 +986,6 @@ def run_experiments(config: Optional[Dict] = None):
     print(f"Emergent cases: {total_emergent} ({total_emergent/len(results)*100:.1f}%)")
     print(f"Runtime: {runtime:.1f} minutes")
     print(f"Qubits used: {NUM_QUBITS}")
-    print(f"Statistical power achieved: {validation.get('achieved_power', 0):.3f}")
     
     # Detailed breakdown
     for dtype in ["noise", "incompleteness"]:
@@ -1139,14 +1008,13 @@ def run_experiments(config: Optional[Dict] = None):
             print(f"  {etype}: {count}")
     
     # Pattern-specific performance
-    print("\nPer-pattern performance (base patterns only):")
-    for pname in base_names:
-        pattern_results = [r for r in results if r[2].startswith(pname) and not "var" in r[2]]
-        if pattern_results:
-            pattern_emergent = sum(1 for r in pattern_results if r[17])
-            avg_accuracy = np.mean([r[7] for r in pattern_results])
-            print(f"  {pname}: {pattern_emergent}/{len(pattern_results)} emergent, "
-                  f"avg accuracy: {avg_accuracy:.3f}")
+    print("\nPer-pattern performance:")
+    for pname in names:
+        pattern_results = [r for r in results if r[2] == pname]
+        pattern_emergent = sum(1 for r in pattern_results if r[17])
+        avg_accuracy = np.mean([r[7] for r in pattern_results])
+        print(f"  {pname}: {pattern_emergent}/{len(pattern_results)} emergent, "
+              f"avg accuracy: {avg_accuracy:.3f}")
     
     return results, validation if config.get("validate", True) else None
 
@@ -1157,32 +1025,25 @@ def run_experiments(config: Optional[Dict] = None):
 if __name__ == "__main__":
     print("\n" + "="*60)
     print("SCALABLE QUANTUM HOPFIELD NETWORK EXPERIMENT")
-    print("WITH ENHANCED SAMPLING FOR STATISTICAL POWER")
     print("="*60)
     print("\nThis experiment tests a Quantum Hopfield Neural Network")
     print("with properly scaled pattern sizes and qubit allocations.")
     print("\nEach configuration uses N² qubits for NxN patterns,")
     print("ensuring scientifically valid problem-solution scaling.")
-    print("\nEnhanced sampling ensures adequate statistical power")
-    print("(n≥200 samples per configuration, 602+ total)")
     print("\nSmaller patterns (3x3) run faster but have less complexity,")
     print("while larger patterns (5x5) provide richer dynamics.")
     
-    # Configuration for experiments with enhanced sampling
+    # Configuration for experiments
     config = {
-        "noise_levels": [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35],  # 7 levels
-        "masking_levels": [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35],  # 7 levels
-        "repetitions": DEFAULT_SHOTS,  
-        "temperature": TEMPERATURE,
+        "noise_levels": [0.1, 0.15, 0.2, 0.25, 0.3],  # Granular levels
+        "masking_levels": [0.1, 0.15, 0.2, 0.25, 0.3],
+        "repetitions": DEFAULT_SHOTS,  # Adjusted based on pattern size
+        "temperature": TEMPERATURE,  # Size-specific temperature
         "output_dir": "results",
-        "validate": True,
-        "repetitions_per_condition": 3,  # Multiple runs per condition
-        "use_pattern_variations": True,  # Generate variations
-        "min_samples": MIN_SAMPLES_PER_CONFIG  # Ensure adequate power
+        "validate": True
     }
     
     results, validation = run_experiments(config)
     
     print(f"\n✅ {PATTERN_SIZE}x{PATTERN_SIZE} experiment complete!")
-    print(f"Statistical power: {'ADEQUATE' if validation['adequate_power'] else 'CHECK REQUIRED'}")
     print("=" * 60)

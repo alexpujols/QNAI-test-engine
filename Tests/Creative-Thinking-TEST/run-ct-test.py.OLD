@@ -15,7 +15,7 @@ __author__ = "Alex Pujols"
 __copyright__ = "Alex Pujols"
 __credits__ = ["Alex Pujols"]
 __license__ = "MIT"
-__version__ = "5.0-beta"
+__version__ = "3.0-beta"
 __maintainer__ = "Alex Pujols"
 __email__ = "A.Pujols@o365.ncu.edu; alexpujols@ieee.org"
 __status__ = "Prototype"
@@ -65,7 +65,6 @@ def get_qubit_configuration():
             print("  - 21-25 qubits: Maximum creative complexity")
             print("\nNote: Higher qubit counts enable richer creative associations")
             print("but require more computational resources.")
-            print("\nNote: Enhanced sampling enabled for statistical power (n≥200 per config)")
             
             num_qubits = input("\nNumber of qubits (8-25): ").strip()
             num_qubits = int(num_qubits)
@@ -109,10 +108,6 @@ def get_qubit_configuration():
 
 # Get user configuration
 NUM_QUBITS = get_qubit_configuration()
-
-# Statistical power requirements
-MIN_SAMPLES_PER_CONFIG = 200  # Minimum samples for adequate power
-TARGET_TOTAL_SAMPLES = 602  # From dissertation power analysis
 
 # ============================================================================
 # CONFIGURATION CONSTANTS - DYNAMICALLY ADJUSTED FOR QUBIT COUNT
@@ -1033,14 +1028,12 @@ async def run_experiments(config: Optional[Dict] = None):
     """
     if config is None:
         config = {
-            "num_prompts_per_theme": 20,  # Increased from 5 for statistical power
+            "num_prompts_per_theme": 3,
             "num_outputs": 3,
             "shots": SHOTS,
             "temperature": 0.5,
             "output_dir": "results",
-            "use_ai_scoring": True,
-            "min_samples": MIN_SAMPLES_PER_CONFIG,  # Ensure adequate power
-            "use_theme_variations": True  # Generate theme variations
+            "use_ai_scoring": True
         }
     
     timestamp = datetime.now().strftime("%m%d%Y_%H%M%S")
@@ -1270,14 +1263,12 @@ if __name__ == "__main__":
     
     # Configuration for experiments
     config = {
-        "num_prompts_per_theme": 20,  # Increased from 5 for statistical power
+        "num_prompts_per_theme": 5,  # 5 prompts per theme
         "num_outputs": 3,  # Generate 3 associations per prompt
         "shots": SHOTS,  # Quantum measurement shots (dynamically set)
         "temperature": 0.5,  # Creativity temperature
         "output_dir": "results",
-        "use_ai_scoring": True,  # Set to True to use real AI scoring (if keys are configured)
-        "min_samples": MIN_SAMPLES_PER_CONFIG,  # Ensure adequate power
-        "use_theme_variations": True  # Generate theme variations
+        "use_ai_scoring": True  # Set to True to use real AI scoring (if keys are configured)
     }
     
     # Run async experiments

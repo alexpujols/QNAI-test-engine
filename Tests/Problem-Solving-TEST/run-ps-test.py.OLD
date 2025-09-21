@@ -15,7 +15,7 @@ __author__ = "Alex Pujols"
 __copyright__ = "Alex Pujols"
 __credits__ = ["Alex Pujols"]
 __license__ = "MIT"
-__version__ = "5.0-beta"
+__version__ = "3.0-beta"
 __maintainer__ = "Alex Pujols"
 __email__ = "A.Pujols@o365.ncu.edu; alexpujols@ieee.org"
 __status__ = "Prototype"
@@ -1407,10 +1407,7 @@ if __name__ == "__main__":
         "use_replay": True,
         "batch_size": BATCH_SIZE,
         "output_dir": "results",
-        "visualize": False,  # Reduced for faster runtime
-        "n_base_mazes": NUM_BASE_MAZES,
-        "n_variations": 3,
-        "min_samples": MIN_SAMPLES_PER_CONFIG
+        "visualize": True
     }
     
     results = run_experiments(config)
