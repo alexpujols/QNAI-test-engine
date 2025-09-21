@@ -1,4 +1,3 @@
-(qnai-env) pooh@beast-server-0:~/QNAI-Experiment/QNAI-test-engine/Tests/Pattern-Matching-TEST$ python run-pm-test.py 
 
 ============================================================
 QUANTUM HOPFIELD NETWORK CONFIGURATION
@@ -9,21 +8,23 @@ Select pattern size for the Quantum Hopfield Network:
 Available configurations:
   1. 3x3 patterns (9 qubits)
      - Simple patterns: I, L, T
-     - Fastest execution (~2-5 minutes)
+     - Fastest execution (~5-10 minutes)
      - Good for initial testing
 
   2. 4x4 patterns (16 qubits)
      - Medium patterns: T, O, H
-     - Moderate runtime (~5-10 minutes)
+     - Moderate runtime (~15-30 minutes)
      - Balanced complexity
 
   3. 5x5 patterns (25 qubits)
      - Complex patterns: T, O, X
-     - Longer runtime (~10-20 minutes)
+     - Longer runtime (~30-60 minutes)
      - Maximum pattern complexity
 
 Each configuration uses N² qubits for NxN patterns
 ensuring proper problem-solution scaling
+
+Note: Enhanced sampling enabled for statistical power (n≥200 per config)
 
 Enter your choice (1, 2, or 3): 1
 
@@ -32,12 +33,14 @@ Configuration details:
   - Pattern size: 3x3
   - Qubits required: 9
   - Pattern types: I, L, T
-  - Estimated runtime: 2-5 minutes
+  - Estimated runtime: 5-10 minutes
+  - Target samples: ≥200 for statistical power
 
 Proceed with this configuration? (y/n): y
 
 ============================================================
 SCALABLE QUANTUM HOPFIELD NETWORK EXPERIMENT
+WITH ENHANCED SAMPLING FOR STATISTICAL POWER
 ============================================================
 
 This experiment tests a Quantum Hopfield Neural Network
@@ -46,21 +49,28 @@ with properly scaled pattern sizes and qubit allocations.
 Each configuration uses N² qubits for NxN patterns,
 ensuring scientifically valid problem-solution scaling.
 
+Enhanced sampling ensures adequate statistical power
+(n≥200 samples per configuration, 602+ total)
+
 Smaller patterns (3x3) run faster but have less complexity,
 while larger patterns (5x5) provide richer dynamics.
 
 ============================================================
 3x3 QUANTUM HOPFIELD NETWORK EXPERIMENTS
+Enhanced Sampling for Statistical Power
 ============================================================
 Pattern size: 3x3
 Qubits: 9
 Temperature: 0.150
 Quantum noise: 0.060
 Shots per retrieval: 250
+Target samples: ≥200
+Degradation levels: 7 noise × 7 mask
+Repetitions per condition: 3
 Seed: True random
 ============================================================
 
-Patterns to test: I, L, T
+Patterns to test: 9 (including variations)
 
 Initializing 3x3 Quantum Hopfield Network...
   Configuration:
@@ -70,48 +80,277 @@ Initializing 3x3 Quantum Hopfield Network...
     - Quantum noise: 0.060
     - Shots per trial: 250
 
-Running experiments...
+Running experiments with enhanced sampling...
 
-  Run 1: I + noise 10.0%🔧 Quantum device: GPU (lightning.gpu, 9 qubits)
- -> Accuracy: 1.00, Emergent: True
-  Run 2: I + noise 15.0% -> Accuracy: 0.89, Emergent: False
-  Run 3: I + noise 20.0% -> Accuracy: 0.89, Emergent: False
-  Run 4: I + noise 25.0% -> Accuracy: 0.78, Emergent: False
-  Run 5: I + noise 30.0% -> Accuracy: 0.78, Emergent: False
-  Run 6: I + mask 10.0% -> Accuracy: 1.00, Emergent: False
-  Run 7: I + mask 15.0% -> Accuracy: 1.00, Emergent: True
-  Run 8: I + mask 20.0% -> Accuracy: 1.00, Emergent: True
-  Run 9: I + mask 25.0% -> Accuracy: 0.89, Emergent: False
-  Run 10: I + mask 30.0% -> Accuracy: 0.89, Emergent: False
-  Run 11: L + noise 10.0% -> Accuracy: 1.00, Emergent: True
-  Run 12: L + noise 15.0% -> Accuracy: 0.89, Emergent: False
-  Run 13: L + noise 20.0% -> Accuracy: 0.89, Emergent: False
-  Run 14: L + noise 25.0% -> Accuracy: 0.78, Emergent: False
-  Run 15: L + noise 30.0% -> Accuracy: 0.78, Emergent: False
-  Run 16: L + mask 10.0% -> Accuracy: 1.00, Emergent: False
-  Run 17: L + mask 15.0% -> Accuracy: 1.00, Emergent: False
-  Run 18: L + mask 20.0% -> Accuracy: 1.00, Emergent: True
-  Run 19: L + mask 25.0% -> Accuracy: 1.00, Emergent: True
-  Run 20: L + mask 30.0% -> Accuracy: 0.89, Emergent: False
-  Run 21: T + noise 10.0% -> Accuracy: 1.00, Emergent: True
-  Run 22: T + noise 15.0% -> Accuracy: 0.89, Emergent: False
-  Run 23: T + noise 20.0% -> Accuracy: 0.89, Emergent: False
-  Run 24: T + noise 25.0% -> Accuracy: 0.78, Emergent: False
-  Run 25: T + noise 30.0% -> Accuracy: 0.78, Emergent: False
-  Run 26: T + mask 10.0% -> Accuracy: 1.00, Emergent: False
-  Run 27: T + mask 15.0% -> Accuracy: 1.00, Emergent: True
-  Run 28: T + mask 20.0% -> Accuracy: 1.00, Emergent: True
-  Run 29: T + mask 25.0% -> Accuracy: 1.00, Emergent: True
-  Run 30: T + mask 30.0% -> Accuracy: 1.00, Emergent: True
+  Run 1/378 (0.3%): I_original + noise 5.0% (rep 1)🔧 Quantum device: GPU (lightning.gpu, 9 qubits)
+ -> Acc: 1.00, Em: False
+  Run 2/378 (0.5%): I_original + noise 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 3/378 (0.8%): I_original + noise 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 4/378 (1.1%): I_original + noise 10.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 5/378 (1.3%): I_original + noise 10.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 6/378 (1.6%): I_original + noise 10.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 7/378 (1.9%): I_original + noise 15.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 8/378 (2.1%): I_original + noise 15.0% (rep 2) -> Acc: 0.89, Em: False
+  Run 9/378 (2.4%): I_original + noise 15.0% (rep 3) -> Acc: 0.89, Em: False
+  Run 10/378 (2.6%): I_original + noise 20.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 11/378 (2.9%): I_original + noise 20.0% (rep 2) -> Acc: 0.89, Em: False
+  Run 12/378 (3.2%): I_original + noise 20.0% (rep 3) -> Acc: 0.89, Em: False
+  Run 13/378 (3.4%): I_original + noise 25.0% (rep 1) -> Acc: 0.78, Em: False
+  Run 14/378 (3.7%): I_original + noise 25.0% (rep 2) -> Acc: 0.78, Em: False
+  Run 15/378 (4.0%): I_original + noise 25.0% (rep 3) -> Acc: 0.78, Em: False
+  Run 16/378 (4.2%): I_original + noise 30.0% (rep 1) -> Acc: 0.78, Em: False
+  Run 17/378 (4.5%): I_original + noise 30.0% (rep 2) -> Acc: 0.78, Em: False
+  Run 18/378 (4.8%): I_original + noise 30.0% (rep 3) -> Acc: 0.78, Em: False
+  Run 19/378 (5.0%): I_original + noise 35.0% (rep 1) -> Acc: 0.67, Em: False
+  Run 20/378 (5.3%): I_original + noise 35.0% (rep 2) -> Acc: 0.67, Em: False
+  Run 21/378 (5.6%): I_original + noise 35.0% (rep 3) -> Acc: 0.67, Em: False
+  Run 22/378 (5.8%): I_original + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 23/378 (6.1%): I_original + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 24/378 (6.3%): I_original + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 25/378 (6.6%): I_original + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 26/378 (6.9%): I_original + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 27/378 (7.1%): I_original + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 28/378 (7.4%): I_original + mask 15.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 29/378 (7.7%): I_original + mask 15.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 30/378 (7.9%): I_original + mask 15.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 31/378 (8.2%): I_original + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 32/378 (8.5%): I_original + mask 20.0% (rep 2) -> Acc: 0.89, Em: False
+  Run 33/378 (8.7%): I_original + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 34/378 (9.0%): I_original + mask 25.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 35/378 (9.3%): I_original + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 36/378 (9.5%): I_original + mask 25.0% (rep 3) -> Acc: 0.89, Em: False
+  Run 37/378 (9.8%): I_original + mask 30.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 38/378 (10.1%): I_original + mask 30.0% (rep 2) -> Acc: 0.89, Em: False
+  Run 39/378 (10.3%): I_original + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 40/378 (10.6%): I_original + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 41/378 (10.8%): I_original + mask 35.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 42/378 (11.1%): I_original + mask 35.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 43/378 (11.4%): I_var1 + noise 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 44/378 (11.6%): I_var1 + noise 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 45/378 (11.9%): I_var1 + noise 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 46/378 (12.2%): I_var1 + noise 10.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 47/378 (12.4%): I_var1 + noise 10.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 48/378 (12.7%): I_var1 + noise 10.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 49/378 (13.0%): I_var1 + noise 15.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 50/378 (13.2%): I_var1 + noise 15.0% (rep 2) -> Acc: 0.89, Em: False
+  Run 51/378 (13.5%): I_var1 + noise 15.0% (rep 3) -> Acc: 0.89, Em: False
+  Run 52/378 (13.8%): I_var1 + noise 20.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 53/378 (14.0%): I_var1 + noise 20.0% (rep 2) -> Acc: 0.89, Em: False
+  Run 54/378 (14.3%): I_var1 + noise 20.0% (rep 3) -> Acc: 0.89, Em: False
+  Run 55/378 (14.6%): I_var1 + noise 25.0% (rep 1) -> Acc: 0.78, Em: False
+  Run 56/378 (14.8%): I_var1 + noise 25.0% (rep 2) -> Acc: 0.78, Em: False
+  Run 57/378 (15.1%): I_var1 + noise 25.0% (rep 3) -> Acc: 0.78, Em: False
+  Run 58/378 (15.3%): I_var1 + noise 30.0% (rep 1) -> Acc: 0.78, Em: False
+  Run 59/378 (15.6%): I_var1 + noise 30.0% (rep 2) -> Acc: 0.78, Em: False
+  Run 60/378 (15.9%): I_var1 + noise 30.0% (rep 3) -> Acc: 0.78, Em: False
+  Run 61/378 (16.1%): I_var1 + noise 35.0% (rep 1) -> Acc: 0.67, Em: False
+  Run 62/378 (16.4%): I_var1 + noise 35.0% (rep 2) -> Acc: 0.67, Em: False
+  Run 63/378 (16.7%): I_var1 + noise 35.0% (rep 3) -> Acc: 0.67, Em: False
+  Run 64/378 (16.9%): I_var1 + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 65/378 (17.2%): I_var1 + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 66/378 (17.5%): I_var1 + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 67/378 (17.7%): I_var1 + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 68/378 (18.0%): I_var1 + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 69/378 (18.3%): I_var1 + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 70/378 (18.5%): I_var1 + mask 15.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 71/378 (18.8%): I_var1 + mask 15.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 72/378 (19.0%): I_var1 + mask 15.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 73/378 (19.3%): I_var1 + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 74/378 (19.6%): I_var1 + mask 20.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 75/378 (19.8%): I_var1 + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 76/378 (20.1%): I_var1 + mask 25.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 77/378 (20.4%): I_var1 + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 78/378 (20.6%): I_var1 + mask 25.0% (rep 3) -> Acc: 0.89, Em: False
+  Run 79/378 (20.9%): I_var1 + mask 30.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 80/378 (21.2%): I_var1 + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 81/378 (21.4%): I_var1 + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 82/378 (21.7%): I_var1 + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 83/378 (22.0%): I_var1 + mask 35.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 84/378 (22.2%): I_var1 + mask 35.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 85/378 (22.5%): I_var2 + noise 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 86/378 (22.8%): I_var2 + noise 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 87/378 (23.0%): I_var2 + noise 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 88/378 (23.3%): I_var2 + noise 10.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 89/378 (23.5%): I_var2 + noise 10.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 90/378 (23.8%): I_var2 + noise 10.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 91/378 (24.1%): I_var2 + noise 15.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 92/378 (24.3%): I_var2 + noise 15.0% (rep 2) -> Acc: 0.89, Em: False
+  Run 93/378 (24.6%): I_var2 + noise 15.0% (rep 3) -> Acc: 0.89, Em: False
+  Run 94/378 (24.9%): I_var2 + noise 20.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 95/378 (25.1%): I_var2 + noise 20.0% (rep 2) -> Acc: 0.89, Em: False
+  Run 96/378 (25.4%): I_var2 + noise 20.0% (rep 3) -> Acc: 0.89, Em: False
+  Run 97/378 (25.7%): I_var2 + noise 25.0% (rep 1) -> Acc: 0.78, Em: False
+  Run 98/378 (25.9%): I_var2 + noise 25.0% (rep 2) -> Acc: 0.78, Em: False
+  Run 99/378 (26.2%): I_var2 + noise 25.0% (rep 3) -> Acc: 0.78, Em: False
+  Run 100/378 (26.5%): I_var2 + noise 30.0% (rep 1) -> Acc: 0.78, Em: False
+  Run 101/378 (26.7%): I_var2 + noise 30.0% (rep 2) -> Acc: 0.78, Em: False
+  Run 102/378 (27.0%): I_var2 + noise 30.0% (rep 3) -> Acc: 0.78, Em: False
+  Run 103/378 (27.2%): I_var2 + noise 35.0% (rep 1) -> Acc: 0.67, Em: False
+  Run 104/378 (27.5%): I_var2 + noise 35.0% (rep 2) -> Acc: 0.67, Em: False
+  Run 105/378 (27.8%): I_var2 + noise 35.0% (rep 3) -> Acc: 0.67, Em: False
+  Run 106/378 (28.0%): I_var2 + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 107/378 (28.3%): I_var2 + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 108/378 (28.6%): I_var2 + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 109/378 (28.8%): I_var2 + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 110/378 (29.1%): I_var2 + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 111/378 (29.4%): I_var2 + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 112/378 (29.6%): I_var2 + mask 15.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 113/378 (29.9%): I_var2 + mask 15.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 114/378 (30.2%): I_var2 + mask 15.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 115/378 (30.4%): I_var2 + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 116/378 (30.7%): I_var2 + mask 20.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 117/378 (31.0%): I_var2 + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 118/378 (31.2%): I_var2 + mask 25.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 119/378 (31.5%): I_var2 + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 120/378 (31.7%): I_var2 + mask 25.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 121/378 (32.0%): I_var2 + mask 30.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 122/378 (32.3%): I_var2 + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 123/378 (32.5%): I_var2 + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 124/378 (32.8%): I_var2 + mask 35.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 125/378 (33.1%): I_var2 + mask 35.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 126/378 (33.3%): I_var2 + mask 35.0% (rep 3) -> Acc: 0.89, Em: False
+  Run 127/378 (33.6%): L_original + noise 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 128/378 (33.9%): L_original + noise 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 129/378 (34.1%): L_original + noise 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 130/378 (34.4%): L_original + noise 10.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 131/378 (34.7%): L_original + noise 10.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 132/378 (34.9%): L_original + noise 10.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 133/378 (35.2%): L_original + noise 15.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 134/378 (35.4%): L_original + noise 15.0% (rep 2) -> Acc: 0.89, Em: False
+  Run 135/378 (35.7%): L_original + noise 15.0% (rep 3) -> Acc: 0.89, Em: False
+  Run 136/378 (36.0%): L_original + noise 20.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 137/378 (36.2%): L_original + noise 20.0% (rep 2) -> Acc: 0.89, Em: False
+  Run 138/378 (36.5%): L_original + noise 20.0% (rep 3) -> Acc: 0.89, Em: False
+  Run 139/378 (36.8%): L_original + noise 25.0% (rep 1) -> Acc: 0.78, Em: False
+  Run 140/378 (37.0%): L_original + noise 25.0% (rep 2) -> Acc: 0.78, Em: False
+  Run 141/378 (37.3%): L_original + noise 25.0% (rep 3) -> Acc: 0.78, Em: False
+  Run 142/378 (37.6%): L_original + noise 30.0% (rep 1) -> Acc: 0.78, Em: False
+  Run 143/378 (37.8%): L_original + noise 30.0% (rep 2) -> Acc: 0.78, Em: False
+  Run 144/378 (38.1%): L_original + noise 30.0% (rep 3) -> Acc: 0.78, Em: False
+  Run 145/378 (38.4%): L_original + noise 35.0% (rep 1) -> Acc: 0.67, Em: False
+  Run 146/378 (38.6%): L_original + noise 35.0% (rep 2) -> Acc: 0.67, Em: False
+  Run 147/378 (38.9%): L_original + noise 35.0% (rep 3) -> Acc: 0.67, Em: False
+  Run 148/378 (39.2%): L_original + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 149/378 (39.4%): L_original + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 150/378 (39.7%): L_original + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 151/378 (39.9%): L_original + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 152/378 (40.2%): L_original + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 153/378 (40.5%): L_original + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 154/378 (40.7%): L_original + mask 15.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 155/378 (41.0%): L_original + mask 15.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 156/378 (41.3%): L_original + mask 15.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 157/378 (41.5%): L_original + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 158/378 (41.8%): L_original + mask 20.0% (rep 2) -> Acc: 0.89, Em: False
+  Run 159/378 (42.1%): L_original + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 160/378 (42.3%): L_original + mask 25.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 161/378 (42.6%): L_original + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 162/378 (42.9%): L_original + mask 25.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 163/378 (43.1%): L_original + mask 30.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 164/378 (43.4%): L_original + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 165/378 (43.7%): L_original + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 166/378 (43.9%): L_original + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 167/378 (44.2%): L_original + mask 35.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 168/378 (44.4%): L_original + mask 35.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 169/378 (44.7%): L_var1 + noise 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 170/378 (45.0%): L_var1 + noise 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 171/378 (45.2%): L_var1 + noise 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 172/378 (45.5%): L_var1 + noise 10.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 173/378 (45.8%): L_var1 + noise 10.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 174/378 (46.0%): L_var1 + noise 10.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 175/378 (46.3%): L_var1 + noise 15.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 176/378 (46.6%): L_var1 + noise 15.0% (rep 2) -> Acc: 0.89, Em: False
+  Run 177/378 (46.8%): L_var1 + noise 15.0% (rep 3) -> Acc: 0.89, Em: False
+  Run 178/378 (47.1%): L_var1 + noise 20.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 179/378 (47.4%): L_var1 + noise 20.0% (rep 2) -> Acc: 0.89, Em: False
+  Run 180/378 (47.6%): L_var1 + noise 20.0% (rep 3) -> Acc: 0.89, Em: False
+  Run 181/378 (47.9%): L_var1 + noise 25.0% (rep 1) -> Acc: 0.78, Em: False
+  Run 182/378 (48.1%): L_var1 + noise 25.0% (rep 2) -> Acc: 0.78, Em: False
+  Run 183/378 (48.4%): L_var1 + noise 25.0% (rep 3) -> Acc: 0.78, Em: False
+  Run 184/378 (48.7%): L_var1 + noise 30.0% (rep 1) -> Acc: 0.78, Em: False
+  Run 185/378 (48.9%): L_var1 + noise 30.0% (rep 2) -> Acc: 0.78, Em: False
+  Run 186/378 (49.2%): L_var1 + noise 30.0% (rep 3) -> Acc: 0.78, Em: False
+  Run 187/378 (49.5%): L_var1 + noise 35.0% (rep 1) -> Acc: 0.67, Em: False
+  Run 188/378 (49.7%): L_var1 + noise 35.0% (rep 2) -> Acc: 0.67, Em: False
+  Run 189/378 (50.0%): L_var1 + noise 35.0% (rep 3) -> Acc: 0.67, Em: False
+  Run 190/378 (50.3%): L_var1 + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 191/378 (50.5%): L_var1 + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 192/378 (50.8%): L_var1 + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 193/378 (51.1%): L_var1 + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 194/378 (51.3%): L_var1 + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 195/378 (51.6%): L_var1 + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 196/378 (51.9%): L_var1 + mask 15.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 197/378 (52.1%): L_var1 + mask 15.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 198/378 (52.4%): L_var1 + mask 15.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 199/378 (52.6%): L_var1 + mask 20.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 200/378 (52.9%): L_var1 + mask 20.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 201/378 (53.2%): L_var1 + mask 20.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 202/378 (53.4%): L_var1 + mask 25.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 203/378 (53.7%): L_var1 + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 204/378 (54.0%): L_var1 + mask 25.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 205/378 (54.2%): L_var1 + mask 30.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 206/378 (54.5%): L_var1 + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 207/378 (54.8%): L_var1 + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 208/378 (55.0%): L_var1 + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 209/378 (55.3%): L_var1 + mask 35.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 210/378 (55.6%): L_var1 + mask 35.0% (rep 3) -> Acc: 1.00, Em: False
 
-Results saved to: results/qhnn_results_9q_09072025_142438.csv
+✓ Reached minimum sample size: 210 samples
+  Run 211/378 (55.8%): L_var2 + noise 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 212/378 (56.1%): L_var2 + noise 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 213/378 (56.3%): L_var2 + noise 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 214/378 (56.6%): L_var2 + noise 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 215/378 (56.9%): L_var2 + noise 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 216/378 (57.1%): L_var2 + noise 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 217/378 (57.4%): L_var2 + noise 15.0% (rep 1) -> Acc: 0.89, Em: False
+  Run 218/378 (57.7%): L_var2 + noise 15.0% (rep 2) -> Acc: 0.89, Em: False
+  Run 219/378 (57.9%): L_var2 + noise 15.0% (rep 3) -> Acc: 0.89, Em: True
+  Run 220/378 (58.2%): L_var2 + noise 20.0% (rep 1) -> Acc: 0.89, Em: True
+  Run 221/378 (58.5%): L_var2 + noise 20.0% (rep 2) -> Acc: 0.89, Em: False
+  Run 222/378 (58.7%): L_var2 + noise 20.0% (rep 3) -> Acc: 0.89, Em: False
+  Run 223/378 (59.0%): L_var2 + noise 25.0% (rep 1) -> Acc: 0.78, Em: False
+  Run 224/378 (59.3%): L_var2 + noise 25.0% (rep 2) -> Acc: 0.78, Em: False
+  Run 225/378 (59.5%): L_var2 + noise 25.0% (rep 3) -> Acc: 0.78, Em: False
+  Run 226/378 (59.8%): L_var2 + noise 30.0% (rep 1) -> Acc: 0.78, Em: False
+  Run 227/378 (60.1%): L_var2 + noise 30.0% (rep 2) -> Acc: 0.78, Em: False
+  Run 228/378 (60.3%): L_var2 + noise 30.0% (rep 3) -> Acc: 0.78, Em: False
+  Run 229/378 (60.6%): L_var2 + noise 35.0% (rep 1) -> Acc: 0.67, Em: False
+  Run 230/378 (60.8%): L_var2 + noise 35.0% (rep 2) -> Acc: 0.67, Em: False
+  Run 231/378 (61.1%): L_var2 + noise 35.0% (rep 3) -> Acc: 0.67, Em: False
+  Run 232/378 (61.4%): L_var2 + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 233/378 (61.6%): L_var2 + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 234/378 (61.9%): L_var2 + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 235/378 (62.2%): L_var2 + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 236/378 (62.4%): L_var2 + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 237/378 (62.7%): L_var2 + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 238/378 (63.0%): L_var2 + mask 15.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 239/378 (63.2%): L_var2 + mask 15.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 240/378 (63.5%): L_var2 + mask 15.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 241/378 (63.8%): L_var2 + mask 20.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 242/378 (64.0%): L_var2 + mask 20.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 243/378 (64.3%): L_var2 + mask 20.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 244/378 (64.6%): L_var2 + mask 25.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 245/378 (64.8%): L_var2 + mask 25.0% (rep 2) -> Acc: 0.89, Em: True
+  Run 246/378 (65.1%): L_var2 + mask 25.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 247/378 (65.3%): L_var2 + mask 30.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 248/378 (65.6%): L_var2 + mask 30.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 249/378 (65.9%): L_var2 + mask 30.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 250/378 (66.1%): L_var2 + mask 35.0% (rep 1) -> Acc: 0.89, Em: True
+  Run 251/378 (66.4%): L_var2 + mask 35.0% (rep 2) -> Acc: 0.78, Em: False
+  Run 252/378 (66.7%): L_var2 + mask 35.0% (rep 3) -> Acc: 0.89, Em: False
+
+✓ Reached minimum sample size: 252 samples
+Stopping early - sufficient samples collected
+
+Results saved to: results/qhnn_results_9q_09212025_163955.csv
 
 ============================================================
 VALIDATION REPORT
 ============================================================
 Pattern size: 3x3
-Noise emergence rate: 20.0%
-Mask emergence rate: 53.3%
+Total samples: 252
+Statistical power: 1.000 (✓ Adequate)
+Noise emergence rate: 13.5%
+Mask emergence rate: 45.2%
 
 ✓ No anomalies detected
 
@@ -119,24 +358,25 @@ Mask emergence rate: 53.3%
 EXPERIMENT SUMMARY
 ============================================================
 Pattern size: 3x3
-Total runs: 30
-Emergent cases: 11 (36.7%)
-Runtime: 0.3 minutes
+Total runs: 252
+Emergent cases: 74 (29.4%)
+Runtime: 2.4 minutes
 Qubits used: 9
-  noise: 3/15 (20.0%)
-  incompleteness: 8/15 (53.3%)
+Statistical power achieved: 1.000
+  noise: 17/126 (13.5%)
+  incompleteness: 57/126 (45.2%)
 
 Emergence breakdown by type:
-  exceptional_recall: 3
-  perfect_recall: 3
-  perfect_reconstruction: 5
+  exceptional_recall: 33
+  perfect_recall: 17
+  perfect_reconstruction: 24
 
-Per-pattern performance:
-  I: 3/10 emergent, avg accuracy: 0.911
-  L: 3/10 emergent, avg accuracy: 0.922
-  T: 5/10 emergent, avg accuracy: 0.933
+Per-pattern performance (base patterns only):
+  I: 13/42 emergent, avg accuracy: 0.915
+  L: 15/42 emergent, avg accuracy: 0.923
 
 ✅ 3x3 experiment complete!
+Statistical power: ADEQUATE
 ============================================================
 (qnai-env) pooh@beast-server-0:~/QNAI-Experiment/QNAI-test-engine/Tests/Pattern-Matching-TEST$ python run-pm-test.py 
 
@@ -149,21 +389,23 @@ Select pattern size for the Quantum Hopfield Network:
 Available configurations:
   1. 3x3 patterns (9 qubits)
      - Simple patterns: I, L, T
-     - Fastest execution (~2-5 minutes)
+     - Fastest execution (~5-10 minutes)
      - Good for initial testing
 
   2. 4x4 patterns (16 qubits)
      - Medium patterns: T, O, H
-     - Moderate runtime (~5-10 minutes)
+     - Moderate runtime (~15-30 minutes)
      - Balanced complexity
 
   3. 5x5 patterns (25 qubits)
      - Complex patterns: T, O, X
-     - Longer runtime (~10-20 minutes)
+     - Longer runtime (~30-60 minutes)
      - Maximum pattern complexity
 
 Each configuration uses N² qubits for NxN patterns
 ensuring proper problem-solution scaling
+
+Note: Enhanced sampling enabled for statistical power (n≥200 per config)
 
 Enter your choice (1, 2, or 3): 2
 
@@ -172,12 +414,14 @@ Configuration details:
   - Pattern size: 4x4
   - Qubits required: 16
   - Pattern types: T, O, H
-  - Estimated runtime: 5-10 minutes
+  - Estimated runtime: 15-30 minutes
+  - Target samples: ≥200 for statistical power
 
 Proceed with this configuration? (y/n): y
 
 ============================================================
 SCALABLE QUANTUM HOPFIELD NETWORK EXPERIMENT
+WITH ENHANCED SAMPLING FOR STATISTICAL POWER
 ============================================================
 
 This experiment tests a Quantum Hopfield Neural Network
@@ -186,21 +430,28 @@ with properly scaled pattern sizes and qubit allocations.
 Each configuration uses N² qubits for NxN patterns,
 ensuring scientifically valid problem-solution scaling.
 
+Enhanced sampling ensures adequate statistical power
+(n≥200 samples per configuration, 602+ total)
+
 Smaller patterns (3x3) run faster but have less complexity,
 while larger patterns (5x5) provide richer dynamics.
 
 ============================================================
 4x4 QUANTUM HOPFIELD NETWORK EXPERIMENTS
+Enhanced Sampling for Statistical Power
 ============================================================
 Pattern size: 4x4
 Qubits: 16
 Temperature: 0.120
 Quantum noise: 0.050
 Shots per retrieval: 200
+Target samples: ≥200
+Degradation levels: 7 noise × 7 mask
+Repetitions per condition: 3
 Seed: True random
 ============================================================
 
-Patterns to test: T, O, H
+Patterns to test: 9 (including variations)
 
 Initializing 4x4 Quantum Hopfield Network...
   Configuration:
@@ -210,48 +461,277 @@ Initializing 4x4 Quantum Hopfield Network...
     - Quantum noise: 0.050
     - Shots per trial: 200
 
-Running experiments...
+Running experiments with enhanced sampling...
 
-  Run 1: T + noise 10.0%🔧 Quantum device: GPU (lightning.gpu, 16 qubits)
- -> Accuracy: 0.94, Emergent: False
-  Run 2: T + noise 15.0% -> Accuracy: 0.88, Emergent: False
-  Run 3: T + noise 20.0% -> Accuracy: 0.81, Emergent: False
-  Run 4: T + noise 25.0% -> Accuracy: 0.75, Emergent: False
-  Run 5: T + noise 30.0% -> Accuracy: 0.75, Emergent: False
-  Run 6: T + mask 10.0% -> Accuracy: 1.00, Emergent: False
-  Run 7: T + mask 15.0% -> Accuracy: 1.00, Emergent: False
-  Run 8: T + mask 20.0% -> Accuracy: 1.00, Emergent: True
-  Run 9: T + mask 25.0% -> Accuracy: 1.00, Emergent: True
-  Run 10: T + mask 30.0% -> Accuracy: 1.00, Emergent: True
-  Run 11: O + noise 10.0% -> Accuracy: 0.94, Emergent: False
-  Run 12: O + noise 15.0% -> Accuracy: 0.88, Emergent: False
-  Run 13: O + noise 20.0% -> Accuracy: 0.81, Emergent: False
-  Run 14: O + noise 25.0% -> Accuracy: 0.75, Emergent: False
-  Run 15: O + noise 30.0% -> Accuracy: 0.75, Emergent: False
-  Run 16: O + mask 10.0% -> Accuracy: 1.00, Emergent: False
-  Run 17: O + mask 15.0% -> Accuracy: 1.00, Emergent: False
-  Run 18: O + mask 20.0% -> Accuracy: 1.00, Emergent: True
-  Run 19: O + mask 25.0% -> Accuracy: 1.00, Emergent: True
-  Run 20: O + mask 30.0% -> Accuracy: 1.00, Emergent: True
-  Run 21: H + noise 10.0% -> Accuracy: 0.94, Emergent: False
-  Run 22: H + noise 15.0% -> Accuracy: 0.88, Emergent: False
-  Run 23: H + noise 20.0% -> Accuracy: 0.81, Emergent: False
-  Run 24: H + noise 25.0% -> Accuracy: 0.75, Emergent: False
-  Run 25: H + noise 30.0% -> Accuracy: 0.75, Emergent: False
-  Run 26: H + mask 10.0% -> Accuracy: 1.00, Emergent: False
-  Run 27: H + mask 15.0% -> Accuracy: 1.00, Emergent: False
-  Run 28: H + mask 20.0% -> Accuracy: 1.00, Emergent: True
-  Run 29: H + mask 25.0% -> Accuracy: 1.00, Emergent: True
-  Run 30: H + mask 30.0% -> Accuracy: 1.00, Emergent: True
+  Run 1/378 (0.3%): T_original + noise 5.0% (rep 1)🔧 Quantum device: GPU (lightning.gpu, 16 qubits)
+ -> Acc: 1.00, Em: False
+  Run 2/378 (0.5%): T_original + noise 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 3/378 (0.8%): T_original + noise 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 4/378 (1.1%): T_original + noise 10.0% (rep 1) -> Acc: 0.94, Em: False
+  Run 5/378 (1.3%): T_original + noise 10.0% (rep 2) -> Acc: 0.94, Em: False
+  Run 6/378 (1.6%): T_original + noise 10.0% (rep 3) -> Acc: 0.94, Em: False
+  Run 7/378 (1.9%): T_original + noise 15.0% (rep 1) -> Acc: 0.88, Em: False
+  Run 8/378 (2.1%): T_original + noise 15.0% (rep 2) -> Acc: 0.88, Em: False
+  Run 9/378 (2.4%): T_original + noise 15.0% (rep 3) -> Acc: 0.88, Em: False
+  Run 10/378 (2.6%): T_original + noise 20.0% (rep 1) -> Acc: 0.81, Em: False
+  Run 11/378 (2.9%): T_original + noise 20.0% (rep 2) -> Acc: 0.81, Em: False
+  Run 12/378 (3.2%): T_original + noise 20.0% (rep 3) -> Acc: 0.81, Em: False
+  Run 13/378 (3.4%): T_original + noise 25.0% (rep 1) -> Acc: 0.75, Em: False
+  Run 14/378 (3.7%): T_original + noise 25.0% (rep 2) -> Acc: 0.75, Em: False
+  Run 15/378 (4.0%): T_original + noise 25.0% (rep 3) -> Acc: 0.75, Em: False
+  Run 16/378 (4.2%): T_original + noise 30.0% (rep 1) -> Acc: 0.75, Em: False
+  Run 17/378 (4.5%): T_original + noise 30.0% (rep 2) -> Acc: 0.75, Em: False
+  Run 18/378 (4.8%): T_original + noise 30.0% (rep 3) -> Acc: 0.75, Em: False
+  Run 19/378 (5.0%): T_original + noise 35.0% (rep 1) -> Acc: 0.69, Em: False
+  Run 20/378 (5.3%): T_original + noise 35.0% (rep 2) -> Acc: 0.69, Em: False
+  Run 21/378 (5.6%): T_original + noise 35.0% (rep 3) -> Acc: 0.69, Em: False
+  Run 22/378 (5.8%): T_original + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 23/378 (6.1%): T_original + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 24/378 (6.3%): T_original + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 25/378 (6.6%): T_original + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 26/378 (6.9%): T_original + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 27/378 (7.1%): T_original + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 28/378 (7.4%): T_original + mask 15.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 29/378 (7.7%): T_original + mask 15.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 30/378 (7.9%): T_original + mask 15.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 31/378 (8.2%): T_original + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 32/378 (8.5%): T_original + mask 20.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 33/378 (8.7%): T_original + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 34/378 (9.0%): T_original + mask 25.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 35/378 (9.3%): T_original + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 36/378 (9.5%): T_original + mask 25.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 37/378 (9.8%): T_original + mask 30.0% (rep 1) -> Acc: 0.88, Em: False
+  Run 38/378 (10.1%): T_original + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 39/378 (10.3%): T_original + mask 30.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 40/378 (10.6%): T_original + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 41/378 (10.8%): T_original + mask 35.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 42/378 (11.1%): T_original + mask 35.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 43/378 (11.4%): T_var1 + noise 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 44/378 (11.6%): T_var1 + noise 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 45/378 (11.9%): T_var1 + noise 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 46/378 (12.2%): T_var1 + noise 10.0% (rep 1) -> Acc: 0.94, Em: False
+  Run 47/378 (12.4%): T_var1 + noise 10.0% (rep 2) -> Acc: 0.94, Em: False
+  Run 48/378 (12.7%): T_var1 + noise 10.0% (rep 3) -> Acc: 0.94, Em: False
+  Run 49/378 (13.0%): T_var1 + noise 15.0% (rep 1) -> Acc: 0.88, Em: False
+  Run 50/378 (13.2%): T_var1 + noise 15.0% (rep 2) -> Acc: 0.88, Em: False
+  Run 51/378 (13.5%): T_var1 + noise 15.0% (rep 3) -> Acc: 0.88, Em: False
+  Run 52/378 (13.8%): T_var1 + noise 20.0% (rep 1) -> Acc: 0.81, Em: False
+  Run 53/378 (14.0%): T_var1 + noise 20.0% (rep 2) -> Acc: 0.81, Em: False
+  Run 54/378 (14.3%): T_var1 + noise 20.0% (rep 3) -> Acc: 0.81, Em: False
+  Run 55/378 (14.6%): T_var1 + noise 25.0% (rep 1) -> Acc: 0.75, Em: False
+  Run 56/378 (14.8%): T_var1 + noise 25.0% (rep 2) -> Acc: 0.75, Em: False
+  Run 57/378 (15.1%): T_var1 + noise 25.0% (rep 3) -> Acc: 0.75, Em: False
+  Run 58/378 (15.3%): T_var1 + noise 30.0% (rep 1) -> Acc: 0.75, Em: False
+  Run 59/378 (15.6%): T_var1 + noise 30.0% (rep 2) -> Acc: 0.75, Em: False
+  Run 60/378 (15.9%): T_var1 + noise 30.0% (rep 3) -> Acc: 0.75, Em: False
+  Run 61/378 (16.1%): T_var1 + noise 35.0% (rep 1) -> Acc: 0.69, Em: False
+  Run 62/378 (16.4%): T_var1 + noise 35.0% (rep 2) -> Acc: 0.69, Em: False
+  Run 63/378 (16.7%): T_var1 + noise 35.0% (rep 3) -> Acc: 0.69, Em: False
+  Run 64/378 (16.9%): T_var1 + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 65/378 (17.2%): T_var1 + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 66/378 (17.5%): T_var1 + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 67/378 (17.7%): T_var1 + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 68/378 (18.0%): T_var1 + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 69/378 (18.3%): T_var1 + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 70/378 (18.5%): T_var1 + mask 15.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 71/378 (18.8%): T_var1 + mask 15.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 72/378 (19.0%): T_var1 + mask 15.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 73/378 (19.3%): T_var1 + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 74/378 (19.6%): T_var1 + mask 20.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 75/378 (19.8%): T_var1 + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 76/378 (20.1%): T_var1 + mask 25.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 77/378 (20.4%): T_var1 + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 78/378 (20.6%): T_var1 + mask 25.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 79/378 (20.9%): T_var1 + mask 30.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 80/378 (21.2%): T_var1 + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 81/378 (21.4%): T_var1 + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 82/378 (21.7%): T_var1 + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 83/378 (22.0%): T_var1 + mask 35.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 84/378 (22.2%): T_var1 + mask 35.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 85/378 (22.5%): T_var2 + noise 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 86/378 (22.8%): T_var2 + noise 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 87/378 (23.0%): T_var2 + noise 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 88/378 (23.3%): T_var2 + noise 10.0% (rep 1) -> Acc: 0.94, Em: False
+  Run 89/378 (23.5%): T_var2 + noise 10.0% (rep 2) -> Acc: 0.94, Em: False
+  Run 90/378 (23.8%): T_var2 + noise 10.0% (rep 3) -> Acc: 0.94, Em: False
+  Run 91/378 (24.1%): T_var2 + noise 15.0% (rep 1) -> Acc: 0.88, Em: False
+  Run 92/378 (24.3%): T_var2 + noise 15.0% (rep 2) -> Acc: 0.88, Em: False
+  Run 93/378 (24.6%): T_var2 + noise 15.0% (rep 3) -> Acc: 0.88, Em: False
+  Run 94/378 (24.9%): T_var2 + noise 20.0% (rep 1) -> Acc: 0.81, Em: False
+  Run 95/378 (25.1%): T_var2 + noise 20.0% (rep 2) -> Acc: 0.81, Em: False
+  Run 96/378 (25.4%): T_var2 + noise 20.0% (rep 3) -> Acc: 0.81, Em: False
+  Run 97/378 (25.7%): T_var2 + noise 25.0% (rep 1) -> Acc: 0.75, Em: False
+  Run 98/378 (25.9%): T_var2 + noise 25.0% (rep 2) -> Acc: 0.75, Em: False
+  Run 99/378 (26.2%): T_var2 + noise 25.0% (rep 3) -> Acc: 0.75, Em: False
+  Run 100/378 (26.5%): T_var2 + noise 30.0% (rep 1) -> Acc: 0.75, Em: False
+  Run 101/378 (26.7%): T_var2 + noise 30.0% (rep 2) -> Acc: 0.75, Em: False
+  Run 102/378 (27.0%): T_var2 + noise 30.0% (rep 3) -> Acc: 0.75, Em: False
+  Run 103/378 (27.2%): T_var2 + noise 35.0% (rep 1) -> Acc: 0.69, Em: False
+  Run 104/378 (27.5%): T_var2 + noise 35.0% (rep 2) -> Acc: 0.69, Em: False
+  Run 105/378 (27.8%): T_var2 + noise 35.0% (rep 3) -> Acc: 0.69, Em: False
+  Run 106/378 (28.0%): T_var2 + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 107/378 (28.3%): T_var2 + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 108/378 (28.6%): T_var2 + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 109/378 (28.8%): T_var2 + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 110/378 (29.1%): T_var2 + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 111/378 (29.4%): T_var2 + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 112/378 (29.6%): T_var2 + mask 15.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 113/378 (29.9%): T_var2 + mask 15.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 114/378 (30.2%): T_var2 + mask 15.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 115/378 (30.4%): T_var2 + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 116/378 (30.7%): T_var2 + mask 20.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 117/378 (31.0%): T_var2 + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 118/378 (31.2%): T_var2 + mask 25.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 119/378 (31.5%): T_var2 + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 120/378 (31.7%): T_var2 + mask 25.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 121/378 (32.0%): T_var2 + mask 30.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 122/378 (32.3%): T_var2 + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 123/378 (32.5%): T_var2 + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 124/378 (32.8%): T_var2 + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 125/378 (33.1%): T_var2 + mask 35.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 126/378 (33.3%): T_var2 + mask 35.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 127/378 (33.6%): O_original + noise 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 128/378 (33.9%): O_original + noise 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 129/378 (34.1%): O_original + noise 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 130/378 (34.4%): O_original + noise 10.0% (rep 1) -> Acc: 0.94, Em: False
+  Run 131/378 (34.7%): O_original + noise 10.0% (rep 2) -> Acc: 0.94, Em: False
+  Run 132/378 (34.9%): O_original + noise 10.0% (rep 3) -> Acc: 0.94, Em: False
+  Run 133/378 (35.2%): O_original + noise 15.0% (rep 1) -> Acc: 0.88, Em: False
+  Run 134/378 (35.4%): O_original + noise 15.0% (rep 2) -> Acc: 0.88, Em: False
+  Run 135/378 (35.7%): O_original + noise 15.0% (rep 3) -> Acc: 0.88, Em: False
+  Run 136/378 (36.0%): O_original + noise 20.0% (rep 1) -> Acc: 0.81, Em: False
+  Run 137/378 (36.2%): O_original + noise 20.0% (rep 2) -> Acc: 0.81, Em: False
+  Run 138/378 (36.5%): O_original + noise 20.0% (rep 3) -> Acc: 0.81, Em: False
+  Run 139/378 (36.8%): O_original + noise 25.0% (rep 1) -> Acc: 0.75, Em: False
+  Run 140/378 (37.0%): O_original + noise 25.0% (rep 2) -> Acc: 0.75, Em: False
+  Run 141/378 (37.3%): O_original + noise 25.0% (rep 3) -> Acc: 0.75, Em: False
+  Run 142/378 (37.6%): O_original + noise 30.0% (rep 1) -> Acc: 0.75, Em: False
+  Run 143/378 (37.8%): O_original + noise 30.0% (rep 2) -> Acc: 0.75, Em: False
+  Run 144/378 (38.1%): O_original + noise 30.0% (rep 3) -> Acc: 0.75, Em: False
+  Run 145/378 (38.4%): O_original + noise 35.0% (rep 1) -> Acc: 0.69, Em: False
+  Run 146/378 (38.6%): O_original + noise 35.0% (rep 2) -> Acc: 0.69, Em: False
+  Run 147/378 (38.9%): O_original + noise 35.0% (rep 3) -> Acc: 0.69, Em: False
+  Run 148/378 (39.2%): O_original + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 149/378 (39.4%): O_original + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 150/378 (39.7%): O_original + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 151/378 (39.9%): O_original + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 152/378 (40.2%): O_original + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 153/378 (40.5%): O_original + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 154/378 (40.7%): O_original + mask 15.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 155/378 (41.0%): O_original + mask 15.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 156/378 (41.3%): O_original + mask 15.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 157/378 (41.5%): O_original + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 158/378 (41.8%): O_original + mask 20.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 159/378 (42.1%): O_original + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 160/378 (42.3%): O_original + mask 25.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 161/378 (42.6%): O_original + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 162/378 (42.9%): O_original + mask 25.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 163/378 (43.1%): O_original + mask 30.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 164/378 (43.4%): O_original + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 165/378 (43.7%): O_original + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 166/378 (43.9%): O_original + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 167/378 (44.2%): O_original + mask 35.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 168/378 (44.4%): O_original + mask 35.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 169/378 (44.7%): O_var1 + noise 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 170/378 (45.0%): O_var1 + noise 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 171/378 (45.2%): O_var1 + noise 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 172/378 (45.5%): O_var1 + noise 10.0% (rep 1) -> Acc: 0.94, Em: False
+  Run 173/378 (45.8%): O_var1 + noise 10.0% (rep 2) -> Acc: 0.94, Em: False
+  Run 174/378 (46.0%): O_var1 + noise 10.0% (rep 3) -> Acc: 0.94, Em: False
+  Run 175/378 (46.3%): O_var1 + noise 15.0% (rep 1) -> Acc: 0.88, Em: False
+  Run 176/378 (46.6%): O_var1 + noise 15.0% (rep 2) -> Acc: 0.88, Em: False
+  Run 177/378 (46.8%): O_var1 + noise 15.0% (rep 3) -> Acc: 0.88, Em: False
+  Run 178/378 (47.1%): O_var1 + noise 20.0% (rep 1) -> Acc: 0.81, Em: False
+  Run 179/378 (47.4%): O_var1 + noise 20.0% (rep 2) -> Acc: 0.81, Em: False
+  Run 180/378 (47.6%): O_var1 + noise 20.0% (rep 3) -> Acc: 0.81, Em: False
+  Run 181/378 (47.9%): O_var1 + noise 25.0% (rep 1) -> Acc: 0.75, Em: False
+  Run 182/378 (48.1%): O_var1 + noise 25.0% (rep 2) -> Acc: 0.75, Em: False
+  Run 183/378 (48.4%): O_var1 + noise 25.0% (rep 3) -> Acc: 0.75, Em: False
+  Run 184/378 (48.7%): O_var1 + noise 30.0% (rep 1) -> Acc: 0.75, Em: False
+  Run 185/378 (48.9%): O_var1 + noise 30.0% (rep 2) -> Acc: 0.75, Em: False
+  Run 186/378 (49.2%): O_var1 + noise 30.0% (rep 3) -> Acc: 0.75, Em: False
+  Run 187/378 (49.5%): O_var1 + noise 35.0% (rep 1) -> Acc: 0.69, Em: False
+  Run 188/378 (49.7%): O_var1 + noise 35.0% (rep 2) -> Acc: 0.69, Em: False
+  Run 189/378 (50.0%): O_var1 + noise 35.0% (rep 3) -> Acc: 0.69, Em: False
+  Run 190/378 (50.3%): O_var1 + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 191/378 (50.5%): O_var1 + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 192/378 (50.8%): O_var1 + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 193/378 (51.1%): O_var1 + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 194/378 (51.3%): O_var1 + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 195/378 (51.6%): O_var1 + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 196/378 (51.9%): O_var1 + mask 15.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 197/378 (52.1%): O_var1 + mask 15.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 198/378 (52.4%): O_var1 + mask 15.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 199/378 (52.6%): O_var1 + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 200/378 (52.9%): O_var1 + mask 20.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 201/378 (53.2%): O_var1 + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 202/378 (53.4%): O_var1 + mask 25.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 203/378 (53.7%): O_var1 + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 204/378 (54.0%): O_var1 + mask 25.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 205/378 (54.2%): O_var1 + mask 30.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 206/378 (54.5%): O_var1 + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 207/378 (54.8%): O_var1 + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 208/378 (55.0%): O_var1 + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 209/378 (55.3%): O_var1 + mask 35.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 210/378 (55.6%): O_var1 + mask 35.0% (rep 3) -> Acc: 1.00, Em: True
 
-Results saved to: results/qhnn_results_16q_09072025_142502.csv
+✓ Reached minimum sample size: 210 samples
+  Run 211/378 (55.8%): O_var2 + noise 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 212/378 (56.1%): O_var2 + noise 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 213/378 (56.3%): O_var2 + noise 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 214/378 (56.6%): O_var2 + noise 10.0% (rep 1) -> Acc: 0.94, Em: False
+  Run 215/378 (56.9%): O_var2 + noise 10.0% (rep 2) -> Acc: 0.94, Em: False
+  Run 216/378 (57.1%): O_var2 + noise 10.0% (rep 3) -> Acc: 0.94, Em: False
+  Run 217/378 (57.4%): O_var2 + noise 15.0% (rep 1) -> Acc: 0.88, Em: False
+  Run 218/378 (57.7%): O_var2 + noise 15.0% (rep 2) -> Acc: 0.88, Em: False
+  Run 219/378 (57.9%): O_var2 + noise 15.0% (rep 3) -> Acc: 0.88, Em: False
+  Run 220/378 (58.2%): O_var2 + noise 20.0% (rep 1) -> Acc: 0.81, Em: False
+  Run 221/378 (58.5%): O_var2 + noise 20.0% (rep 2) -> Acc: 0.81, Em: False
+  Run 222/378 (58.7%): O_var2 + noise 20.0% (rep 3) -> Acc: 0.81, Em: False
+  Run 223/378 (59.0%): O_var2 + noise 25.0% (rep 1) -> Acc: 0.75, Em: False
+  Run 224/378 (59.3%): O_var2 + noise 25.0% (rep 2) -> Acc: 0.75, Em: False
+  Run 225/378 (59.5%): O_var2 + noise 25.0% (rep 3) -> Acc: 0.75, Em: False
+  Run 226/378 (59.8%): O_var2 + noise 30.0% (rep 1) -> Acc: 0.75, Em: False
+  Run 227/378 (60.1%): O_var2 + noise 30.0% (rep 2) -> Acc: 0.75, Em: False
+  Run 228/378 (60.3%): O_var2 + noise 30.0% (rep 3) -> Acc: 0.75, Em: False
+  Run 229/378 (60.6%): O_var2 + noise 35.0% (rep 1) -> Acc: 0.69, Em: False
+  Run 230/378 (60.8%): O_var2 + noise 35.0% (rep 2) -> Acc: 0.69, Em: False
+  Run 231/378 (61.1%): O_var2 + noise 35.0% (rep 3) -> Acc: 0.69, Em: False
+  Run 232/378 (61.4%): O_var2 + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 233/378 (61.6%): O_var2 + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 234/378 (61.9%): O_var2 + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 235/378 (62.2%): O_var2 + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 236/378 (62.4%): O_var2 + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 237/378 (62.7%): O_var2 + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 238/378 (63.0%): O_var2 + mask 15.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 239/378 (63.2%): O_var2 + mask 15.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 240/378 (63.5%): O_var2 + mask 15.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 241/378 (63.8%): O_var2 + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 242/378 (64.0%): O_var2 + mask 20.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 243/378 (64.3%): O_var2 + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 244/378 (64.6%): O_var2 + mask 25.0% (rep 1) -> Acc: 0.94, Em: True
+  Run 245/378 (64.8%): O_var2 + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 246/378 (65.1%): O_var2 + mask 25.0% (rep 3) -> Acc: 0.88, Em: False
+  Run 247/378 (65.3%): O_var2 + mask 30.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 248/378 (65.6%): O_var2 + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 249/378 (65.9%): O_var2 + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 250/378 (66.1%): O_var2 + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 251/378 (66.4%): O_var2 + mask 35.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 252/378 (66.7%): O_var2 + mask 35.0% (rep 3) -> Acc: 0.94, Em: True
+
+✓ Reached minimum sample size: 252 samples
+Stopping early - sufficient samples collected
+
+Results saved to: results/qhnn_results_16q_09212025_164636.csv
 
 ============================================================
 VALIDATION REPORT
 ============================================================
 Pattern size: 4x4
+Total samples: 252
+Statistical power: 1.000 (✓ Adequate)
 Noise emergence rate: 0.0%
-Mask emergence rate: 60.0%
+Mask emergence rate: 54.8%
 
 ⚠️ WARNINGS:
   - Asymmetry detected: masking shows significantly higher emergence than noise
@@ -260,23 +740,25 @@ Mask emergence rate: 60.0%
 EXPERIMENT SUMMARY
 ============================================================
 Pattern size: 4x4
-Total runs: 30
-Emergent cases: 9 (30.0%)
-Runtime: 0.2 minutes
+Total runs: 252
+Emergent cases: 69 (27.4%)
+Runtime: 1.6 minutes
 Qubits used: 16
-  noise: 0/15 (0.0%)
-  incompleteness: 9/15 (60.0%)
+Statistical power achieved: 1.000
+  noise: 0/126 (0.0%)
+  incompleteness: 69/126 (54.8%)
 
 Emergence breakdown by type:
-  exceptional_recall: 6
-  perfect_reconstruction: 3
+  exceptional_recall: 45
+  near_perfect_reconstruction: 9
+  perfect_reconstruction: 15
 
-Per-pattern performance:
-  T: 3/10 emergent, avg accuracy: 0.912
-  O: 3/10 emergent, avg accuracy: 0.912
-  H: 3/10 emergent, avg accuracy: 0.912
+Per-pattern performance (base patterns only):
+  T: 10/42 emergent, avg accuracy: 0.912
+  O: 12/42 emergent, avg accuracy: 0.915
 
 ✅ 4x4 experiment complete!
+Statistical power: ADEQUATE
 ============================================================
 (qnai-env) pooh@beast-server-0:~/QNAI-Experiment/QNAI-test-engine/Tests/Pattern-Matching-TEST$ python run-pm-test.py 
 
@@ -289,21 +771,23 @@ Select pattern size for the Quantum Hopfield Network:
 Available configurations:
   1. 3x3 patterns (9 qubits)
      - Simple patterns: I, L, T
-     - Fastest execution (~2-5 minutes)
+     - Fastest execution (~5-10 minutes)
      - Good for initial testing
 
   2. 4x4 patterns (16 qubits)
      - Medium patterns: T, O, H
-     - Moderate runtime (~5-10 minutes)
+     - Moderate runtime (~15-30 minutes)
      - Balanced complexity
 
   3. 5x5 patterns (25 qubits)
      - Complex patterns: T, O, X
-     - Longer runtime (~10-20 minutes)
+     - Longer runtime (~30-60 minutes)
      - Maximum pattern complexity
 
 Each configuration uses N² qubits for NxN patterns
 ensuring proper problem-solution scaling
+
+Note: Enhanced sampling enabled for statistical power (n≥200 per config)
 
 Enter your choice (1, 2, or 3): 3
 
@@ -312,12 +796,14 @@ Configuration details:
   - Pattern size: 5x5
   - Qubits required: 25
   - Pattern types: T, O, X
-  - Estimated runtime: 10-20 minutes
+  - Estimated runtime: 30-60 minutes
+  - Target samples: ≥200 for statistical power
 
 Proceed with this configuration? (y/n): y
 
 ============================================================
 SCALABLE QUANTUM HOPFIELD NETWORK EXPERIMENT
+WITH ENHANCED SAMPLING FOR STATISTICAL POWER
 ============================================================
 
 This experiment tests a Quantum Hopfield Neural Network
@@ -326,21 +812,28 @@ with properly scaled pattern sizes and qubit allocations.
 Each configuration uses N² qubits for NxN patterns,
 ensuring scientifically valid problem-solution scaling.
 
+Enhanced sampling ensures adequate statistical power
+(n≥200 samples per configuration, 602+ total)
+
 Smaller patterns (3x3) run faster but have less complexity,
 while larger patterns (5x5) provide richer dynamics.
 
 ============================================================
 5x5 QUANTUM HOPFIELD NETWORK EXPERIMENTS
+Enhanced Sampling for Statistical Power
 ============================================================
 Pattern size: 5x5
 Qubits: 25
 Temperature: 0.100
 Quantum noise: 0.040
 Shots per retrieval: 150
+Target samples: ≥200
+Degradation levels: 7 noise × 7 mask
+Repetitions per condition: 3
 Seed: True random
 ============================================================
 
-Patterns to test: T, O, X
+Patterns to test: 9 (including variations)
 
 Initializing 5x5 Quantum Hopfield Network...
   Configuration:
@@ -350,48 +843,277 @@ Initializing 5x5 Quantum Hopfield Network...
     - Quantum noise: 0.040
     - Shots per trial: 150
 
-Running experiments...
+Running experiments with enhanced sampling...
 
-  Run 1: T + noise 10.0%🔧 Quantum device: GPU (lightning.gpu, 25 qubits)
- -> Accuracy: 0.92, Emergent: False
-  Run 2: T + noise 15.0% -> Accuracy: 0.88, Emergent: False
-  Run 3: T + noise 20.0% -> Accuracy: 0.80, Emergent: False
-  Run 4: T + noise 25.0% -> Accuracy: 0.76, Emergent: False
-  Run 5: T + noise 30.0% -> Accuracy: 0.72, Emergent: False
-  Run 6: T + mask 10.0% -> Accuracy: 1.00, Emergent: False
-  Run 7: T + mask 15.0% -> Accuracy: 1.00, Emergent: False
-  Run 8: T + mask 20.0% -> Accuracy: 1.00, Emergent: True
-  Run 9: T + mask 25.0% -> Accuracy: 1.00, Emergent: True
-  Run 10: T + mask 30.0% -> Accuracy: 1.00, Emergent: True
-  Run 11: O + noise 10.0% -> Accuracy: 0.92, Emergent: False
-  Run 12: O + noise 15.0% -> Accuracy: 0.88, Emergent: False
-  Run 13: O + noise 20.0% -> Accuracy: 0.80, Emergent: False
-  Run 14: O + noise 25.0% -> Accuracy: 0.76, Emergent: False
-  Run 15: O + noise 30.0% -> Accuracy: 0.72, Emergent: False
-  Run 16: O + mask 10.0% -> Accuracy: 1.00, Emergent: False
-  Run 17: O + mask 15.0% -> Accuracy: 1.00, Emergent: False
-  Run 18: O + mask 20.0% -> Accuracy: 1.00, Emergent: True
-  Run 19: O + mask 25.0% -> Accuracy: 1.00, Emergent: True
-  Run 20: O + mask 30.0% -> Accuracy: 1.00, Emergent: True
-  Run 21: X + noise 10.0% -> Accuracy: 0.92, Emergent: False
-  Run 22: X + noise 15.0% -> Accuracy: 0.88, Emergent: False
-  Run 23: X + noise 20.0% -> Accuracy: 0.80, Emergent: False
-  Run 24: X + noise 25.0% -> Accuracy: 0.76, Emergent: False
-  Run 25: X + noise 30.0% -> Accuracy: 0.72, Emergent: False
-  Run 26: X + mask 10.0% -> Accuracy: 1.00, Emergent: False
-  Run 27: X + mask 15.0% -> Accuracy: 1.00, Emergent: False
-  Run 28: X + mask 20.0% -> Accuracy: 1.00, Emergent: True
-  Run 29: X + mask 25.0% -> Accuracy: 1.00, Emergent: True
-  Run 30: X + mask 30.0% -> Accuracy: 1.00, Emergent: True
+  Run 1/378 (0.3%): T_original + noise 5.0% (rep 1)🔧 Quantum device: GPU (lightning.gpu, 25 qubits)
+ -> Acc: 0.96, Em: False
+  Run 2/378 (0.5%): T_original + noise 5.0% (rep 2) -> Acc: 0.96, Em: False
+  Run 3/378 (0.8%): T_original + noise 5.0% (rep 3) -> Acc: 0.96, Em: False
+  Run 4/378 (1.1%): T_original + noise 10.0% (rep 1) -> Acc: 0.92, Em: False
+  Run 5/378 (1.3%): T_original + noise 10.0% (rep 2) -> Acc: 0.92, Em: False
+  Run 6/378 (1.6%): T_original + noise 10.0% (rep 3) -> Acc: 0.92, Em: False
+  Run 7/378 (1.9%): T_original + noise 15.0% (rep 1) -> Acc: 0.88, Em: False
+  Run 8/378 (2.1%): T_original + noise 15.0% (rep 2) -> Acc: 0.88, Em: False
+  Run 9/378 (2.4%): T_original + noise 15.0% (rep 3) -> Acc: 0.88, Em: False
+  Run 10/378 (2.6%): T_original + noise 20.0% (rep 1) -> Acc: 0.80, Em: False
+  Run 11/378 (2.9%): T_original + noise 20.0% (rep 2) -> Acc: 0.80, Em: False
+  Run 12/378 (3.2%): T_original + noise 20.0% (rep 3) -> Acc: 0.80, Em: False
+  Run 13/378 (3.4%): T_original + noise 25.0% (rep 1) -> Acc: 0.76, Em: False
+  Run 14/378 (3.7%): T_original + noise 25.0% (rep 2) -> Acc: 0.76, Em: False
+  Run 15/378 (4.0%): T_original + noise 25.0% (rep 3) -> Acc: 0.76, Em: False
+  Run 16/378 (4.2%): T_original + noise 30.0% (rep 1) -> Acc: 0.72, Em: False
+  Run 17/378 (4.5%): T_original + noise 30.0% (rep 2) -> Acc: 0.72, Em: False
+  Run 18/378 (4.8%): T_original + noise 30.0% (rep 3) -> Acc: 0.72, Em: False
+  Run 19/378 (5.0%): T_original + noise 35.0% (rep 1) -> Acc: 0.68, Em: False
+  Run 20/378 (5.3%): T_original + noise 35.0% (rep 2) -> Acc: 0.68, Em: False
+  Run 21/378 (5.6%): T_original + noise 35.0% (rep 3) -> Acc: 0.68, Em: False
+  Run 22/378 (5.8%): T_original + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 23/378 (6.1%): T_original + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 24/378 (6.3%): T_original + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 25/378 (6.6%): T_original + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 26/378 (6.9%): T_original + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 27/378 (7.1%): T_original + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 28/378 (7.4%): T_original + mask 15.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 29/378 (7.7%): T_original + mask 15.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 30/378 (7.9%): T_original + mask 15.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 31/378 (8.2%): T_original + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 32/378 (8.5%): T_original + mask 20.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 33/378 (8.7%): T_original + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 34/378 (9.0%): T_original + mask 25.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 35/378 (9.3%): T_original + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 36/378 (9.5%): T_original + mask 25.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 37/378 (9.8%): T_original + mask 30.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 38/378 (10.1%): T_original + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 39/378 (10.3%): T_original + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 40/378 (10.6%): T_original + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 41/378 (10.8%): T_original + mask 35.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 42/378 (11.1%): T_original + mask 35.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 43/378 (11.4%): T_var1 + noise 5.0% (rep 1) -> Acc: 0.96, Em: False
+  Run 44/378 (11.6%): T_var1 + noise 5.0% (rep 2) -> Acc: 0.96, Em: False
+  Run 45/378 (11.9%): T_var1 + noise 5.0% (rep 3) -> Acc: 0.96, Em: False
+  Run 46/378 (12.2%): T_var1 + noise 10.0% (rep 1) -> Acc: 0.92, Em: False
+  Run 47/378 (12.4%): T_var1 + noise 10.0% (rep 2) -> Acc: 0.92, Em: False
+  Run 48/378 (12.7%): T_var1 + noise 10.0% (rep 3) -> Acc: 0.92, Em: False
+  Run 49/378 (13.0%): T_var1 + noise 15.0% (rep 1) -> Acc: 0.88, Em: False
+  Run 50/378 (13.2%): T_var1 + noise 15.0% (rep 2) -> Acc: 0.88, Em: False
+  Run 51/378 (13.5%): T_var1 + noise 15.0% (rep 3) -> Acc: 0.88, Em: False
+  Run 52/378 (13.8%): T_var1 + noise 20.0% (rep 1) -> Acc: 0.80, Em: False
+  Run 53/378 (14.0%): T_var1 + noise 20.0% (rep 2) -> Acc: 0.80, Em: False
+  Run 54/378 (14.3%): T_var1 + noise 20.0% (rep 3) -> Acc: 0.80, Em: False
+  Run 55/378 (14.6%): T_var1 + noise 25.0% (rep 1) -> Acc: 0.76, Em: False
+  Run 56/378 (14.8%): T_var1 + noise 25.0% (rep 2) -> Acc: 0.76, Em: False
+  Run 57/378 (15.1%): T_var1 + noise 25.0% (rep 3) -> Acc: 0.76, Em: False
+  Run 58/378 (15.3%): T_var1 + noise 30.0% (rep 1) -> Acc: 0.72, Em: False
+  Run 59/378 (15.6%): T_var1 + noise 30.0% (rep 2) -> Acc: 0.72, Em: False
+  Run 60/378 (15.9%): T_var1 + noise 30.0% (rep 3) -> Acc: 0.72, Em: False
+  Run 61/378 (16.1%): T_var1 + noise 35.0% (rep 1) -> Acc: 0.68, Em: False
+  Run 62/378 (16.4%): T_var1 + noise 35.0% (rep 2) -> Acc: 0.68, Em: False
+  Run 63/378 (16.7%): T_var1 + noise 35.0% (rep 3) -> Acc: 0.68, Em: False
+  Run 64/378 (16.9%): T_var1 + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 65/378 (17.2%): T_var1 + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 66/378 (17.5%): T_var1 + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 67/378 (17.7%): T_var1 + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 68/378 (18.0%): T_var1 + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 69/378 (18.3%): T_var1 + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 70/378 (18.5%): T_var1 + mask 15.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 71/378 (18.8%): T_var1 + mask 15.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 72/378 (19.0%): T_var1 + mask 15.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 73/378 (19.3%): T_var1 + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 74/378 (19.6%): T_var1 + mask 20.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 75/378 (19.8%): T_var1 + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 76/378 (20.1%): T_var1 + mask 25.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 77/378 (20.4%): T_var1 + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 78/378 (20.6%): T_var1 + mask 25.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 79/378 (20.9%): T_var1 + mask 30.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 80/378 (21.2%): T_var1 + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 81/378 (21.4%): T_var1 + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 82/378 (21.7%): T_var1 + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 83/378 (22.0%): T_var1 + mask 35.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 84/378 (22.2%): T_var1 + mask 35.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 85/378 (22.5%): T_var2 + noise 5.0% (rep 1) -> Acc: 0.96, Em: False
+  Run 86/378 (22.8%): T_var2 + noise 5.0% (rep 2) -> Acc: 0.96, Em: False
+  Run 87/378 (23.0%): T_var2 + noise 5.0% (rep 3) -> Acc: 0.96, Em: False
+  Run 88/378 (23.3%): T_var2 + noise 10.0% (rep 1) -> Acc: 0.92, Em: False
+  Run 89/378 (23.5%): T_var2 + noise 10.0% (rep 2) -> Acc: 0.92, Em: False
+  Run 90/378 (23.8%): T_var2 + noise 10.0% (rep 3) -> Acc: 0.92, Em: False
+  Run 91/378 (24.1%): T_var2 + noise 15.0% (rep 1) -> Acc: 0.88, Em: True
+  Run 92/378 (24.3%): T_var2 + noise 15.0% (rep 2) -> Acc: 0.88, Em: True
+  Run 93/378 (24.6%): T_var2 + noise 15.0% (rep 3) -> Acc: 0.88, Em: False
+  Run 94/378 (24.9%): T_var2 + noise 20.0% (rep 1) -> Acc: 0.80, Em: False
+  Run 95/378 (25.1%): T_var2 + noise 20.0% (rep 2) -> Acc: 0.80, Em: False
+  Run 96/378 (25.4%): T_var2 + noise 20.0% (rep 3) -> Acc: 0.80, Em: False
+  Run 97/378 (25.7%): T_var2 + noise 25.0% (rep 1) -> Acc: 0.76, Em: False
+  Run 98/378 (25.9%): T_var2 + noise 25.0% (rep 2) -> Acc: 0.76, Em: False
+  Run 99/378 (26.2%): T_var2 + noise 25.0% (rep 3) -> Acc: 0.76, Em: False
+  Run 100/378 (26.5%): T_var2 + noise 30.0% (rep 1) -> Acc: 0.72, Em: False
+  Run 101/378 (26.7%): T_var2 + noise 30.0% (rep 2) -> Acc: 0.72, Em: False
+  Run 102/378 (27.0%): T_var2 + noise 30.0% (rep 3) -> Acc: 0.72, Em: False
+  Run 103/378 (27.2%): T_var2 + noise 35.0% (rep 1) -> Acc: 0.68, Em: False
+  Run 104/378 (27.5%): T_var2 + noise 35.0% (rep 2) -> Acc: 0.68, Em: False
+  Run 105/378 (27.8%): T_var2 + noise 35.0% (rep 3) -> Acc: 0.68, Em: False
+  Run 106/378 (28.0%): T_var2 + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 107/378 (28.3%): T_var2 + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 108/378 (28.6%): T_var2 + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 109/378 (28.8%): T_var2 + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 110/378 (29.1%): T_var2 + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 111/378 (29.4%): T_var2 + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 112/378 (29.6%): T_var2 + mask 15.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 113/378 (29.9%): T_var2 + mask 15.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 114/378 (30.2%): T_var2 + mask 15.0% (rep 3) -> Acc: 0.96, Em: False
+  Run 115/378 (30.4%): T_var2 + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 116/378 (30.7%): T_var2 + mask 20.0% (rep 2) -> Acc: 0.96, Em: True
+  Run 117/378 (31.0%): T_var2 + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 118/378 (31.2%): T_var2 + mask 25.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 119/378 (31.5%): T_var2 + mask 25.0% (rep 2) -> Acc: 0.96, Em: True
+  Run 120/378 (31.7%): T_var2 + mask 25.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 121/378 (32.0%): T_var2 + mask 30.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 122/378 (32.3%): T_var2 + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 123/378 (32.5%): T_var2 + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 124/378 (32.8%): T_var2 + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 125/378 (33.1%): T_var2 + mask 35.0% (rep 2) -> Acc: 0.96, Em: True
+  Run 126/378 (33.3%): T_var2 + mask 35.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 127/378 (33.6%): O_original + noise 5.0% (rep 1) -> Acc: 0.96, Em: False
+  Run 128/378 (33.9%): O_original + noise 5.0% (rep 2) -> Acc: 0.96, Em: False
+  Run 129/378 (34.1%): O_original + noise 5.0% (rep 3) -> Acc: 0.96, Em: False
+  Run 130/378 (34.4%): O_original + noise 10.0% (rep 1) -> Acc: 0.92, Em: False
+  Run 131/378 (34.7%): O_original + noise 10.0% (rep 2) -> Acc: 0.92, Em: False
+  Run 132/378 (34.9%): O_original + noise 10.0% (rep 3) -> Acc: 0.92, Em: False
+  Run 133/378 (35.2%): O_original + noise 15.0% (rep 1) -> Acc: 0.88, Em: False
+  Run 134/378 (35.4%): O_original + noise 15.0% (rep 2) -> Acc: 0.88, Em: False
+  Run 135/378 (35.7%): O_original + noise 15.0% (rep 3) -> Acc: 0.88, Em: False
+  Run 136/378 (36.0%): O_original + noise 20.0% (rep 1) -> Acc: 0.80, Em: False
+  Run 137/378 (36.2%): O_original + noise 20.0% (rep 2) -> Acc: 0.80, Em: False
+  Run 138/378 (36.5%): O_original + noise 20.0% (rep 3) -> Acc: 0.80, Em: False
+  Run 139/378 (36.8%): O_original + noise 25.0% (rep 1) -> Acc: 0.76, Em: False
+  Run 140/378 (37.0%): O_original + noise 25.0% (rep 2) -> Acc: 0.76, Em: False
+  Run 141/378 (37.3%): O_original + noise 25.0% (rep 3) -> Acc: 0.76, Em: False
+  Run 142/378 (37.6%): O_original + noise 30.0% (rep 1) -> Acc: 0.72, Em: False
+  Run 143/378 (37.8%): O_original + noise 30.0% (rep 2) -> Acc: 0.72, Em: False
+  Run 144/378 (38.1%): O_original + noise 30.0% (rep 3) -> Acc: 0.72, Em: False
+  Run 145/378 (38.4%): O_original + noise 35.0% (rep 1) -> Acc: 0.68, Em: False
+  Run 146/378 (38.6%): O_original + noise 35.0% (rep 2) -> Acc: 0.68, Em: False
+  Run 147/378 (38.9%): O_original + noise 35.0% (rep 3) -> Acc: 0.68, Em: False
+  Run 148/378 (39.2%): O_original + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 149/378 (39.4%): O_original + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 150/378 (39.7%): O_original + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 151/378 (39.9%): O_original + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 152/378 (40.2%): O_original + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 153/378 (40.5%): O_original + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 154/378 (40.7%): O_original + mask 15.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 155/378 (41.0%): O_original + mask 15.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 156/378 (41.3%): O_original + mask 15.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 157/378 (41.5%): O_original + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 158/378 (41.8%): O_original + mask 20.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 159/378 (42.1%): O_original + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 160/378 (42.3%): O_original + mask 25.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 161/378 (42.6%): O_original + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 162/378 (42.9%): O_original + mask 25.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 163/378 (43.1%): O_original + mask 30.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 164/378 (43.4%): O_original + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 165/378 (43.7%): O_original + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 166/378 (43.9%): O_original + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 167/378 (44.2%): O_original + mask 35.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 168/378 (44.4%): O_original + mask 35.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 169/378 (44.7%): O_var1 + noise 5.0% (rep 1) -> Acc: 0.96, Em: False
+  Run 170/378 (45.0%): O_var1 + noise 5.0% (rep 2) -> Acc: 0.96, Em: False
+  Run 171/378 (45.2%): O_var1 + noise 5.0% (rep 3) -> Acc: 0.96, Em: False
+  Run 172/378 (45.5%): O_var1 + noise 10.0% (rep 1) -> Acc: 0.92, Em: False
+  Run 173/378 (45.8%): O_var1 + noise 10.0% (rep 2) -> Acc: 0.92, Em: False
+  Run 174/378 (46.0%): O_var1 + noise 10.0% (rep 3) -> Acc: 0.92, Em: False
+  Run 175/378 (46.3%): O_var1 + noise 15.0% (rep 1) -> Acc: 0.88, Em: False
+  Run 176/378 (46.6%): O_var1 + noise 15.0% (rep 2) -> Acc: 0.88, Em: False
+  Run 177/378 (46.8%): O_var1 + noise 15.0% (rep 3) -> Acc: 0.88, Em: False
+  Run 178/378 (47.1%): O_var1 + noise 20.0% (rep 1) -> Acc: 0.80, Em: False
+  Run 179/378 (47.4%): O_var1 + noise 20.0% (rep 2) -> Acc: 0.80, Em: False
+  Run 180/378 (47.6%): O_var1 + noise 20.0% (rep 3) -> Acc: 0.80, Em: False
+  Run 181/378 (47.9%): O_var1 + noise 25.0% (rep 1) -> Acc: 0.76, Em: False
+  Run 182/378 (48.1%): O_var1 + noise 25.0% (rep 2) -> Acc: 0.76, Em: False
+  Run 183/378 (48.4%): O_var1 + noise 25.0% (rep 3) -> Acc: 0.76, Em: False
+  Run 184/378 (48.7%): O_var1 + noise 30.0% (rep 1) -> Acc: 0.72, Em: False
+  Run 185/378 (48.9%): O_var1 + noise 30.0% (rep 2) -> Acc: 0.72, Em: False
+  Run 186/378 (49.2%): O_var1 + noise 30.0% (rep 3) -> Acc: 0.72, Em: False
+  Run 187/378 (49.5%): O_var1 + noise 35.0% (rep 1) -> Acc: 0.68, Em: False
+  Run 188/378 (49.7%): O_var1 + noise 35.0% (rep 2) -> Acc: 0.68, Em: False
+  Run 189/378 (50.0%): O_var1 + noise 35.0% (rep 3) -> Acc: 0.68, Em: False
+  Run 190/378 (50.3%): O_var1 + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 191/378 (50.5%): O_var1 + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 192/378 (50.8%): O_var1 + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 193/378 (51.1%): O_var1 + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 194/378 (51.3%): O_var1 + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 195/378 (51.6%): O_var1 + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 196/378 (51.9%): O_var1 + mask 15.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 197/378 (52.1%): O_var1 + mask 15.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 198/378 (52.4%): O_var1 + mask 15.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 199/378 (52.6%): O_var1 + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 200/378 (52.9%): O_var1 + mask 20.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 201/378 (53.2%): O_var1 + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 202/378 (53.4%): O_var1 + mask 25.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 203/378 (53.7%): O_var1 + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 204/378 (54.0%): O_var1 + mask 25.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 205/378 (54.2%): O_var1 + mask 30.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 206/378 (54.5%): O_var1 + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 207/378 (54.8%): O_var1 + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 208/378 (55.0%): O_var1 + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 209/378 (55.3%): O_var1 + mask 35.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 210/378 (55.6%): O_var1 + mask 35.0% (rep 3) -> Acc: 1.00, Em: True
 
-Results saved to: results/qhnn_results_25q_09072025_142525.csv
+✓ Reached minimum sample size: 210 samples
+  Run 211/378 (55.8%): O_var2 + noise 5.0% (rep 1) -> Acc: 0.96, Em: False
+  Run 212/378 (56.1%): O_var2 + noise 5.0% (rep 2) -> Acc: 0.96, Em: False
+  Run 213/378 (56.3%): O_var2 + noise 5.0% (rep 3) -> Acc: 0.96, Em: False
+  Run 214/378 (56.6%): O_var2 + noise 10.0% (rep 1) -> Acc: 0.92, Em: False
+  Run 215/378 (56.9%): O_var2 + noise 10.0% (rep 2) -> Acc: 0.92, Em: False
+  Run 216/378 (57.1%): O_var2 + noise 10.0% (rep 3) -> Acc: 0.92, Em: False
+  Run 217/378 (57.4%): O_var2 + noise 15.0% (rep 1) -> Acc: 0.88, Em: False
+  Run 218/378 (57.7%): O_var2 + noise 15.0% (rep 2) -> Acc: 0.88, Em: False
+  Run 219/378 (57.9%): O_var2 + noise 15.0% (rep 3) -> Acc: 0.88, Em: False
+  Run 220/378 (58.2%): O_var2 + noise 20.0% (rep 1) -> Acc: 0.80, Em: False
+  Run 221/378 (58.5%): O_var2 + noise 20.0% (rep 2) -> Acc: 0.80, Em: False
+  Run 222/378 (58.7%): O_var2 + noise 20.0% (rep 3) -> Acc: 0.80, Em: False
+  Run 223/378 (59.0%): O_var2 + noise 25.0% (rep 1) -> Acc: 0.76, Em: False
+  Run 224/378 (59.3%): O_var2 + noise 25.0% (rep 2) -> Acc: 0.76, Em: False
+  Run 225/378 (59.5%): O_var2 + noise 25.0% (rep 3) -> Acc: 0.76, Em: False
+  Run 226/378 (59.8%): O_var2 + noise 30.0% (rep 1) -> Acc: 0.72, Em: False
+  Run 227/378 (60.1%): O_var2 + noise 30.0% (rep 2) -> Acc: 0.72, Em: False
+  Run 228/378 (60.3%): O_var2 + noise 30.0% (rep 3) -> Acc: 0.72, Em: False
+  Run 229/378 (60.6%): O_var2 + noise 35.0% (rep 1) -> Acc: 0.68, Em: False
+  Run 230/378 (60.8%): O_var2 + noise 35.0% (rep 2) -> Acc: 0.68, Em: False
+  Run 231/378 (61.1%): O_var2 + noise 35.0% (rep 3) -> Acc: 0.68, Em: False
+  Run 232/378 (61.4%): O_var2 + mask 5.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 233/378 (61.6%): O_var2 + mask 5.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 234/378 (61.9%): O_var2 + mask 5.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 235/378 (62.2%): O_var2 + mask 10.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 236/378 (62.4%): O_var2 + mask 10.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 237/378 (62.7%): O_var2 + mask 10.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 238/378 (63.0%): O_var2 + mask 15.0% (rep 1) -> Acc: 1.00, Em: False
+  Run 239/378 (63.2%): O_var2 + mask 15.0% (rep 2) -> Acc: 1.00, Em: False
+  Run 240/378 (63.5%): O_var2 + mask 15.0% (rep 3) -> Acc: 1.00, Em: False
+  Run 241/378 (63.8%): O_var2 + mask 20.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 242/378 (64.0%): O_var2 + mask 20.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 243/378 (64.3%): O_var2 + mask 20.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 244/378 (64.6%): O_var2 + mask 25.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 245/378 (64.8%): O_var2 + mask 25.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 246/378 (65.1%): O_var2 + mask 25.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 247/378 (65.3%): O_var2 + mask 30.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 248/378 (65.6%): O_var2 + mask 30.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 249/378 (65.9%): O_var2 + mask 30.0% (rep 3) -> Acc: 1.00, Em: True
+  Run 250/378 (66.1%): O_var2 + mask 35.0% (rep 1) -> Acc: 1.00, Em: True
+  Run 251/378 (66.4%): O_var2 + mask 35.0% (rep 2) -> Acc: 1.00, Em: True
+  Run 252/378 (66.7%): O_var2 + mask 35.0% (rep 3) -> Acc: 1.00, Em: True
+
+✓ Reached minimum sample size: 252 samples
+Stopping early - sufficient samples collected
+
+Results saved to: results/qhnn_results_25q_09212025_164848.csv
 
 ============================================================
 VALIDATION REPORT
 ============================================================
 Pattern size: 5x5
-Noise emergence rate: 0.0%
-Mask emergence rate: 60.0%
+Total samples: 252
+Statistical power: 1.000 (✓ Adequate)
+Noise emergence rate: 1.6%
+Mask emergence rate: 57.1%
 
 ⚠️ WARNINGS:
   - Asymmetry detected: masking shows significantly higher emergence than noise
@@ -400,22 +1122,24 @@ Mask emergence rate: 60.0%
 EXPERIMENT SUMMARY
 ============================================================
 Pattern size: 5x5
-Total runs: 30
-Emergent cases: 9 (30.0%)
-Runtime: 1.2 minutes
+Total runs: 252
+Emergent cases: 74 (29.4%)
+Runtime: 9.9 minutes
 Qubits used: 25
-  noise: 0/15 (0.0%)
-  incompleteness: 9/15 (60.0%)
+Statistical power achieved: 1.000
+  noise: 2/126 (1.6%)
+  incompleteness: 72/126 (57.1%)
 
 Emergence breakdown by type:
-  exceptional_recall: 6
-  perfect_reconstruction: 3
+  exceptional_recall: 46
+  near_perfect_reconstruction: 9
+  perfect_reconstruction: 17
+  robust_recall: 2
 
-Per-pattern performance:
-  T: 3/10 emergent, avg accuracy: 0.908
-  O: 3/10 emergent, avg accuracy: 0.908
-  X: 3/10 emergent, avg accuracy: 0.908
+Per-pattern performance (base patterns only):
+  T: 12/42 emergent, avg accuracy: 0.909
+  O: 12/42 emergent, avg accuracy: 0.909
 
 ✅ 5x5 experiment complete!
+Statistical power: ADEQUATE
 ============================================================
-(qnai-env) pooh@beast-server-0:~/QNAI-Experiment/QNAI-test-engine/Tests/Pattern-Matching-TEST$ 
