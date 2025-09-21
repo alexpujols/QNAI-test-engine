@@ -110,7 +110,8 @@ class ExperimentDataLoader:
     def __init__(self, 
                  qhnn_dir: str = "../Tests/Pattern-Matching-TEST/results/",
                  vqnn_dir: str = "../Tests/Problem-Solving-TEST/results/",
-                 qam_dir: str = "../Tests/Creative-Thinking-TEST/results/"):
+                 qam_dir: str = "../Tests/Creative-Thinking-TEST/results/",
+                 use_uploads: bool = False):
         """
         Initialize data loader with directory paths specified in dissertation.
         
@@ -118,10 +119,18 @@ class ExperimentDataLoader:
             qhnn_dir: Directory containing QHNN (Pattern Matching) results
             vqnn_dir: Directory containing VQNN (Problem Solving) results  
             qam_dir: Directory containing QAM (Creative Thinking) results
+            use_uploads: If True, use /mnt/user-data/uploads for testing
         """
-        self.qhnn_dir = Path(qhnn_dir)
-        self.vqnn_dir = Path(vqnn_dir)
-        self.qam_dir = Path(qam_dir)
+        if use_uploads:
+            # Use uploaded files for testing
+            self.qhnn_dir = Path("/mnt/user-data/uploads")
+            self.vqnn_dir = Path("/mnt/user-data/uploads")
+            self.qam_dir = Path("/mnt/user-data/uploads")
+        else:
+            self.qhnn_dir = Path(qhnn_dir)
+            self.vqnn_dir = Path(vqnn_dir)
+            self.qam_dir = Path(qam_dir)
+            
         self.qhnn_data = {}  # Pattern matching
         self.vqnn_data = {}  # Problem solving
         self.qam_data = {}   # Creative thinking
