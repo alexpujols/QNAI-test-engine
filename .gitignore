@@ -12,5 +12,4 @@ UML-files/
 *.key
 
 # Git instructional file
-git_sync.txt
-git_commit.txt
+*.info
