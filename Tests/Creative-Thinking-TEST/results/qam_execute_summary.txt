@@ -1,4 +1,3 @@
-(qnai-env) pooh@beast-server-0:~/QNAI-Experiment/QNAI-test-engine/Tests/Creative-Thinking-TEST$ python run-ct-test.py 
 
 ============================================================
 QUANTUM CIRCUIT CONFIGURATION FOR CREATIVE THINKING
@@ -13,6 +12,8 @@ Recommended ranges:
 
 Note: Higher qubit counts enable richer creative associations
 but require more computational resources.
+
+Note: Enhanced sampling enabled for statistical power (n≥200 per config)
 
 Number of qubits (8-25): 9
 
@@ -62,45 +63,120 @@ Initializing 9-qubit Quantum Associative Memory...
 ✅ AI scoring APIs initialized
 Running experiments...
 
-Testing 5 themes with 5 prompts each
+Testing 5 themes with 20 prompts each
   Run 1: Theme 'animal' (iteration 1)🔧 Quantum device: GPU (lightning.gpu)
- -> Creativity: 3.63, Emergent: False
-  Run 2: Theme 'animal' (iteration 2) -> Creativity: 4.22, Emergent: False
-  Run 3: Theme 'animal' (iteration 3) -> Creativity: 3.81, Emergent: False
-  Run 4: Theme 'animal' (iteration 4) -> Creativity: 3.85, Emergent: False
-  Run 5: Theme 'animal' (iteration 5) -> Creativity: 3.96, Emergent: False
-  Run 6: Theme 'machine' (iteration 1) -> Creativity: 3.81, Emergent: False
-  Run 7: Theme 'machine' (iteration 2) -> Creativity: 3.85, Emergent: False
-  Run 8: Theme 'machine' (iteration 3) -> Creativity: 3.59, Emergent: False
-  Run 9: Theme 'machine' (iteration 4) -> Creativity: 4.41, Emergent: False
-  Run 10: Theme 'machine' (iteration 5) -> Creativity: 4.11, Emergent: False
-  Run 11: Theme 'emotion' (iteration 1) -> Creativity: 4.78, Emergent: True
-  Run 12: Theme 'emotion' (iteration 2) -> Creativity: 4.78, Emergent: True
-  Run 13: Theme 'emotion' (iteration 3) -> Creativity: 4.33, Emergent: False
-  Run 14: Theme 'emotion' (iteration 4) -> Creativity: 4.41, Emergent: False
-  Run 15: Theme 'emotion' (iteration 5) -> Creativity: 4.30, Emergent: False
-  Run 16: Theme 'nature' (iteration 1) -> Creativity: 4.30, Emergent: False
-  Run 17: Theme 'nature' (iteration 2) -> Creativity: 3.96, Emergent: False
-  Run 18: Theme 'nature' (iteration 3) -> Creativity: 4.67, Emergent: True
-  Run 19: Theme 'nature' (iteration 4) -> Creativity: 4.70, Emergent: True
-  Run 20: Theme 'nature' (iteration 5) -> Creativity: 3.85, Emergent: False
-  Run 21: Theme 'algorithm' (iteration 1) -> Creativity: 4.19, Emergent: False
-  Run 22: Theme 'algorithm' (iteration 2) -> Creativity: 3.96, Emergent: False
-  Run 23: Theme 'algorithm' (iteration 3) -> Creativity: 4.59, Emergent: True
-  Run 24: Theme 'algorithm' (iteration 4) -> Creativity: 4.15, Emergent: False
-  Run 25: Theme 'algorithm' (iteration 5) -> Creativity: 4.00, Emergent: False
+ -> Creativity: 4.15, Emergent: False
+  Run 2: Theme 'animal' (iteration 2) -> Creativity: 4.11, Emergent: False
+  Run 3: Theme 'animal' (iteration 3) -> Creativity: 3.85, Emergent: False
+  Run 4: Theme 'animal' (iteration 4) -> Creativity: 3.48, Emergent: False
+  Run 5: Theme 'animal' (iteration 5) -> Creativity: 3.22, Emergent: False
+  Run 6: Theme 'animal' (iteration 6) -> Creativity: 3.93, Emergent: False
+  Run 7: Theme 'animal' (iteration 7) -> Creativity: 3.85, Emergent: False
+  Run 8: Theme 'animal' (iteration 8) -> Creativity: 4.26, Emergent: False
+  Run 9: Theme 'animal' (iteration 9) -> Creativity: 4.11, Emergent: False
+  Run 10: Theme 'animal' (iteration 10) -> Creativity: 3.93, Emergent: False
+  Run 11: Theme 'animal' (iteration 11) -> Creativity: 4.26, Emergent: False
+  Run 12: Theme 'animal' (iteration 12) -> Creativity: 3.93, Emergent: False
+  Run 13: Theme 'animal' (iteration 13) -> Creativity: 3.78, Emergent: False
+  Run 14: Theme 'animal' (iteration 14) -> Creativity: 3.81, Emergent: False
+  Run 15: Theme 'animal' (iteration 15) -> Creativity: 3.93, Emergent: False
+  Run 16: Theme 'animal' (iteration 16) -> Creativity: 3.89, Emergent: False
+  Run 17: Theme 'animal' (iteration 17) -> Creativity: 3.85, Emergent: False
+  Run 18: Theme 'animal' (iteration 18) -> Creativity: 3.78, Emergent: False
+  Run 19: Theme 'animal' (iteration 19) -> Creativity: 4.30, Emergent: False
+  Run 20: Theme 'animal' (iteration 20) -> Creativity: 3.78, Emergent: False
+  Run 21: Theme 'machine' (iteration 1) -> Creativity: 3.70, Emergent: False
+  Run 22: Theme 'machine' (iteration 2) -> Creativity: 4.04, Emergent: False
+  Run 23: Theme 'machine' (iteration 3) -> Creativity: 4.07, Emergent: False
+  Run 24: Theme 'machine' (iteration 4) -> Creativity: 4.33, Emergent: False
+  Run 25: Theme 'machine' (iteration 5) -> Creativity: 4.15, Emergent: False
+  Run 26: Theme 'machine' (iteration 6) -> Creativity: 4.00, Emergent: False
+  Run 27: Theme 'machine' (iteration 7) -> Creativity: 4.22, Emergent: False
+  Run 28: Theme 'machine' (iteration 8) -> Creativity: 4.11, Emergent: False
+  Run 29: Theme 'machine' (iteration 9) -> Creativity: 4.33, Emergent: False
+  Run 30: Theme 'machine' (iteration 10) -> Creativity: 3.81, Emergent: False
+  Run 31: Theme 'machine' (iteration 11) -> Creativity: 4.07, Emergent: False
+  Run 32: Theme 'machine' (iteration 12) -> Creativity: 4.07, Emergent: False
+  Run 33: Theme 'machine' (iteration 13) -> Creativity: 4.15, Emergent: False
+  Run 34: Theme 'machine' (iteration 14) -> Creativity: 4.37, Emergent: False
+  Run 35: Theme 'machine' (iteration 15) -> Creativity: 4.04, Emergent: False
+  Run 36: Theme 'machine' (iteration 16) -> Creativity: 3.74, Emergent: False
+  Run 37: Theme 'machine' (iteration 17) -> Creativity: 3.74, Emergent: False
+  Run 38: Theme 'machine' (iteration 18) -> Creativity: 4.07, Emergent: False
+  Run 39: Theme 'machine' (iteration 19) -> Creativity: 3.78, Emergent: False
+  Run 40: Theme 'machine' (iteration 20) -> Creativity: 3.85, Emergent: False
+  Run 41: Theme 'emotion' (iteration 1) -> Creativity: 4.70, Emergent: True
+  Run 42: Theme 'emotion' (iteration 2) -> Creativity: 4.52, Emergent: True
+  Run 43: Theme 'emotion' (iteration 3) -> Creativity: 4.44, Emergent: False
+  Run 44: Theme 'emotion' (iteration 4) -> Creativity: 4.70, Emergent: True
+  Run 45: Theme 'emotion' (iteration 5) -> Creativity: 4.67, Emergent: True
+  Run 46: Theme 'emotion' (iteration 6) -> Creativity: 4.85, Emergent: True
+  Run 47: Theme 'emotion' (iteration 7) -> Creativity: 4.37, Emergent: False
+  Run 48: Theme 'emotion' (iteration 8) -> Creativity: 4.37, Emergent: False
+  Run 49: Theme 'emotion' (iteration 9) -> Creativity: 4.81, Emergent: True
+  Run 50: Theme 'emotion' (iteration 10) -> Creativity: 4.48, Emergent: False
+  Run 51: Theme 'emotion' (iteration 11) -> Creativity: 4.78, Emergent: False
+  Run 52: Theme 'emotion' (iteration 12) -> Creativity: 4.70, Emergent: True
+  Run 53: Theme 'emotion' (iteration 13) -> Creativity: 4.96, Emergent: True
+  Run 54: Theme 'emotion' (iteration 14) -> Creativity: 4.37, Emergent: False
+  Run 55: Theme 'emotion' (iteration 15) -> Creativity: 4.63, Emergent: True
+  Run 56: Theme 'emotion' (iteration 16) -> Creativity: 4.67, Emergent: True
+  Run 57: Theme 'emotion' (iteration 17) -> Creativity: 4.26, Emergent: False
+  Run 58: Theme 'emotion' (iteration 18) -> Creativity: 4.70, Emergent: True
+  Run 59: Theme 'emotion' (iteration 19) -> Creativity: 4.78, Emergent: True
+  Run 60: Theme 'emotion' (iteration 20) -> Creativity: 4.78, Emergent: True
+  Run 61: Theme 'nature' (iteration 1) -> Creativity: 4.52, Emergent: True
+  Run 62: Theme 'nature' (iteration 2) -> Creativity: 4.48, Emergent: False
+  Run 63: Theme 'nature' (iteration 3) -> Creativity: 4.30, Emergent: False
+  Run 64: Theme 'nature' (iteration 4) -> Creativity: 4.19, Emergent: False
+  Run 65: Theme 'nature' (iteration 5) -> Creativity: 4.48, Emergent: False
+  Run 66: Theme 'nature' (iteration 6) -> Creativity: 4.37, Emergent: False
+  Run 67: Theme 'nature' (iteration 7) -> Creativity: 4.19, Emergent: False
+  Run 68: Theme 'nature' (iteration 8) -> Creativity: 4.04, Emergent: False
+  Run 69: Theme 'nature' (iteration 9) -> Creativity: 4.26, Emergent: False
+  Run 70: Theme 'nature' (iteration 10) -> Creativity: 4.56, Emergent: True
+  Run 71: Theme 'nature' (iteration 11) -> Creativity: 4.26, Emergent: False
+  Run 72: Theme 'nature' (iteration 12) -> Creativity: 4.44, Emergent: False
+  Run 73: Theme 'nature' (iteration 13) -> Creativity: 4.37, Emergent: False
+  Run 74: Theme 'nature' (iteration 14) -> Creativity: 4.52, Emergent: True
+  Run 75: Theme 'nature' (iteration 15) -> Creativity: 4.19, Emergent: False
+  Run 76: Theme 'nature' (iteration 16) -> Creativity: 3.52, Emergent: False
+  Run 77: Theme 'nature' (iteration 17) -> Creativity: 4.15, Emergent: False
+  Run 78: Theme 'nature' (iteration 18) -> Creativity: 4.56, Emergent: True
+  Run 79: Theme 'nature' (iteration 19) -> Creativity: 4.07, Emergent: False
+  Run 80: Theme 'nature' (iteration 20) -> Creativity: 4.37, Emergent: False
+  Run 81: Theme 'algorithm' (iteration 1) -> Creativity: 3.48, Emergent: False
+  Run 82: Theme 'algorithm' (iteration 2) -> Creativity: 3.85, Emergent: False
+  Run 83: Theme 'algorithm' (iteration 3) -> Creativity: 4.48, Emergent: False
+  Run 84: Theme 'algorithm' (iteration 4) -> Creativity: 3.63, Emergent: False
+  Run 85: Theme 'algorithm' (iteration 5) -> Creativity: 4.04, Emergent: False
+  Run 86: Theme 'algorithm' (iteration 6) -> Creativity: 4.22, Emergent: False
+  Run 87: Theme 'algorithm' (iteration 7) -> Creativity: 4.26, Emergent: False
+  Run 88: Theme 'algorithm' (iteration 8) -> Creativity: 4.19, Emergent: False
+  Run 89: Theme 'algorithm' (iteration 9) -> Creativity: 4.30, Emergent: False
+  Run 90: Theme 'algorithm' (iteration 10) -> Creativity: 4.44, Emergent: False
+  Run 91: Theme 'algorithm' (iteration 11) -> Creativity: 4.33, Emergent: False
+  Run 92: Theme 'algorithm' (iteration 12) -> Creativity: 4.04, Emergent: False
+  Run 93: Theme 'algorithm' (iteration 13) -> Creativity: 4.33, Emergent: False
+  Run 94: Theme 'algorithm' (iteration 14) -> Creativity: 3.96, Emergent: False
+  Run 95: Theme 'algorithm' (iteration 15) -> Creativity: 4.07, Emergent: False
+  Run 96: Theme 'algorithm' (iteration 16) -> Creativity: 4.07, Emergent: False
+  Run 97: Theme 'algorithm' (iteration 17) -> Creativity: 4.26, Emergent: False
+  Run 98: Theme 'algorithm' (iteration 18) -> Creativity: 3.44, Emergent: False
+  Run 99: Theme 'algorithm' (iteration 19) -> Creativity: 4.00, Emergent: False
+  Run 100: Theme 'algorithm' (iteration 20) -> Creativity: 3.93, Emergent: False
 
-Results saved to: results/qam_creative_results_9q_09072025_145308.csv
+Results saved to: results/qam_creative_results_9q_09212025_172211.csv
 
 ============================================================
 SUMMARY
 ============================================================
-Total runs: 25
-Emergent cases: 5 (20.0%)
-Average creativity score: 4.17/7.0
+Total runs: 100
+Emergent cases: 17 (17.0%)
+Average creativity score: 4.19/7.0
 
 Emergence types:
-  semantic_leap: 5 (100.0% of emergent)
+  semantic_leap: 17 (100.0% of emergent)
 
 Quantum configuration used:
   Qubits: 9
@@ -124,6 +200,8 @@ Recommended ranges:
 
 Note: Higher qubit counts enable richer creative associations
 but require more computational resources.
+
+Note: Enhanced sampling enabled for statistical power (n≥200 per config)
 
 Number of qubits (8-25): 16
 
@@ -173,56 +251,161 @@ Initializing 16-qubit Quantum Associative Memory...
 ✅ AI scoring APIs initialized
 Running experiments...
 
-Testing 7 themes with 5 prompts each
+Testing 7 themes with 20 prompts each
   Run 1: Theme 'animal' (iteration 1)🔧 Quantum device: GPU (lightning.gpu)
- -> Creativity: 3.85, Emergent: False
-  Run 2: Theme 'animal' (iteration 2) -> Creativity: 3.70, Emergent: False
-  Run 3: Theme 'animal' (iteration 3) -> Creativity: 3.74, Emergent: False
-  Run 4: Theme 'animal' (iteration 4) -> Creativity: 4.07, Emergent: False
-  Run 5: Theme 'animal' (iteration 5) -> Creativity: 4.00, Emergent: False
-  Run 6: Theme 'machine' (iteration 1) -> Creativity: 4.78, Emergent: True
-  Run 7: Theme 'machine' (iteration 2) -> Creativity: 4.81, Emergent: True
-  Run 8: Theme 'machine' (iteration 3) -> Creativity: 5.04, Emergent: True
-  Run 9: Theme 'machine' (iteration 4) -> Creativity: 4.81, Emergent: True
-  Run 10: Theme 'machine' (iteration 5) -> Creativity: 4.81, Emergent: True
-  Run 11: Theme 'emotion' (iteration 1) -> Creativity: 5.04, Emergent: True
-  Run 12: Theme 'emotion' (iteration 2) -> Creativity: 4.33, Emergent: False
-  Run 13: Theme 'emotion' (iteration 3) -> Creativity: 4.81, Emergent: True
-  Run 14: Theme 'emotion' (iteration 4) -> Creativity: 4.56, Emergent: True
-  Run 15: Theme 'emotion' (iteration 5) -> Creativity: 4.52, Emergent: True
-  Run 16: Theme 'nature' (iteration 1) -> Creativity: 5.22, Emergent: True
-  Run 17: Theme 'nature' (iteration 2) -> Creativity: 5.44, Emergent: True
-  Run 18: Theme 'nature' (iteration 3) -> Creativity: 5.30, Emergent: True
-  Run 19: Theme 'nature' (iteration 4) -> Creativity: 5.11, Emergent: True
-  Run 20: Theme 'nature' (iteration 5) -> Creativity: 5.41, Emergent: True
-  Run 21: Theme 'algorithm' (iteration 1) -> Creativity: 4.11, Emergent: False
-  Run 22: Theme 'algorithm' (iteration 2) -> Creativity: 4.52, Emergent: True
-  Run 23: Theme 'algorithm' (iteration 3) -> Creativity: 4.15, Emergent: False
-  Run 24: Theme 'algorithm' (iteration 4) -> Creativity: 4.30, Emergent: False
-  Run 25: Theme 'algorithm' (iteration 5) -> Creativity: 4.15, Emergent: False
-  Run 26: Theme 'quantum' (iteration 1) -> Creativity: 3.07, Emergent: False
-  Run 27: Theme 'quantum' (iteration 2) -> Creativity: 4.33, Emergent: False
-  Run 28: Theme 'quantum' (iteration 3) -> Creativity: 4.41, Emergent: False
-  Run 29: Theme 'quantum' (iteration 4) -> Creativity: 3.63, Emergent: False
-  Run 30: Theme 'quantum' (iteration 5) -> Creativity: 3.85, Emergent: False
-  Run 31: Theme 'consciousness' (iteration 1) -> Creativity: 4.48, Emergent: False
-  Run 32: Theme 'consciousness' (iteration 2) -> Creativity: 4.52, Emergent: False
-  Run 33: Theme 'consciousness' (iteration 3) -> Creativity: 4.41, Emergent: False
-  Run 34: Theme 'consciousness' (iteration 4) -> Creativity: 4.48, Emergent: False
-  Run 35: Theme 'consciousness' (iteration 5) -> Creativity: 4.48, Emergent: False
+ -> Creativity: 3.70, Emergent: False
+  Run 2: Theme 'animal' (iteration 2) -> Creativity: 3.96, Emergent: False
+  Run 3: Theme 'animal' (iteration 3) -> Creativity: 3.48, Emergent: False
+  Run 4: Theme 'animal' (iteration 4) -> Creativity: 3.70, Emergent: False
+  Run 5: Theme 'animal' (iteration 5) -> Creativity: 4.07, Emergent: False
+  Run 6: Theme 'animal' (iteration 6) -> Creativity: 3.96, Emergent: False
+  Run 7: Theme 'animal' (iteration 7) -> Creativity: 3.52, Emergent: False
+  Run 8: Theme 'animal' (iteration 8) -> Creativity: 4.00, Emergent: False
+  Run 9: Theme 'animal' (iteration 9) -> Creativity: 3.89, Emergent: False
+  Run 10: Theme 'animal' (iteration 10) -> Creativity: 4.04, Emergent: False
+  Run 11: Theme 'animal' (iteration 11) -> Creativity: 3.56, Emergent: False
+  Run 12: Theme 'animal' (iteration 12) -> Creativity: 4.11, Emergent: False
+  Run 13: Theme 'animal' (iteration 13) -> Creativity: 3.74, Emergent: False
+  Run 14: Theme 'animal' (iteration 14) -> Creativity: 3.81, Emergent: False
+  Run 15: Theme 'animal' (iteration 15) -> Creativity: 3.96, Emergent: False
+  Run 16: Theme 'animal' (iteration 16) -> Creativity: 3.81, Emergent: False
+  Run 17: Theme 'animal' (iteration 17) -> Creativity: 4.19, Emergent: False
+  Run 18: Theme 'animal' (iteration 18) -> Creativity: 3.70, Emergent: False
+  Run 19: Theme 'animal' (iteration 19) -> Creativity: 3.81, Emergent: False
+  Run 20: Theme 'animal' (iteration 20) -> Creativity: 3.59, Emergent: False
+  Run 21: Theme 'machine' (iteration 1) -> Creativity: 4.93, Emergent: True
+  Run 22: Theme 'machine' (iteration 2) -> Creativity: 4.70, Emergent: True
+  Run 23: Theme 'machine' (iteration 3) -> Creativity: 4.89, Emergent: True
+  Run 24: Theme 'machine' (iteration 4) -> Creativity: 4.89, Emergent: True
+  Run 25: Theme 'machine' (iteration 5) -> Creativity: 4.78, Emergent: True
+  Run 26: Theme 'machine' (iteration 6) -> Creativity: 4.96, Emergent: True
+  Run 27: Theme 'machine' (iteration 7) -> Creativity: 4.70, Emergent: True
+  Run 28: Theme 'machine' (iteration 8) -> Creativity: 5.00, Emergent: True
+  Run 29: Theme 'machine' (iteration 9) -> Creativity: 4.67, Emergent: True
+  Run 30: Theme 'machine' (iteration 10) -> Creativity: 4.89, Emergent: True
+  Run 31: Theme 'machine' (iteration 11) -> Creativity: 5.00, Emergent: True
+  Run 32: Theme 'machine' (iteration 12) -> Creativity: 5.00, Emergent: True
+  Run 33: Theme 'machine' (iteration 13) -> Creativity: 4.96, Emergent: True
+  Run 34: Theme 'machine' (iteration 14) -> Creativity: 4.56, Emergent: True
+  Run 35: Theme 'machine' (iteration 15) -> Creativity: 4.67, Emergent: True
+  Run 36: Theme 'machine' (iteration 16) -> Creativity: 4.81, Emergent: True
+  Run 37: Theme 'machine' (iteration 17) -> Creativity: 5.00, Emergent: True
+  Run 38: Theme 'machine' (iteration 18) -> Creativity: 5.04, Emergent: True
+  Run 39: Theme 'machine' (iteration 19) -> Creativity: 4.63, Emergent: True
+  Run 40: Theme 'machine' (iteration 20) -> Creativity: 4.70, Emergent: True
+  Run 41: Theme 'emotion' (iteration 1) -> Creativity: 5.04, Emergent: True
+  Run 42: Theme 'emotion' (iteration 2) -> Creativity: 4.70, Emergent: True
+  Run 43: Theme 'emotion' (iteration 3) -> Creativity: 4.30, Emergent: False
+  Run 44: Theme 'emotion' (iteration 4) -> Creativity: 4.78, Emergent: True
+  Run 45: Theme 'emotion' (iteration 5) -> Creativity: 5.00, Emergent: True
+  Run 46: Theme 'emotion' (iteration 6) -> Creativity: 4.70, Emergent: True
+  Run 47: Theme 'emotion' (iteration 7) -> Creativity: 4.96, Emergent: True
+  Run 48: Theme 'emotion' (iteration 8) -> Creativity: 4.81, Emergent: True
+  Run 49: Theme 'emotion' (iteration 9) -> Creativity: 4.37, Emergent: False
+  Run 50: Theme 'emotion' (iteration 10) -> Creativity: 4.96, Emergent: True
+  Run 51: Theme 'emotion' (iteration 11) -> Creativity: 5.04, Emergent: True
+  Run 52: Theme 'emotion' (iteration 12) -> Creativity: 4.67, Emergent: True
+  Run 53: Theme 'emotion' (iteration 13) -> Creativity: 4.41, Emergent: False
+  Run 54: Theme 'emotion' (iteration 14) -> Creativity: 4.81, Emergent: True
+  Run 55: Theme 'emotion' (iteration 15) -> Creativity: 4.74, Emergent: True
+  Run 56: Theme 'emotion' (iteration 16) -> Creativity: 4.22, Emergent: False
+  Run 57: Theme 'emotion' (iteration 17) -> Creativity: 4.96, Emergent: True
+  Run 58: Theme 'emotion' (iteration 18) -> Creativity: 5.04, Emergent: True
+  Run 59: Theme 'emotion' (iteration 19) -> Creativity: 4.78, Emergent: True
+  Run 60: Theme 'emotion' (iteration 20) -> Creativity: 4.48, Emergent: False
+  Run 61: Theme 'nature' (iteration 1) -> Creativity: 5.41, Emergent: True
+  Run 62: Theme 'nature' (iteration 2) -> Creativity: 4.93, Emergent: True
+  Run 63: Theme 'nature' (iteration 3) -> Creativity: 5.07, Emergent: True
+  Run 64: Theme 'nature' (iteration 4) -> Creativity: 4.96, Emergent: True
+  Run 65: Theme 'nature' (iteration 5) -> Creativity: 4.85, Emergent: True
+  Run 66: Theme 'nature' (iteration 6) -> Creativity: 5.48, Emergent: True
+  Run 67: Theme 'nature' (iteration 7) -> Creativity: 5.33, Emergent: True
+  Run 68: Theme 'nature' (iteration 8) -> Creativity: 4.67, Emergent: True
+  Run 69: Theme 'nature' (iteration 9) -> Creativity: 5.41, Emergent: True
+  Run 70: Theme 'nature' (iteration 10) -> Creativity: 4.81, Emergent: True
+  Run 71: Theme 'nature' (iteration 11) -> Creativity: 5.30, Emergent: True
+  Run 72: Theme 'nature' (iteration 12) -> Creativity: 5.37, Emergent: True
+  Run 73: Theme 'nature' (iteration 13) -> Creativity: 5.04, Emergent: True
+  Run 74: Theme 'nature' (iteration 14) -> Creativity: 5.15, Emergent: True
+  Run 75: Theme 'nature' (iteration 15) -> Creativity: 5.19, Emergent: True
+  Run 76: Theme 'nature' (iteration 16) -> Creativity: 4.85, Emergent: True
+  Run 77: Theme 'nature' (iteration 17) -> Creativity: 5.30, Emergent: True
+  Run 78: Theme 'nature' (iteration 18) -> Creativity: 5.04, Emergent: True
+  Run 79: Theme 'nature' (iteration 19) -> Creativity: 5.04, Emergent: True
+  Run 80: Theme 'nature' (iteration 20) -> Creativity: 5.41, Emergent: True
+  Run 81: Theme 'algorithm' (iteration 1) -> Creativity: 4.15, Emergent: False
+  Run 82: Theme 'algorithm' (iteration 2) -> Creativity: 4.30, Emergent: False
+  Run 83: Theme 'algorithm' (iteration 3) -> Creativity: 4.67, Emergent: True
+  Run 84: Theme 'algorithm' (iteration 4) -> Creativity: 3.81, Emergent: False
+  Run 85: Theme 'algorithm' (iteration 5) -> Creativity: 3.63, Emergent: False
+  Run 86: Theme 'algorithm' (iteration 6) -> Creativity: 4.48, Emergent: False
+  Run 87: Theme 'algorithm' (iteration 7) -> Creativity: 4.33, Emergent: False
+  Run 88: Theme 'algorithm' (iteration 8) -> Creativity: 3.89, Emergent: False
+  Run 89: Theme 'algorithm' (iteration 9) -> Creativity: 4.30, Emergent: False
+  Run 90: Theme 'algorithm' (iteration 10) -> Creativity: 4.15, Emergent: False
+  Run 91: Theme 'algorithm' (iteration 11) -> Creativity: 4.04, Emergent: False
+  Run 92: Theme 'algorithm' (iteration 12) -> Creativity: 4.56, Emergent: True
+  Run 93: Theme 'algorithm' (iteration 13) -> Creativity: 4.37, Emergent: False
+  Run 94: Theme 'algorithm' (iteration 14) -> Creativity: 4.26, Emergent: False
+  Run 95: Theme 'algorithm' (iteration 15) -> Creativity: 4.15, Emergent: False
+  Run 96: Theme 'algorithm' (iteration 16) -> Creativity: 4.37, Emergent: False
+  Run 97: Theme 'algorithm' (iteration 17) -> Creativity: 4.37, Emergent: False
+  Run 98: Theme 'algorithm' (iteration 18) -> Creativity: 4.15, Emergent: False
+  Run 99: Theme 'algorithm' (iteration 19) -> Creativity: 3.85, Emergent: False
+  Run 100: Theme 'algorithm' (iteration 20) -> Creativity: 4.22, Emergent: False
+  Run 101: Theme 'quantum' (iteration 1) -> Creativity: 4.63, Emergent: True
+  Run 102: Theme 'quantum' (iteration 2) -> Creativity: 3.52, Emergent: False
+  Run 103: Theme 'quantum' (iteration 3) -> Creativity: 4.30, Emergent: False
+  Run 104: Theme 'quantum' (iteration 4) -> Creativity: 4.56, Emergent: True
+  Run 105: Theme 'quantum' (iteration 5) -> Creativity: 3.52, Emergent: False
+  Run 106: Theme 'quantum' (iteration 6) -> Creativity: 4.70, Emergent: True
+  Run 107: Theme 'quantum' (iteration 7) -> Creativity: 4.59, Emergent: True
+  Run 108: Theme 'quantum' (iteration 8) -> Creativity: 4.11, Emergent: False
+  Run 109: Theme 'quantum' (iteration 9) -> Creativity: 4.33, Emergent: False
+  Run 110: Theme 'quantum' (iteration 10) -> Creativity: 4.48, Emergent: False
+  Run 111: Theme 'quantum' (iteration 11) -> Creativity: 4.41, Emergent: False
+  Run 112: Theme 'quantum' (iteration 12) -> Creativity: 4.44, Emergent: False
+  Run 113: Theme 'quantum' (iteration 13) -> Creativity: 4.67, Emergent: True
+  Run 114: Theme 'quantum' (iteration 14) -> Creativity: 4.56, Emergent: True
+  Run 115: Theme 'quantum' (iteration 15) -> Creativity: 4.56, Emergent: True
+  Run 116: Theme 'quantum' (iteration 16) -> Creativity: 3.78, Emergent: False
+  Run 117: Theme 'quantum' (iteration 17) -> Creativity: 4.41, Emergent: False
+  Run 118: Theme 'quantum' (iteration 18) -> Creativity: 3.93, Emergent: False
+  Run 119: Theme 'quantum' (iteration 19) -> Creativity: 3.67, Emergent: False
+  Run 120: Theme 'quantum' (iteration 20) -> Creativity: 3.89, Emergent: False
+  Run 121: Theme 'consciousness' (iteration 1) -> Creativity: 4.30, Emergent: False
+  Run 122: Theme 'consciousness' (iteration 2) -> Creativity: 4.04, Emergent: False
+  Run 123: Theme 'consciousness' (iteration 3) -> Creativity: 4.15, Emergent: False
+  Run 124: Theme 'consciousness' (iteration 4) -> Creativity: 4.15, Emergent: False
+  Run 125: Theme 'consciousness' (iteration 5) -> Creativity: 4.07, Emergent: False
+  Run 126: Theme 'consciousness' (iteration 6) -> Creativity: 4.19, Emergent: False
+  Run 127: Theme 'consciousness' (iteration 7) -> Creativity: 4.22, Emergent: False
+  Run 128: Theme 'consciousness' (iteration 8) -> Creativity: 4.15, Emergent: False
+  Run 129: Theme 'consciousness' (iteration 9) -> Creativity: 4.15, Emergent: False
+  Run 130: Theme 'consciousness' (iteration 10) -> Creativity: 4.19, Emergent: False
+  Run 131: Theme 'consciousness' (iteration 11) -> Creativity: 4.00, Emergent: False
+  Run 132: Theme 'consciousness' (iteration 12) -> Creativity: 4.15, Emergent: False
+  Run 133: Theme 'consciousness' (iteration 13) -> Creativity: 4.22, Emergent: False
+  Run 134: Theme 'consciousness' (iteration 14) -> Creativity: 4.07, Emergent: False
+  Run 135: Theme 'consciousness' (iteration 15) -> Creativity: 4.30, Emergent: False
+  Run 136: Theme 'consciousness' (iteration 16) -> Creativity: 4.07, Emergent: False
+  Run 137: Theme 'consciousness' (iteration 17) -> Creativity: 4.00, Emergent: False
+  Run 138: Theme 'consciousness' (iteration 18) -> Creativity: 4.15, Emergent: False
+  Run 139: Theme 'consciousness' (iteration 19) -> Creativity: 4.04, Emergent: False
+  Run 140: Theme 'consciousness' (iteration 20) -> Creativity: 4.11, Emergent: False
 
-Results saved to: results/qam_creative_results_16q_09072025_145512.csv
+Results saved to: results/qam_creative_results_16q_09212025_172914.csv
 
 ============================================================
 SUMMARY
 ============================================================
-Total runs: 35
-Emergent cases: 15 (42.9%)
-Average creativity score: 4.46/7.0
+Total runs: 140
+Emergent cases: 64 (45.7%)
+Average creativity score: 4.45/7.0
 
 Emergence types:
-  semantic_leap: 11 (73.3% of emergent)
-  creative_association: 4 (26.7% of emergent)
+  semantic_leap: 56 (87.5% of emergent)
+  creative_association: 8 (12.5% of emergent)
 
 Quantum configuration used:
   Qubits: 16
@@ -246,6 +429,8 @@ Recommended ranges:
 
 Note: Higher qubit counts enable richer creative associations
 but require more computational resources.
+
+Note: Enhanced sampling enabled for statistical power (n≥200 per config)
 
 Number of qubits (8-25): 25
 
@@ -295,66 +480,201 @@ Initializing 25-qubit Quantum Associative Memory...
 ✅ AI scoring APIs initialized
 Running experiments...
 
-Testing 9 themes with 5 prompts each
+Testing 9 themes with 20 prompts each
   Run 1: Theme 'animal' (iteration 1)🔧 Quantum device: GPU (lightning.gpu)
- -> Creativity: 2.89, Emergent: False
-  Run 2: Theme 'animal' (iteration 2) -> Creativity: 3.74, Emergent: False
-  Run 3: Theme 'animal' (iteration 3) -> Creativity: 4.11, Emergent: False
-  Run 4: Theme 'animal' (iteration 4) -> Creativity: 3.70, Emergent: False
-  Run 5: Theme 'animal' (iteration 5) -> Creativity: 3.59, Emergent: False
-  Run 6: Theme 'machine' (iteration 1) -> Creativity: 4.56, Emergent: True
-  Run 7: Theme 'machine' (iteration 2) -> Creativity: 3.93, Emergent: False
-  Run 8: Theme 'machine' (iteration 3) -> Creativity: 4.44, Emergent: False
-  Run 9: Theme 'machine' (iteration 4) -> Creativity: 5.00, Emergent: True
-  Run 10: Theme 'machine' (iteration 5) -> Creativity: 4.30, Emergent: False
-  Run 11: Theme 'emotion' (iteration 1) -> Creativity: 3.48, Emergent: False
-  Run 12: Theme 'emotion' (iteration 2) -> Creativity: 3.41, Emergent: False
-  Run 13: Theme 'emotion' (iteration 3) -> Creativity: 3.04, Emergent: False
-  Run 14: Theme 'emotion' (iteration 4) -> Creativity: 3.22, Emergent: False
-  Run 15: Theme 'emotion' (iteration 5) -> Creativity: 3.67, Emergent: False
-  Run 16: Theme 'nature' (iteration 1) -> Creativity: 3.30, Emergent: False
-  Run 17: Theme 'nature' (iteration 2) -> Creativity: 4.11, Emergent: False
-  Run 18: Theme 'nature' (iteration 3) -> Creativity: 3.44, Emergent: False
-  Run 19: Theme 'nature' (iteration 4) -> Creativity: 3.33, Emergent: False
-  Run 20: Theme 'nature' (iteration 5) -> Creativity: 4.00, Emergent: False
-  Run 21: Theme 'algorithm' (iteration 1) -> Creativity: 4.22, Emergent: False
-  Run 22: Theme 'algorithm' (iteration 2) -> Creativity: 4.44, Emergent: False
-  Run 23: Theme 'algorithm' (iteration 3) -> Creativity: 5.11, Emergent: True
-  Run 24: Theme 'algorithm' (iteration 4) -> Creativity: 3.63, Emergent: False
-  Run 25: Theme 'algorithm' (iteration 5) -> Creativity: 4.81, Emergent: True
-  Run 26: Theme 'quantum' (iteration 1) -> Creativity: 4.44, Emergent: False
-  Run 27: Theme 'quantum' (iteration 2) -> Creativity: 5.04, Emergent: True
-  Run 28: Theme 'quantum' (iteration 3) -> Creativity: 4.74, Emergent: True
-  Run 29: Theme 'quantum' (iteration 4) -> Creativity: 3.67, Emergent: False
-  Run 30: Theme 'quantum' (iteration 5) -> Creativity: 4.44, Emergent: False
-  Run 31: Theme 'consciousness' (iteration 1) -> Creativity: 4.56, Emergent: True
-  Run 32: Theme 'consciousness' (iteration 2) -> Creativity: 4.37, Emergent: False
-  Run 33: Theme 'consciousness' (iteration 3) -> Creativity: 4.30, Emergent: False
-  Run 34: Theme 'consciousness' (iteration 4) -> Creativity: 3.70, Emergent: False
-  Run 35: Theme 'consciousness' (iteration 5) -> Creativity: 3.81, Emergent: False
-  Run 36: Theme 'paradox' (iteration 1) -> Creativity: 4.19, Emergent: False
-  Run 37: Theme 'paradox' (iteration 2) -> Creativity: 3.81, Emergent: False
-  Run 38: Theme 'paradox' (iteration 3) -> Creativity: 4.56, Emergent: True
-  Run 39: Theme 'paradox' (iteration 4) -> Creativity: 4.00, Emergent: False
-  Run 40: Theme 'paradox' (iteration 5) -> Creativity: 3.56, Emergent: False
-  Run 41: Theme 'beauty' (iteration 1) -> Creativity: 4.52, Emergent: True
-  Run 42: Theme 'beauty' (iteration 2) -> Creativity: 4.33, Emergent: False
-  Run 43: Theme 'beauty' (iteration 3) -> Creativity: 4.30, Emergent: False
-  Run 44: Theme 'beauty' (iteration 4) -> Creativity: 4.48, Emergent: False
-  Run 45: Theme 'beauty' (iteration 5) -> Creativity: 4.59, Emergent: True
+ -> Creativity: 2.56, Emergent: False
+  Run 2: Theme 'animal' (iteration 2) -> Creativity: 2.85, Emergent: False
+  Run 3: Theme 'animal' (iteration 3) -> Creativity: 3.37, Emergent: False
+  Run 4: Theme 'animal' (iteration 4) -> Creativity: 3.78, Emergent: False
+  Run 5: Theme 'animal' (iteration 5) -> Creativity: 3.63, Emergent: False
+  Run 6: Theme 'animal' (iteration 6) -> Creativity: 3.63, Emergent: False
+  Run 7: Theme 'animal' (iteration 7) -> Creativity: 4.15, Emergent: False
+  Run 8: Theme 'animal' (iteration 8) -> Creativity: 2.44, Emergent: False
+  Run 9: Theme 'animal' (iteration 9) -> Creativity: 2.74, Emergent: False
+  Run 10: Theme 'animal' (iteration 10) -> Creativity: 3.78, Emergent: False
+  Run 11: Theme 'animal' (iteration 11) -> Creativity: 3.70, Emergent: False
+  Run 12: Theme 'animal' (iteration 12) -> Creativity: 3.11, Emergent: False
+  Run 13: Theme 'animal' (iteration 13) -> Creativity: 3.81, Emergent: False
+  Run 14: Theme 'animal' (iteration 14) -> Creativity: 3.89, Emergent: False
+  Run 15: Theme 'animal' (iteration 15) -> Creativity: 4.04, Emergent: False
+  Run 16: Theme 'animal' (iteration 16) -> Creativity: 3.41, Emergent: False
+  Run 17: Theme 'animal' (iteration 17) -> Creativity: 4.15, Emergent: False
+  Run 18: Theme 'animal' (iteration 18) -> Creativity: 3.30, Emergent: False
+  Run 19: Theme 'animal' (iteration 19) -> Creativity: 3.78, Emergent: False
+  Run 20: Theme 'animal' (iteration 20) -> Creativity: 3.26, Emergent: False
+  Run 21: Theme 'machine' (iteration 1) -> Creativity: 4.44, Emergent: False
+  Run 22: Theme 'machine' (iteration 2) -> Creativity: 4.41, Emergent: False
+  Run 23: Theme 'machine' (iteration 3) -> Creativity: 4.85, Emergent: True
+  Run 24: Theme 'machine' (iteration 4) -> Creativity: 5.00, Emergent: True
+  Run 25: Theme 'machine' (iteration 5) -> Creativity: 4.19, Emergent: False
+  Run 26: Theme 'machine' (iteration 6) -> Creativity: 4.52, Emergent: True
+  Run 27: Theme 'machine' (iteration 7) -> Creativity: 4.44, Emergent: False
+  Run 28: Theme 'machine' (iteration 8) -> Creativity: 5.07, Emergent: True
+  Run 29: Theme 'machine' (iteration 9) -> Creativity: 4.70, Emergent: True
+  Run 30: Theme 'machine' (iteration 10) -> Creativity: 4.07, Emergent: False
+  Run 31: Theme 'machine' (iteration 11) -> Creativity: 4.48, Emergent: False
+  Run 32: Theme 'machine' (iteration 12) -> Creativity: 4.93, Emergent: True
+  Run 33: Theme 'machine' (iteration 13) -> Creativity: 4.96, Emergent: True
+  Run 34: Theme 'machine' (iteration 14) -> Creativity: 5.07, Emergent: True
+  Run 35: Theme 'machine' (iteration 15) -> Creativity: 4.48, Emergent: False
+  Run 36: Theme 'machine' (iteration 16) -> Creativity: 4.56, Emergent: True
+  Run 37: Theme 'machine' (iteration 17) -> Creativity: 4.89, Emergent: True
+  Run 38: Theme 'machine' (iteration 18) -> Creativity: 3.93, Emergent: False
+  Run 39: Theme 'machine' (iteration 19) -> Creativity: 4.04, Emergent: False
+  Run 40: Theme 'machine' (iteration 20) -> Creativity: 4.56, Emergent: True
+  Run 41: Theme 'emotion' (iteration 1) -> Creativity: 3.59, Emergent: False
+  Run 42: Theme 'emotion' (iteration 2) -> Creativity: 3.67, Emergent: False
+  Run 43: Theme 'emotion' (iteration 3) -> Creativity: 4.15, Emergent: False
+  Run 44: Theme 'emotion' (iteration 4) -> Creativity: 3.52, Emergent: False
+  Run 45: Theme 'emotion' (iteration 5) -> Creativity: 3.59, Emergent: False
+  Run 46: Theme 'emotion' (iteration 6) -> Creativity: 3.67, Emergent: False
+  Run 47: Theme 'emotion' (iteration 7) -> Creativity: 3.59, Emergent: False
+  Run 48: Theme 'emotion' (iteration 8) -> Creativity: 3.11, Emergent: False
+  Run 49: Theme 'emotion' (iteration 9) -> Creativity: 3.96, Emergent: False
+  Run 50: Theme 'emotion' (iteration 10) -> Creativity: 3.67, Emergent: False
+  Run 51: Theme 'emotion' (iteration 11) -> Creativity: 3.56, Emergent: False
+  Run 52: Theme 'emotion' (iteration 12) -> Creativity: 3.41, Emergent: False
+  Run 53: Theme 'emotion' (iteration 13) -> Creativity: 4.04, Emergent: False
+  Run 54: Theme 'emotion' (iteration 14) -> Creativity: 4.22, Emergent: False
+  Run 55: Theme 'emotion' (iteration 15) -> Creativity: 3.96, Emergent: False
+  Run 56: Theme 'emotion' (iteration 16) -> Creativity: 3.89, Emergent: False
+  Run 57: Theme 'emotion' (iteration 17) -> Creativity: 4.15, Emergent: False
+  Run 58: Theme 'emotion' (iteration 18) -> Creativity: 3.52, Emergent: False
+  Run 59: Theme 'emotion' (iteration 19) -> Creativity: 3.30, Emergent: False
+  Run 60: Theme 'emotion' (iteration 20) -> Creativity: 4.07, Emergent: False
+  Run 61: Theme 'nature' (iteration 1) -> Creativity: 2.19, Emergent: False
+  Run 62: Theme 'nature' (iteration 2) -> Creativity: 2.52, Emergent: False
+  Run 63: Theme 'nature' (iteration 3) -> Creativity: 3.48, Emergent: False
+  Run 64: Theme 'nature' (iteration 4) -> Creativity: 3.85, Emergent: False
+  Run 65: Theme 'nature' (iteration 5) -> Creativity: 3.30, Emergent: False
+  Run 66: Theme 'nature' (iteration 6) -> Creativity: 3.30, Emergent: False
+  Run 67: Theme 'nature' (iteration 7) -> Creativity: 3.74, Emergent: False
+  Run 68: Theme 'nature' (iteration 8) -> Creativity: 3.59, Emergent: False
+  Run 69: Theme 'nature' (iteration 9) -> Creativity: 3.96, Emergent: False
+  Run 70: Theme 'nature' (iteration 10) -> Creativity: 3.81, Emergent: False
+  Run 71: Theme 'nature' (iteration 11) -> Creativity: 3.67, Emergent: False
+  Run 72: Theme 'nature' (iteration 12) -> Creativity: 3.44, Emergent: False
+  Run 73: Theme 'nature' (iteration 13) -> Creativity: 3.78, Emergent: False
+  Run 74: Theme 'nature' (iteration 14) -> Creativity: 3.93, Emergent: False
+  Run 75: Theme 'nature' (iteration 15) -> Creativity: 3.00, Emergent: False
+  Run 76: Theme 'nature' (iteration 16) -> Creativity: 3.33, Emergent: False
+  Run 77: Theme 'nature' (iteration 17) -> Creativity: 3.33, Emergent: False
+  Run 78: Theme 'nature' (iteration 18) -> Creativity: 3.96, Emergent: False
+  Run 79: Theme 'nature' (iteration 19) -> Creativity: 2.63, Emergent: False
+  Run 80: Theme 'nature' (iteration 20) -> Creativity: 3.37, Emergent: False
+  Run 81: Theme 'algorithm' (iteration 1) -> Creativity: 5.00, Emergent: True
+  Run 82: Theme 'algorithm' (iteration 2) -> Creativity: 4.56, Emergent: True
+  Run 83: Theme 'algorithm' (iteration 3) -> Creativity: 4.78, Emergent: True
+  Run 84: Theme 'algorithm' (iteration 4) -> Creativity: 5.15, Emergent: True
+  Run 85: Theme 'algorithm' (iteration 5) -> Creativity: 4.74, Emergent: True
+  Run 86: Theme 'algorithm' (iteration 6) -> Creativity: 3.85, Emergent: False
+  Run 87: Theme 'algorithm' (iteration 7) -> Creativity: 4.33, Emergent: False
+  Run 88: Theme 'algorithm' (iteration 8) -> Creativity: 4.41, Emergent: False
+  Run 89: Theme 'algorithm' (iteration 9) -> Creativity: 4.85, Emergent: True
+  Run 90: Theme 'algorithm' (iteration 10) -> Creativity: 5.04, Emergent: True
+  Run 91: Theme 'algorithm' (iteration 11) -> Creativity: 4.96, Emergent: True
+  Run 92: Theme 'algorithm' (iteration 12) -> Creativity: 5.04, Emergent: True
+  Run 93: Theme 'algorithm' (iteration 13) -> Creativity: 3.81, Emergent: False
+  Run 94: Theme 'algorithm' (iteration 14) -> Creativity: 4.59, Emergent: True
+  Run 95: Theme 'algorithm' (iteration 15) -> Creativity: 4.78, Emergent: True
+  Run 96: Theme 'algorithm' (iteration 16) -> Creativity: 4.74, Emergent: True
+  Run 97: Theme 'algorithm' (iteration 17) -> Creativity: 4.70, Emergent: True
+  Run 98: Theme 'algorithm' (iteration 18) -> Creativity: 4.19, Emergent: False
+  Run 99: Theme 'algorithm' (iteration 19) -> Creativity: 4.26, Emergent: False
+  Run 100: Theme 'algorithm' (iteration 20) -> Creativity: 5.11, Emergent: True
+  Run 101: Theme 'quantum' (iteration 1) -> Creativity: 5.07, Emergent: True
+  Run 102: Theme 'quantum' (iteration 2) -> Creativity: 4.67, Emergent: True
+  Run 103: Theme 'quantum' (iteration 3) -> Creativity: 3.93, Emergent: False
+  Run 104: Theme 'quantum' (iteration 4) -> Creativity: 4.63, Emergent: True
+  Run 105: Theme 'quantum' (iteration 5) -> Creativity: 4.48, Emergent: False
+  Run 106: Theme 'quantum' (iteration 6) -> Creativity: 4.04, Emergent: False
+  Run 107: Theme 'quantum' (iteration 7) -> Creativity: 4.15, Emergent: False
+  Run 108: Theme 'quantum' (iteration 8) -> Creativity: 5.19, Emergent: True
+  Run 109: Theme 'quantum' (iteration 9) -> Creativity: 4.67, Emergent: True
+  Run 110: Theme 'quantum' (iteration 10) -> Creativity: 3.74, Emergent: False
+  Run 111: Theme 'quantum' (iteration 11) -> Creativity: 4.89, Emergent: True
+  Run 112: Theme 'quantum' (iteration 12) -> Creativity: 4.96, Emergent: True
+  Run 113: Theme 'quantum' (iteration 13) -> Creativity: 5.19, Emergent: True
+  Run 114: Theme 'quantum' (iteration 14) -> Creativity: 4.59, Emergent: True
+  Run 115: Theme 'quantum' (iteration 15) -> Creativity: 4.59, Emergent: True
+  Run 116: Theme 'quantum' (iteration 16) -> Creativity: 5.00, Emergent: True
+  Run 117: Theme 'quantum' (iteration 17) -> Creativity: 4.22, Emergent: False
+  Run 118: Theme 'quantum' (iteration 18) -> Creativity: 4.04, Emergent: False
+  Run 119: Theme 'quantum' (iteration 19) -> Creativity: 4.56, Emergent: True
+  Run 120: Theme 'quantum' (iteration 20) -> Creativity: 5.11, Emergent: True
+  Run 121: Theme 'consciousness' (iteration 1) -> Creativity: 4.41, Emergent: False
+  Run 122: Theme 'consciousness' (iteration 2) -> Creativity: 4.89, Emergent: True
+  Run 123: Theme 'consciousness' (iteration 3) -> Creativity: 3.93, Emergent: False
+  Run 124: Theme 'consciousness' (iteration 4) -> Creativity: 4.74, Emergent: True
+  Run 125: Theme 'consciousness' (iteration 5) -> Creativity: 4.15, Emergent: False
+  Run 126: Theme 'consciousness' (iteration 6) -> Creativity: 4.30, Emergent: False
+  Run 127: Theme 'consciousness' (iteration 7) -> Creativity: 4.56, Emergent: True
+  Run 128: Theme 'consciousness' (iteration 8) -> Creativity: 4.22, Emergent: False
+  Run 129: Theme 'consciousness' (iteration 9) -> Creativity: 4.41, Emergent: False
+  Run 130: Theme 'consciousness' (iteration 10) -> Creativity: 4.15, Emergent: False
+  Run 131: Theme 'consciousness' (iteration 11) -> Creativity: 4.52, Emergent: True
+  Run 132: Theme 'consciousness' (iteration 12) -> Creativity: 4.33, Emergent: False
+  Run 133: Theme 'consciousness' (iteration 13) -> Creativity: 4.41, Emergent: False
+  Run 134: Theme 'consciousness' (iteration 14) -> Creativity: 3.26, Emergent: False
+  Run 135: Theme 'consciousness' (iteration 15) -> Creativity: 4.74, Emergent: True
+  Run 136: Theme 'consciousness' (iteration 16) -> Creativity: 3.93, Emergent: False
+  Run 137: Theme 'consciousness' (iteration 17) -> Creativity: 4.00, Emergent: False
+  Run 138: Theme 'consciousness' (iteration 18) -> Creativity: 4.63, Emergent: True
+  Run 139: Theme 'consciousness' (iteration 19) -> Creativity: 4.22, Emergent: False
+  Run 140: Theme 'consciousness' (iteration 20) -> Creativity: 4.67, Emergent: True
+  Run 141: Theme 'paradox' (iteration 1) -> Creativity: 3.85, Emergent: False
+  Run 142: Theme 'paradox' (iteration 2) -> Creativity: 4.22, Emergent: False
+  Run 143: Theme 'paradox' (iteration 3) -> Creativity: 3.52, Emergent: False
+  Run 144: Theme 'paradox' (iteration 4) -> Creativity: 4.04, Emergent: False
+  Run 145: Theme 'paradox' (iteration 5) -> Creativity: 4.19, Emergent: False
+  Run 146: Theme 'paradox' (iteration 6) -> Creativity: 3.56, Emergent: False
+  Run 147: Theme 'paradox' (iteration 7) -> Creativity: 3.74, Emergent: False
+  Run 148: Theme 'paradox' (iteration 8) -> Creativity: 3.89, Emergent: False
+  Run 149: Theme 'paradox' (iteration 9) -> Creativity: 3.78, Emergent: False
+  Run 150: Theme 'paradox' (iteration 10) -> Creativity: 3.89, Emergent: False
+  Run 151: Theme 'paradox' (iteration 11) -> Creativity: 4.52, Emergent: True
+  Run 152: Theme 'paradox' (iteration 12) -> Creativity: 4.37, Emergent: False
+  Run 153: Theme 'paradox' (iteration 13) -> Creativity: 3.89, Emergent: False
+  Run 154: Theme 'paradox' (iteration 14) -> Creativity: 3.93, Emergent: False
+  Run 155: Theme 'paradox' (iteration 15) -> Creativity: 3.41, Emergent: False
+  Run 156: Theme 'paradox' (iteration 16) -> Creativity: 3.93, Emergent: False
+  Run 157: Theme 'paradox' (iteration 17) -> Creativity: 3.85, Emergent: False
+  Run 158: Theme 'paradox' (iteration 18) -> Creativity: 4.26, Emergent: False
+  Run 159: Theme 'paradox' (iteration 19) -> Creativity: 3.96, Emergent: False
+  Run 160: Theme 'paradox' (iteration 20) -> Creativity: 4.33, Emergent: False
+  Run 161: Theme 'beauty' (iteration 1) -> Creativity: 4.41, Emergent: False
+  Run 162: Theme 'beauty' (iteration 2) -> Creativity: 4.11, Emergent: False
+  Run 163: Theme 'beauty' (iteration 3) -> Creativity: 3.04, Emergent: False
+  Run 164: Theme 'beauty' (iteration 4) -> Creativity: 4.15, Emergent: False
+  Run 165: Theme 'beauty' (iteration 5) -> Creativity: 4.59, Emergent: True
+  Run 166: Theme 'beauty' (iteration 6) -> Creativity: 3.04, Emergent: False
+  Run 167: Theme 'beauty' (iteration 7) -> Creativity: 3.85, Emergent: False
+  Run 168: Theme 'beauty' (iteration 8) -> Creativity: 2.96, Emergent: False
+  Run 169: Theme 'beauty' (iteration 9) -> Creativity: 3.04, Emergent: False
+  Run 170: Theme 'beauty' (iteration 10) -> Creativity: 4.48, Emergent: False
+  Run 171: Theme 'beauty' (iteration 11) -> Creativity: 4.15, Emergent: False
+  Run 172: Theme 'beauty' (iteration 12) -> Creativity: 4.59, Emergent: True
+  Run 173: Theme 'beauty' (iteration 13) -> Creativity: 4.37, Emergent: False
+  Run 174: Theme 'beauty' (iteration 14) -> Creativity: 4.15, Emergent: False
+  Run 175: Theme 'beauty' (iteration 15) -> Creativity: 4.63, Emergent: True
+  Run 176: Theme 'beauty' (iteration 16) -> Creativity: 4.19, Emergent: False
+  Run 177: Theme 'beauty' (iteration 17) -> Creativity: 4.41, Emergent: False
+  Run 178: Theme 'beauty' (iteration 18) -> Creativity: 4.26, Emergent: False
+  Run 179: Theme 'beauty' (iteration 19) -> Creativity: 3.67, Emergent: False
+  Run 180: Theme 'beauty' (iteration 20) -> Creativity: 4.63, Emergent: True
 
-Results saved to: results/qam_creative_results_25q_09072025_145807.csv
+Results saved to: results/qam_creative_results_25q_09212025_174220.csv
 
 ============================================================
 SUMMARY
 ============================================================
-Total runs: 45
-Emergent cases: 10 (22.2%)
-Average creativity score: 4.06/7.0
+Total runs: 180
+Emergent cases: 50 (27.8%)
+Average creativity score: 4.08/7.0
 
 Emergence types:
-  semantic_leap: 6 (60.0% of emergent)
-  creative_association: 4 (40.0% of emergent)
+  creative_association: 24 (48.0% of emergent)
+  semantic_leap: 26 (52.0% of emergent)
 
 Quantum configuration used:
   Qubits: 25
@@ -363,5 +683,3 @@ Quantum configuration used:
 
 ✅ 25-qubit creative thinking experiment complete!
 ============================================================
-(qnai-env) pooh@beast-server-0:~/QNAI-Experiment/QNAI-test-engine/Tests/Creative-Thinking-TEST$ 
-

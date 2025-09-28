@@ -10,3 +10,7 @@ UML-files/
 # Ignore API keys and environment files
 .env
 *.key
+
+# Git instructional file
+git_sync.txt
+git_commit.txt
