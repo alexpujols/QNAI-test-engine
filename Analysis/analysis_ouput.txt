@@ -1,0 +1,216 @@
+============================================================
+QNAI DISSERTATION STATISTICAL ANALYSIS
+============================================================
+Version: 3.0
+Date: 2025-09-28 07:30:22
+============================================================
+
+============================================================
+LOADING EXPERIMENTAL DATA
+============================================================
+✓ Loaded QHNN 9-qubit: 252 runs
+✓ Loaded QHNN 16-qubit: 252 runs
+✓ Loaded QHNN 25-qubit: 252 runs
+✓ Loaded VQNN 9-qubit: 10 runs
+✓ Loaded VQNN 16-qubit: 10 runs
+✓ Loaded VQNN 25-qubit: 10 runs
+✓ Loaded QAM 9-qubit: 100 runs
+✓ Loaded QAM 16-qubit: 140 runs
+✓ Loaded QAM 25-qubit: 180 runs
+
+============================================================
+EXPERIMENT METADATA ANALYSIS
+============================================================
+
+[Pattern Matching (QHNN) Parameters]
+  9q Configuration:
+    Data rows: 252
+    Actual experiment runs: 84
+    Patterns tested: 6
+    Degradation types: 2
+    Degradation levels: 7
+    Degradation range: [0.05, 0.35]
+  16q Configuration:
+    Data rows: 252
+    Actual experiment runs: 84
+    Patterns tested: 6
+    Degradation types: 2
+    Degradation levels: 7
+    Degradation range: [0.05, 0.35]
+  25q Configuration:
+    Data rows: 252
+    Actual experiment runs: 84
+    Patterns tested: 6
+    Degradation types: 2
+    Degradation levels: 7
+    Degradation range: [0.05, 0.35]
+
+[Problem Solving (VQNN) Parameters]
+  9q Configuration:
+    Data rows: 10
+    Actual experiment runs: 10
+    Unique mazes: 10
+    Complexity levels: 3
+    Training episodes: (60, 60)
+    Avg efficiency: 0.901
+  16q Configuration:
+    Data rows: 10
+    Actual experiment runs: 10
+    Unique mazes: 10
+    Complexity levels: 3
+    Training episodes: (80, 80)
+    Avg efficiency: 0.576
+  25q Configuration:
+    Data rows: 10
+    Actual experiment runs: 10
+    Unique mazes: 10
+    Complexity levels: 7
+    Training episodes: (100, 100)
+    Avg efficiency: 0.394
+
+[Creative Thinking (QAM) Parameters]
+  9q Configuration:
+    Data rows: 100
+    Actual experiment runs: 5
+    Unique themes: 5
+    Unique concepts: 5
+    Temperature parameter: 0.500
+    Avg creativity score: 4.186
+  16q Configuration:
+    Data rows: 140
+    Actual experiment runs: 7
+    Unique themes: 7
+    Unique concepts: 7
+    Temperature parameter: 0.500
+    Avg creativity score: 4.447
+  25q Configuration:
+    Data rows: 180
+    Actual experiment runs: 9
+    Unique themes: 9
+    Unique concepts: 9
+    Temperature parameter: 0.500
+    Avg creativity score: 4.081
+
+============================================================
+STATISTICAL POWER ANALYSIS
+============================================================
+Target: Power ≥ 0.80, α = 0.05, 4 predictors
+Effect sizes: Small (f²=0.02), Medium (f²=0.15), Large (f²=0.35)
+------------------------------------------------------------
+
+[Pattern Matching]
+  Combined sample size: n = 756
+    Small effect (f²=0.02): Power = 1.0000 ✓ Adequate
+    Medium effect (f²=0.15): Power = 1.0000 ✓ Adequate
+    Large effect (f²=0.35): Power = 1.0000 ✓ Adequate
+    9q only (n=252): Power = 1.0000 (medium effect)
+    16q only (n=252): Power = 1.0000 (medium effect)
+    25q only (n=252): Power = 1.0000 (medium effect)
+
+[Problem Solving]
+  Combined sample size: n = 30
+    Small effect (f²=0.02): Power = 0.1032 ✗ Insufficient
+    Medium effect (f²=0.15): Power = 1.0000 ✓ Adequate
+    Large effect (f²=0.35): Power = 1.0000 ✓ Adequate
+    9q only (n=10): Power = 0.0923 (medium effect)
+    16q only (n=10): Power = 0.0923 (medium effect)
+    25q only (n=10): Power = 0.0923 (medium effect)
+
+[Creative Thinking]
+  Combined sample size: n = 420
+    Small effect (f²=0.02): Power = 1.0000 ✓ Adequate
+    Medium effect (f²=0.15): Power = 1.0000 ✓ Adequate
+    Large effect (f²=0.35): Power = 1.0000 ✓ Adequate
+    9q only (n=100): Power = 1.0000 (medium effect)
+    16q only (n=140): Power = 1.0000 (medium effect)
+    25q only (n=180): Power = 1.0000 (medium effect)
+
+[Dissertation Power Requirements]
+  Required sample size: 602 (from power analysis)
+  Required power: 0.80
+  Actual combined sample: 1206
+
+Dissertation requirement (n=602, f²=0.02): Power = 1.0000
+Actual analysis (n=1206, f²=0.02): Power = 1.0000
+  ✓ Sample size exceeds power requirements
+
+============================================================
+CALCULATING APPROXIMATE ENTROPY
+============================================================
+✓ QHNN 9q: ApEn mean=0.1968
+✓ QHNN 16q: ApEn mean=0.2803
+✓ QHNN 25q: ApEn mean=0.5208
+✓ VQNN 9q: ApEn mean=-0.3603
+✓ VQNN 16q: ApEn mean=0.2587
+✓ VQNN 25q: ApEn mean=0.5046
+✓ QAM 9q: ApEn mean=-0.0032
+✓ QAM 16q: ApEn mean=-0.0032
+✓ QAM 25q: ApEn mean=-0.0032
+
+============================================================
+DESCRIPTIVE STATISTICAL ANALYSIS
+============================================================
+
+Emergence Score Summary:
+           Experiment  Qubits      Mean   Std Dev
+0    Pattern Matching       9  0.288889  0.449120
+5    Pattern Matching      16  0.265476  0.434010
+10   Pattern Matching      25  0.282540  0.440518
+15    Problem Solving       9  0.780000  0.415799
+20    Problem Solving      16  0.360000  0.469515
+25    Problem Solving      25  0.080000  0.252982
+30  Creative Thinking       9  0.078449  0.174773
+35  Creative Thinking      16  0.265043  0.307456
+40  Creative Thinking      25  0.205007  0.351811
+
+============================================================
+INFERENTIAL STATISTICAL ANALYSIS
+============================================================
+Testing H₀: No correlation between complexity/entropy and emergence
+Testing H₁: Significant correlation exists (α = 0.05)
+------------------------------------------------------------
+
+[Pattern Matching Analysis]
+  N = 756
+  R² = 0.5681
+  Adjusted R² = 0.5652
+  F = 197.315 (p = 0.0000)
+  ✓ REJECT H₀ - Significant correlation found
+
+[Problem Solving Analysis]
+  N = 30
+  R² = 0.7689
+  Adjusted R² = 0.7208
+  F = 15.973 (p = 0.0000)
+  ✓ REJECT H₀ - Significant correlation found
+
+[Creative Thinking Analysis]
+  N = 420
+  R² = 0.0412
+  Adjusted R² = 0.0319
+  F = 4.454 (p = 0.0016)
+  ✓ REJECT H₀ - Significant correlation found
+
+============================================================
+TESTING REGRESSION ASSUMPTIONS
+============================================================
+          Experiment Normality (JB p-value) Normal Independence (DW) Independent
+0   Pattern Matching                 0.0000      ✗             0.904           ✗
+1    Problem Solving                 0.6820      ✓             3.000           ✗
+2  Creative Thinking                 0.0000      ✗             1.010           ✗
+
+============================================================
+GENERATING VISUALIZATIONS
+============================================================
+✓ Saved: emergence_distributions.png
+✓ Saved: regression_diagnostics.png
+
+============================================================
+GENERATING ENHANCED REPORTS
+============================================================
+✓ Saved: statistical_report.html
+✓ Saved: latex_tables.tex
+
+============================================================
+ANALYSIS COMPLETE
+============================================================
