@@ -9,6 +9,710 @@ Select maze size for the experiment:
 Available configurations:
   1. 3x3 mazes (9 qubits)
      - Compact mazes with 9 cells
+     - Fastest execution (~2-6 hours)
+     - Good for initial testing
+
+  2. 4x4 mazes (16 qubits)
+     - Medium mazes with 16 cells
+     - Moderate runtime (~1-3 days)
+     - Balanced complexity
+
+  3. 5x5 mazes (25 qubits)
+     - Large mazes with 25 cells
+     - Longer runtime (~3-5 days)
+     - Maximum complexity
+
+Each configuration properly scales both maze size and qubits
+Using fixed 3x3 local observation window for all sizes
+
+Enter your choice (1, 2, or 3): 1
+
+You selected: 3x3 mazes
+Configuration details:
+  - Maze size: 3x3
+  - Qubits: 9
+  - Local observation: 3x3 window
+  - Estimated runtime: 5-10 minutes
+
+Proceed with this configuration? (y/n): y
+✔ GPU settings configured for 9-qubit simulation
+============================================================
+✔ NVIDIA cuQuantum SDK detected!
+✔ Using Lightning.GPU for 9-qubit simulation
+============================================================
+
+============================================================
+SCALABLE QUANTUM MAZE NAVIGATION EXPERIMENT
+============================================================
+
+This experiment tests a Variational Quantum Neural Network
+with properly scaled maze sizes and qubit allocations.
+
+Each configuration uses:
+  • N² cells for NxN mazes
+  • N² qubits for quantum processing
+  • Fixed 3x3 observation window for consistency
+
+This ensures scientifically valid comparisons across scales.
+
+============================================================
+SCALABLE QUANTUM MAZE NAVIGATION EXPERIMENTS
+============================================================
+Maze size: 3x3
+Qubits: 9
+Observation window: 3x3 (fixed)
+Quantum Backend: lightning.gpu
+GPU Acceleration: ENABLED
+Shots: 250
+Episodes per maze: 60
+============================================================
+
+Running experiments on 3x3 mazes...
+
+
+Initializing Scalable VQNN for 3x3 mazes...
+  Configuration:
+    - Maze size: 3x3
+    - Total qubits available: 9
+    - Observation qubits: 9 (3x3 window)
+    - Position encoding qubits: 0
+    - Active qubits: 9
+    - Layers: 2
+    - Shots: 250
+    - Backend: lightning.gpu
+  ✔ Quantum circuit initialized with 9 active qubits
+
+============================================================
+Maze 1/10: simple_3x3
+============================================================
+Optimal path: 3 steps
+Training with 9-qubit quantum circuit...
+Progress:
+  Episode   0/60: Avg reward =  -68.0, ε = 0.258, Time = 0.1 min
+  Episode  20/60: Avg reward =   51.8, ε = 0.258, Time = 2.4 min
+  Episode  40/60: Avg reward =    0.8, ε = 0.258, Time = 4.9 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 3
+  Optimal steps: 3
+  Efficiency: 100.00%
+  Emergent: True (perfect_navigation)
+  Training time: 7.0 minutes
+
+simple_3x3 Solution:
+---------
+S . █ 
+o o G 
+█ . . 
+Path length: 3 steps
+
+============================================================
+Maze 2/10: corner_3x3
+============================================================
+Optimal path: 4 steps
+Training with 9-qubit quantum circuit...
+Progress:
+  Episode   0/60: Avg reward =  -15.0, ε = 0.258, Time = 0.0 min
+  Episode  20/60: Avg reward =  -20.0, ε = 0.258, Time = 3.1 min
+  Episode  40/60: Avg reward =  -97.9, ε = 0.258, Time = 7.1 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 4
+  Optimal steps: 4
+  Efficiency: 100.00%
+  Emergent: True (perfect_navigation)
+  Training time: 11.1 minutes
+
+corner_3x3 Solution:
+---------
+S o o 
+█ █ o 
+. . G 
+Path length: 4 steps
+
+============================================================
+Maze 3/10: spiral_3x3
+============================================================
+Optimal path: 6 steps
+Training with 9-qubit quantum circuit...
+Progress:
+  Episode   0/60: Avg reward = -288.0, ε = 0.258, Time = 0.2 min
+  Episode  20/60: Avg reward = -253.8, ε = 0.258, Time = 5.9 min
+  Episode  40/60: Avg reward = -224.1, ε = 0.258, Time = 11.7 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 36
+  Optimal steps: 6
+  Efficiency: 16.67%
+  Emergent: False (none)
+  Training time: 17.2 minutes
+
+============================================================
+Maze 4/10: center_3x3
+============================================================
+Optimal path: 4 steps
+Training with 9-qubit quantum circuit...
+Progress:
+  Episode   0/60: Avg reward = -279.0, ε = 0.258, Time = 0.2 min
+  Episode  20/60: Avg reward = -207.0, ε = 0.258, Time = 5.1 min
+  Episode  40/60: Avg reward = -115.4, ε = 0.258, Time = 10.0 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 4
+  Optimal steps: 4
+  Efficiency: 100.00%
+  Emergent: True (perfect_navigation)
+  Training time: 14.6 minutes
+
+center_3x3 Solution:
+---------
+S . █ 
+o █ . 
+o o G 
+Path length: 4 steps
+
+============================================================
+Maze 5/10: zigzag_3x3
+============================================================
+Optimal path: 4 steps
+Training with 9-qubit quantum circuit...
+Progress:
+  Episode   0/60: Avg reward = -297.0, ε = 0.258, Time = 0.2 min
+  Episode  20/60: Avg reward = -167.1, ε = 0.258, Time = 5.4 min
+  Episode  40/60: Avg reward = -177.5, ε = 0.258, Time = 9.6 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 4
+  Optimal steps: 4
+  Efficiency: 100.00%
+  Emergent: True (perfect_navigation)
+  Training time: 13.8 minutes
+
+zigzag_3x3 Solution:
+---------
+S █ . 
+o █ . 
+o o G 
+Path length: 4 steps
+
+============================================================
+Maze 6/10: edge_3x3
+============================================================
+Optimal path: 4 steps
+Training with 9-qubit quantum circuit...
+Progress:
+  Episode   0/60: Avg reward =  -37.0, ε = 0.258, Time = 0.1 min
+  Episode  20/60: Avg reward = -110.0, ε = 0.258, Time = 4.0 min
+  Episode  40/60: Avg reward =  -63.4, ε = 0.258, Time = 7.5 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 4
+  Optimal steps: 4
+  Efficiency: 100.00%
+  Emergent: True (perfect_navigation)
+  Training time: 10.8 minutes
+
+edge_3x3 Solution:
+---------
+S . . 
+o █ . 
+o o G 
+Path length: 4 steps
+
+============================================================
+Maze 7/10: diag_3x3
+============================================================
+Optimal path: 4 steps
+Training with 9-qubit quantum circuit...
+Progress:
+  Episode   0/60: Avg reward =  -27.0, ε = 0.258, Time = 0.0 min
+  Episode  20/60: Avg reward =  -24.1, ε = 0.258, Time = 3.6 min
+  Episode  40/60: Avg reward =   -8.5, ε = 0.258, Time = 6.2 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 4
+  Optimal steps: 4
+  Efficiency: 100.00%
+  Emergent: True (perfect_navigation)
+  Training time: 9.6 minutes
+
+diag_3x3 Solution:
+---------
+S o █ 
+. o █ 
+█ o G 
+Path length: 4 steps
+
+============================================================
+Maze 8/10: open_3x3
+============================================================
+Optimal path: 4 steps
+Training with 9-qubit quantum circuit...
+Progress:
+  Episode   0/60: Avg reward =   95.0, ε = 0.282, Time = 0.0 min
+  Episode  20/60: Avg reward = -100.5, ε = 0.258, Time = 3.6 min
+  Episode  40/60: Avg reward =   31.1, ε = 0.258, Time = 6.5 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 4
+  Optimal steps: 4
+  Efficiency: 100.00%
+  Emergent: True (perfect_navigation)
+  Training time: 9.3 minutes
+
+open_3x3 Solution:
+---------
+S o . 
+. o o 
+. . G 
+Path length: 4 steps
+
+============================================================
+Maze 9/10: barrier_3x3
+============================================================
+Optimal path: 4 steps
+Training with 9-qubit quantum circuit...
+Progress:
+  Episode   0/60: Avg reward = -315.0, ε = 0.258, Time = 0.2 min
+  Episode  20/60: Avg reward = -132.9, ε = 0.258, Time = 5.0 min
+  Episode  40/60: Avg reward = -144.1, ε = 0.258, Time = 9.1 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 4
+  Optimal steps: 4
+  Efficiency: 100.00%
+  Emergent: True (perfect_navigation)
+  Training time: 12.2 minutes
+
+barrier_3x3 Solution:
+---------
+S o o 
+█ █ o 
+. . G 
+Path length: 4 steps
+
+============================================================
+Maze 10/10: complex_3x3
+============================================================
+Optimal path: 4 steps
+Training with 9-qubit quantum circuit...
+Progress:
+  Episode   0/60: Avg reward = -288.0, ε = 0.258, Time = 0.2 min
+  Episode  20/60: Avg reward = -107.5, ε = 0.258, Time = 5.3 min
+  Episode  40/60: Avg reward = -101.9, ε = 0.258, Time = 8.3 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 4
+  Optimal steps: 4
+  Efficiency: 100.00%
+  Emergent: True (perfect_navigation)
+  Training time: 12.7 minutes
+
+complex_3x3 Solution:
+---------
+S █ . 
+o █ . 
+o o G 
+Path length: 4 steps
+
+============================================================
+EXPERIMENT COMPLETE
+============================================================
+Maze size: 3x3
+Total mazes: 10
+Emergent solutions: 9 (90.0%)
+Average efficiency: 0.917
+Total time: 118.2 minutes
+Average time per maze: 11.8 minutes
+Quantum backend: lightning.gpu
+Qubits used: 9/9
+Observation window: 3x3
+
+Emergence breakdown:
+  perfect_navigation: 9
+
+Results saved to: results/vqnn_results_9q_09072025_150642.csv
+
+📊 Performance Report:
+Total runtime: 118.2 minutes
+  circuit_eval_time: avg=1757261174.207, min=1757257602.871, max=1757264693.653
+  loss: avg=250.790, min=0.000, max=10153.433
+
+✅ 3x3 maze experiment complete!
+============================================================
+
+
+============================================================
+QUANTUM MAZE NAVIGATION CONFIGURATION
+============================================================
+
+Select maze size for the experiment:
+
+Available configurations:
+  1. 3x3 mazes (9 qubits)
+     - Compact mazes with 9 cells
+     - Fastest execution (~2-6 hours)
+     - Good for initial testing
+
+  2. 4x4 mazes (16 qubits)
+     - Medium mazes with 16 cells
+     - Moderate runtime (~1-3 days)
+     - Balanced complexity
+
+  3. 5x5 mazes (25 qubits)
+     - Large mazes with 25 cells
+     - Longer runtime (~3-5 days)
+     - Maximum complexity
+
+Each configuration properly scales both maze size and qubits
+Using fixed 3x3 local observation window for all sizes
+
+Enter your choice (1, 2, or 3): 2
+
+You selected: 4x4 mazes
+Configuration details:
+  - Maze size: 4x4
+  - Qubits: 16
+  - Local observation: 3x3 window
+  - Estimated runtime: 15-30 minutes
+
+Proceed with this configuration? (y/n): y
+✔ GPU settings configured for 16-qubit simulation
+============================================================
+✔ NVIDIA cuQuantum SDK detected!
+✔ Using Lightning.GPU for 16-qubit simulation
+============================================================
+
+============================================================
+SCALABLE QUANTUM MAZE NAVIGATION EXPERIMENT
+============================================================
+
+This experiment tests a Variational Quantum Neural Network
+with properly scaled maze sizes and qubit allocations.
+
+Each configuration uses:
+  • N² cells for NxN mazes
+  • N² qubits for quantum processing
+  • Fixed 3x3 observation window for consistency
+
+This ensures scientifically valid comparisons across scales.
+
+============================================================
+SCALABLE QUANTUM MAZE NAVIGATION EXPERIMENTS
+============================================================
+Maze size: 4x4
+Qubits: 16
+Observation window: 3x3 (fixed)
+Quantum Backend: lightning.gpu
+GPU Acceleration: ENABLED
+Shots: 200
+Episodes per maze: 80
+============================================================
+
+Running experiments on 4x4 mazes...
+
+
+Initializing Scalable VQNN for 4x4 mazes...
+  Configuration:
+    - Maze size: 4x4
+    - Total qubits available: 16
+    - Observation qubits: 9 (3x3 window)
+    - Position encoding qubits: 4
+    - Active qubits: 13
+    - Layers: 2
+    - Shots: 200
+    - Backend: lightning.gpu
+  ✔ Quantum circuit initialized with 13 active qubits
+
+============================================================
+Maze 1/10: simple_4x4
+============================================================
+Optimal path: 6 steps
+Training with 13-qubit quantum circuit...
+Progress:
+  Episode   0/80: Avg reward = -139.0, ε = 0.258, Time = 0.5 min
+  Episode  20/80: Avg reward = -148.3, ε = 0.258, Time = 13.0 min
+  Episode  40/80: Avg reward = -144.0, ε = 0.258, Time = 25.2 min
+  Episode  60/80: Avg reward = -176.4, ε = 0.258, Time = 35.6 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 8
+  Optimal steps: 6
+  Efficiency: 75.00%
+  Emergent: True (sudden_insight)
+  Training time: 46.2 minutes
+
+simple_4x4 Solution:
+-----------
+S o █ █ 
+. o █ █ 
+█ o o . 
+█ █ o G 
+Path length: 6 steps
+
+============================================================
+Maze 2/10: spiral_4x4
+============================================================
+Optimal path: 6 steps
+Training with 13-qubit quantum circuit...
+Progress:
+  Episode   0/80: Avg reward = -451.0, ε = 0.258, Time = 0.7 min
+  Episode  20/80: Avg reward = -395.7, ε = 0.258, Time = 17.2 min
+  Episode  40/80: Avg reward = -279.1, ε = 0.258, Time = 32.9 min
+  Episode  60/80: Avg reward = -388.1, ε = 0.258, Time = 49.3 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 14
+  Optimal steps: 6
+  Efficiency: 42.86%
+  Emergent: False (none)
+  Training time: 64.5 minutes
+
+============================================================
+Maze 3/10: rooms_4x4
+============================================================
+Optimal path: 6 steps
+Training with 13-qubit quantum circuit...
+Progress:
+  Episode   0/80: Avg reward = -397.0, ε = 0.258, Time = 0.7 min
+  Episode  20/80: Avg reward = -295.1, ε = 0.258, Time = 16.3 min
+  Episode  40/80: Avg reward = -220.1, ε = 0.258, Time = 31.7 min
+  Episode  60/80: Avg reward = -202.2, ε = 0.258, Time = 47.3 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 9
+  Optimal steps: 6
+  Efficiency: 66.67%
+  Emergent: False (none)
+  Training time: 61.6 minutes
+
+============================================================
+Maze 4/10: zigzag_4x4
+============================================================
+Optimal path: 6 steps
+Training with 13-qubit quantum circuit...
+Progress:
+  Episode   0/80: Avg reward = -586.0, ε = 0.258, Time = 0.7 min
+  Episode  20/80: Avg reward = -397.9, ε = 0.258, Time = 17.6 min
+  Episode  40/80: Avg reward = -419.3, ε = 0.258, Time = 34.2 min
+  Episode  60/80: Avg reward = -550.9, ε = 0.258, Time = 49.6 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 11
+  Optimal steps: 6
+  Efficiency: 54.55%
+  Emergent: False (none)
+  Training time: 66.2 minutes
+
+============================================================
+Maze 5/10: cross_4x4
+============================================================
+Optimal path: -1 steps
+Training with 13-qubit quantum circuit...
+Progress:
+  Episode   0/80: Avg reward = -388.0, ε = 0.258, Time = 0.7 min
+  Episode  20/80: Avg reward = -377.2, ε = 0.258, Time = 18.8 min
+  Episode  40/80: Avg reward = -359.2, ε = 0.258, Time = 36.9 min
+  Episode  60/80: Avg reward = -320.5, ε = 0.258, Time = 55.0 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 64
+  Optimal steps: -1
+  Efficiency: -1.56%
+  Emergent: False (none)
+  Training time: 72.2 minutes
+
+============================================================
+Maze 6/10: corners_4x4
+============================================================
+Optimal path: 6 steps
+Training with 13-qubit quantum circuit...
+Progress:
+  Episode   0/80: Avg reward = -253.0, ε = 0.258, Time = 0.7 min
+  Episode  20/80: Avg reward = -311.8, ε = 0.258, Time = 17.3 min
+  Episode  40/80: Avg reward = -238.5, ε = 0.258, Time = 31.3 min
+  Episode  60/80: Avg reward = -227.2, ε = 0.258, Time = 45.9 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 7
+  Optimal steps: 6
+  Efficiency: 85.71%
+  Emergent: True (perfect_navigation)
+  Training time: 61.8 minutes
+
+corners_4x4 Solution:
+-----------
+S o o █ 
+█ . o . 
+. . o █ 
+. █ o G 
+Path length: 6 steps
+
+============================================================
+Maze 7/10: maze_4x4
+============================================================
+Optimal path: 6 steps
+Training with 13-qubit quantum circuit...
+Progress:
+  Episode   0/80: Avg reward = -259.0, ε = 0.258, Time = 0.7 min
+  Episode  20/80: Avg reward = -377.9, ε = 0.258, Time = 17.2 min
+  Episode  40/80: Avg reward = -443.0, ε = 0.258, Time = 34.8 min
+  Episode  60/80: Avg reward = -298.4, ε = 0.258, Time = 51.1 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 19
+  Optimal steps: 6
+  Efficiency: 31.58%
+  Emergent: False (none)
+  Training time: 66.0 minutes
+
+============================================================
+Maze 8/10: open_4x4
+============================================================
+Optimal path: 6 steps
+Training with 13-qubit quantum circuit...
+Progress:
+  Episode   0/80: Avg reward = -442.0, ε = 0.258, Time = 0.7 min
+  Episode  20/80: Avg reward = -125.1, ε = 0.258, Time = 15.3 min
+  Episode  40/80: Avg reward = -204.7, ε = 0.258, Time = 28.1 min
+  Episode  60/80: Avg reward = -323.3, ε = 0.258, Time = 43.8 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 8
+  Optimal steps: 6
+  Efficiency: 75.00%
+  Emergent: True (sudden_insight)
+  Training time: 56.8 minutes
+
+open_4x4 Solution:
+-----------
+S o o . 
+. █ o o 
+. . █ o 
+. . . G 
+Path length: 6 steps
+
+============================================================
+Maze 9/10: dense_4x4
+============================================================
+Optimal path: 6 steps
+Training with 13-qubit quantum circuit...
+Progress:
+  Episode   0/80: Avg reward = -233.0, ε = 0.258, Time = 0.5 min
+  Episode  20/80: Avg reward = -429.4, ε = 0.258, Time = 16.1 min
+  Episode  40/80: Avg reward = -158.5, ε = 0.258, Time = 28.6 min
+  Episode  60/80: Avg reward = -384.0, ε = 0.258, Time = 42.2 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 8
+  Optimal steps: 6
+  Efficiency: 75.00%
+  Emergent: True (sudden_insight)
+  Training time: 56.7 minutes
+
+dense_4x4 Solution:
+-----------
+S █ . █ 
+o █ . █ 
+o o o o 
+█ . █ G 
+Path length: 6 steps
+
+============================================================
+Maze 10/10: path_4x4
+============================================================
+Optimal path: 6 steps
+Training with 13-qubit quantum circuit...
+Progress:
+  Episode   0/80: Avg reward = -496.0, ε = 0.258, Time = 0.7 min
+  Episode  20/80: Avg reward = -313.5, ε = 0.258, Time = 16.3 min
+  Episode  40/80: Avg reward = -366.6, ε = 0.258, Time = 32.1 min
+  Episode  60/80: Avg reward = -290.6, ε = 0.258, Time = 48.2 min
+
+Evaluating final performance...
+
+Results:
+  Steps to goal: 11
+  Optimal steps: 6
+  Efficiency: 54.55%
+  Emergent: False (none)
+  Training time: 62.1 minutes
+
+============================================================
+EXPERIMENT COMPLETE
+============================================================
+Maze size: 4x4
+Total mazes: 10
+Emergent solutions: 4 (40.0%)
+Average efficiency: 0.559
+Total time: 614.1 minutes
+Average time per maze: 61.4 minutes
+Quantum backend: lightning.gpu
+Qubits used: 13/16
+Observation window: 3x3
+
+Emergence breakdown:
+  sudden_insight: 3
+  perfect_navigation: 1
+
+Results saved to: results/vqnn_results_16q_09072025_173523.csv
+
+📊 Performance Report:
+Total runtime: 614.1 minutes
+  circuit_eval_time: avg=1757284940.857, min=1757266523.815, max=1757303366.832
+  loss: avg=110.674, min=0.000, max=10212.828
+
+✅ 4x4 maze experiment complete!
+============================================================
+(qnai-env) pooh@beast-server-0:~/QNAI-Experiment/QNAI-test-engine/Tests/Problem-Solving-TEST$ python run-ps-test.py 
+
+============================================================
+QUANTUM MAZE NAVIGATION CONFIGURATION
+============================================================
+
+Select maze size for the experiment:
+
+Available configurations:
+  1. 3x3 mazes (9 qubits)
+     - Compact mazes with 9 cells
      - Good for initial testing
 
   2. 4x4 mazes (16 qubits)
@@ -307,7 +1011,7 @@ Emergence breakdown:
 
 Results saved to: results/vqnn_results_25q_09222025_170518.csv
 
-📊 Performance Report:
+Performance Report:
 Total runtime: 64681.1 minutes
   circuit_eval_time: avg=1760506555.650, min=1758560719.006, max=1762441586.729
   loss: avg=83.694, min=0.000, max=10180.252
